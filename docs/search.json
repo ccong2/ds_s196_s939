@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Applied Data Science for Cities",
+    "section": "",
+    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
+  },
+  {
+    "objectID": "index.html#this-website-is-under-construction-please-check-back-later-for-updates",
+    "href": "index.html#this-website-is-under-construction-please-check-back-later-for-updates",
+    "title": "Applied Data Science for Cities",
+    "section": "This website is under construction, please check back later for updates! 😄",
+    "text": "This website is under construction, please check back later for updates! 😄"
+  },
+  {
+    "objectID": "lecture1.html",
+    "href": "lecture1.html",
+    "title": "ds_s187_s954",
+    "section": "",
+    "text": "qmd is more like word"
+  }
+]

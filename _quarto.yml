@@ -1,19 +1,54 @@
 project:
   type: website
+  output-dir: docs #Need to specify an output directory for Github pages (contains knitted html, pictures, etc.) 
+  render: #Specify what files to render (*) means all and (!) means not
+    - "*.qmd"
+    - "*.rmd"
+    - "!flexdashboard*" #This is a type of .rmd/.qmd that needs to be rendered separately due to it's on YAML
 
 website:
   title: "ds_s187_s954"
   navbar:
+    type: default
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+      - text: Home
+        href: index.qmd
+      - text: Lecture
+        menu:
+          - text: "Intro"
+          - href: lecture1.qmd
+          - text: "Population and the Census"
+          - href: lecture2.qmd
+          - text: "Neighborhood Dynamics"
+          - href: lecture3.qmd
+          - text: "Place Opportunity"
+          - href: lecture4.qmd
+          - text: "Transportation Equity"
+          - href: lecture5.qmd
+      - text: Lab
+        menu:
+          - text: "Data wrangling + visualization"
+          - href: lab1.qmd
+          - text: "Enhanced Visualization"
+          - href: lab2.qmd
+          - text: "More data-wrangling tools"
+          - href: lab3.qmd
+          - text: "Websites in R + Github"
+          - href: lab4.qmd
+          - text: "Shiny Apps"
+          - href: lab5.qmd
+    right:
+      - icon: github
+        href: http://github.com/ccong2/
+      - icon: envelope
+        href: mailto:ccong2@mit.edu
 
 format:
   html:
-    theme: cosmo
+    theme: flatly
     css: styles.css
     toc: true
+    page-layout: article
 
 editor: visual
 

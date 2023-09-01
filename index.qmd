@@ -2,8 +2,27 @@
 title: "Applied Data Science for Cities"
 ---
 
-Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes.
+Urban science draws on statistics, visualization, and spatial analysis techniques to gain deeper insights into cities and actively contribute to their development. In this course, we'll dive into the dynamic world of urban science by learning how to tell stories about cities and neighborhoods, covering a range of topics including demographic analysis, health and transportation, and using R as our primary quantitative analysis and interactive visualization tool.
 
-# Under Construction
+::: columns
+::: {.column width="50%"}
+![](img/pic.gif)
+:::
 
-## This website is under construction, please check back later for updates! 😄
+::: {.column width="10%"}
+:::
+
+::: {.column width="40%"}
+### Course Information
+
+-   **Class Time:** M, W: 9:00-11:30 AM
+-   **Location:** Building 9-450
+-   **Canvas Site:**
+
+### Instructor
+
+-   **Cong Cong**
+-   ccong2\@mit.edu \| 9-547
+-   Office Hours: F 2:30-4:00 PM
+:::
+:::

@@ -1,54 +1,102 @@
 project:
   type: website
-  output-dir: docs #Need to specify an output directory for Github pages (contains knitted html, pictures, etc.) 
-  render: #Specify what files to render (*) means all and (!) means not
+  render: 
     - "*.qmd"
-    - "*.rmd"
-    - "!flexdashboard*" #This is a type of .rmd/.qmd that needs to be rendered separately due to it's on YAML
 
+execute: 
+  freeze: auto
+  
 website:
-  title: "ds_s187_s954"
+  title: "Applied Data Science for Cities"
   navbar:
-    type: default
     left:
-      - text: Home
-        href: index.qmd
-      - text: Lecture
-        menu:
-          - text: "Intro"
-          - href: lecture1.qmd
-          - text: "Population and the Census"
-          - href: lecture2.qmd
-          - text: "Neighborhood Dynamics"
-          - href: lecture3.qmd
-          - text: "Place Opportunity"
-          - href: lecture4.qmd
-          - text: "Transportation Equity"
-          - href: lecture5.qmd
-      - text: Lab
-        menu:
-          - text: "Data wrangling + visualization"
-          - href: lab1.qmd
-          - text: "Enhanced Visualization"
-          - href: lab2.qmd
-          - text: "More data-wrangling tools"
-          - href: lab3.qmd
-          - text: "Websites in R + Github"
-          - href: lab4.qmd
-          - text: "Shiny Apps"
-          - href: lab5.qmd
-    right:
-      - icon: github
-        href: http://github.com/ccong2/
-      - icon: envelope
-        href: mailto:ccong2@mit.edu
+      - href: index.qmd
+        text: "Home"
+      - href: syllabus/index.qmd
+        text: "Syllabus"
+      - href: lectures/index.qmd
+        text: "Lectures"
+      - href: labs/index.qmd
+        text: "Labs"
+      - href: howto/index.qmd
+        text: "How To"
+      - href: resources/index.qmd
+        text: "Resources"
+    search: true
+  favicon: favicon.png
+  page-footer:
+    right: "Made with R and [Quarto](https://quarto.org/)"
+
+  sidebar:
+    - title: "Lectures"
+      contents:
+        - section: "Lectures"
+          contents:
+            - text: "01 What does urban data science do" 
+              file: lectures/index.qmd
+            - text: "02 Population and Census"
+              file: lectures/lecture2.qmd
+            - text: "03 Neighborhood Dynamics"
+              file: lectures/lecture3.qmd
+            - text: "04 Place Opportunity"
+              file: lectures/lecture4.qmd
+            - text: "05 Accessibility Analysis"
+              file: lectures/lecture5.qmd
+            - text: "06 Web Storytelling"
+              file: lectures/lecture6.qmd
+
+
+    - title: "Labs"
+      contents:
+        - section: "Labs"
+          contents:
+            - text: "01 Data wrangling + visualization pipeline"
+              file: labs/index.qmd
+            - text: "02 More data-wrangling tools"
+              file: labs/lab2.qmd
+            - text: "03 Enhanced Visualization"
+              file: labs/lab3.qmd
+            - text: "04 Describe neighborhood characteristics"
+              file: labs/lab4.qmd
+            - text: "05 Work with GTFS"
+              file: labs/lab5.qmd
+            - text: "06 Shiny Apps and Dashboards"
+              file: labs/lab6.qmd
+
+    
+    - title: "How To"
+      contents:
+        - section: "Get Started"
+          contents:
+            - text: "Introduction"
+              file: howto/index.qmd
+            - text: "Set Up R and RStudio"
+              file: howto/setupr.qmd
+        - section: "Share Your Work"
+      
+
+    - title: "Resources"
+      contents:
+        - section: "Overview"
+          contents:
+            - resources/index.qmd
+        - section: "Resources"
+          contents:
+            - text: "Textbooks"
+              file: resources/textbook.qmd
+            - text: "Urban Data Analysis"
+              file: resources/analysis.qmd
+            - text: "Data Sources"
+              file: resources/data.qmd
+            - text: "Inspiration"
+              file: resources/inspiration.qmd
 
 format:
   html:
-    theme: flatly
-    css: styles.css
+    theme:
+      light: [flatly]
+    css: 
+      - styles.css
     toc: true
-    page-layout: article
 
 editor: visual
-

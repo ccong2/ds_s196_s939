@@ -1,0 +1,170 @@
+---
+title: "Applied Data Science for Cities"
+subtitle: "11.S187/11.S954  |  Fall 2023"
+---
+
+### Description
+
+Urban data science draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities using a set of descriptive approaches, quantitative and spatial analysis in R. We will learn how to describe community characteristics with small area census data, work with local administrative data, and think about how our analysis of quantitative data fit with other forms of data and engagement to fill in gaps in knowledge.
+
+Learning objectives:
+
+-   Gain familiarity with R as a data analysis, mapping, and storytelling tool.
+-   Be able to identify relevant open datasets in support of your research question.
+-   Articulate the main arguments for your data analysis product and how it supports planning and decision-making regarding an issue of local/national significance.
+
+### How Will We Be Learning
+
+We will be covering census data analysis, using a variable mixture of approachable lectures and hands-on lab tutorials.
+
+**Lecture/Discussion:** Introduces and discusses key concepts, debates, and use cases of urban data science.
+
+**Lab:** We will provide data science tutorials using R. Each lab tutorial aims to solve a specific urban data science problem in addition to building coding skills and statistical intuition. You will need to complete the labs for credits, and you should feel free to apply any parts of these scripts to your own projects.
+
+**Extension readings:** We provide a light material list that focuses on specific topics each week. These articles help you to reflect on your work and formulate arguments for your projects.
+
+**Urban data science project:** This is your final assignment and a project of your own choosing. You can bring any topics, or questions that you might have been grappling with into this course and explore them using data science skills. You will either self-organize into teams or work individually towards your proposed products.
+
+### Your Data Science Project
+
+For this project, you will apply any analysis or visualization methods covered in the course to the topic/issue/geography that is of interest to you. This could be an extension to one or more of your lab exercises. It could be a focused study of conditions (e.g., population change, transportation equity) that you would like to explore more through data integration and visualization. It could be an argument that you want to make (e.g., where should the city plant new trees) and see whether data can provide you with more information or evidence. We will organize a presentation session in the last week of class.
+
+### Prerequisites
+
+Students will benefit from some prior knowledge working in R and RStudio, however, this is also not a course prerequisite. Due to time constraints, I won't be able to introduce the very basic R (software installation, data types, etc.), but [these two tutorials](https://posit.cloud/learn/primers/1) should provide you with sufficient knowledge to start with this course.
+
+### Assessment
+
++----------------------+---------------+
+| Assignment           | Weight        |
++======================+===============+
+| Lab Exercises        | 40%           |
+|                      |               |
+| Package Introduction | 10%           |
+|                      |               |
+| Project Scope Memo   | 10%           |
+|                      |               |
+| Project Presentation | 30%           |
+|                      |               |
+| Attendance           | 10%           |
++----------------------+---------------+
+
+### Key Logistics
+
+**Lab Exercises:** Due Tuesdays, end of day
+
+You will be working on lab on most Wednesday classes and submit a short report before the subsequent class. Details will be specified in each of the assignments distributed at the beginning of the lab session.
+
+**Package Introduction:** Monday, Nov 13, and Monday 20, in class
+
+Each student is expected to introduce a package (or two) that is relevant to your research interests during a class session. The objectives are (1) to foster a collaborative approach to acquiring familiarity with the ever-increasing new packages, and (2) to identify valuable existing R packages applicable to your study and research.
+
+**Project Scope Memo:** Due Friday, Nov 17.
+
+The purpose of this memo is to communicate the scope of your project (what you will do) and your strategies for collecting, visualizing, and analyzing data (how you will do it). A separate guideline will be distributed at the beginning of the course.
+
+**Project Presentation:** Week 8 (Dec 11 -- Dec 13), class time.
+
+### Late policy
+
+To keep all students on a relatively level playing field, a late assignment will be accepted up until one week after the original due date for a loss of one letter grade (e.g., an A becomes an B). After that point, late assignments will receive no credit and will not be accepted.
+
+### Software
+
+We use R and R Studio as the coding environment to develop analysis and applications. You can install the software on your personal computers from [here](https://rstudio.com/products/rstudio/download/).
+
+### Communication
+
+Plan on using our class Slack channel, email, and office hours to get help with troubleshooting problems as they arise in your work. I also encourage you to work with others in the class to troubleshoot problems - it is highly likely that others in the class have encountered similar problems, and this also allows us to create a repository of our problems and responses.
+
+**Email:** I check emails quite frequently, but I will not always be able to respond to emails right away. Please plan accordingly so that you don't miss deadlines.
+
+**Slack:** We will set up a Slack workspace for general communication including Q&A, project collaboration, and information exchange.
+
+**Office hours:** Please consult the top of the syllabus for specific times. I will announce if there are any changes or exceptions. I'm happy to answer any specific coding questions, or chat and help shape the objective and scope of your projects.
+
+### Support & Teamwork
+
+In this course, you will be randomly assigned to dedicated support networks consisting of 3-4 people per group. The goal is to bring you together to give each other immediate feedback, inspire one another, and give you a space to grow as colleagues. While you will all be submitting assignments as individuals, and will be free to form project groups in other ways, it benefits all of us that you share discoveries and experiences, be willing to help when asked and/or receive help when needed.
+
+### Ethics
+
+**Academic Integrity:** Violations to academic integrity are unacceptable at MIT and DUSP. [Instances of misconduct](http://integrity.mit.edu/)include but are not limited to plagiarism, cheating, deliberately unauthorized use of course data and material.
+
+**Collaboration Policy:** While team collaboration is encouraged, students should specify their role and tasks in a project. A positive and constructive attitude for teamwork is essential for a successful completion of the course.
+
+**Diversity and Inclusion:** MIT highly values a diverse, friendly, respectful, and inclusive learning environment among students, faculty, and staffs. We welcome all individuals disregarding their origin, citizenship, gender identity, sexual orientation, religious and pollical beliefs. Please contact me or departmental staffs if you have any question / consideration regarding this.
+
+### Schedule
+
+#### W01 (Oct 23 - Oct 27): What Does Urban Data Science Do
+
+**Lecture:** Introduces the context of using computer science approaches in city planning and explores contemporary challenges of addressing complex, often political, unequal and 'wicked' planning challenges with new computational and data-analytic tools.
+
+**Lab:** We will be setting up our computing environment and introducing R as a data-wrangling, plotting, and mapping language.
+
+**Readings:**
+
+-   Boeing, G., Batty, M., Jiang, S., and Schweitzer, L. (2021). [Urban Analytics: History, Trajectory, an Critique](https://arxiv.org/ftp/arxiv/papers/2105/2105.07020.pdf). In: Handbook of Spatial Analysis in the Social Sciences, edited by S. Rey and R. Franklin. Edward Elgar: Cheltenham, UK.
+-   Kitchin, R. (2016). [The ethics of smart cities and urban science](https://royalsocietypublishing.org/doi/10.1098/rsta.2016.0115). Philosophical Transactions of the Royal Society. A374: 20160115.
+  
+
+#### W02 (Oct 30 - Nov 3): Population and Census
+
+**Lecture:** We will talk about how planners measure basic dimensions of population and change in population at the neighborhood level. We'll also discuss some of the basic features of the main Census products that planners use to describe places and the people who live and work in them.
+
+**Lab:** Use census tracts as our unit of analysis and summarize the level of heterogeneity (or homogeneity) observed between neighborhoods. Practice with `tidycensus` to pull data from census, as well as more data wrangling tools including `dplyr`, `tidyr`, `forcats`, `stringr`, `lubridate` .
+
+**Readings:**
+
+MacDonald, Heather and Alan Peters. Urban Policy and the Census. Redlands, CA: Esri Press. 2011. ["Chapter 1: Introduction to the US Census" and "Chapter 2: Mapping Continuous Measures: The ACS." and "Chapter 3: Interpretation and Communication."](https://drive.google.com/file/d/1mbyqkDoBCDfKugA13zALw_BHY5i1B0EW/view?usp=sharing) pp. 1-17, 26-32, 33-52.
+  
+
+#### W03 (Nov 6 - Nov 10): Neighborhood Dynamics
+
+**Lecture:** The many different types of open data sources. Overview of principles of effective information communication and supplementary tools for data visualization
+
+**Lab:** Fetch data from the web and enhance our visualizations. Learn how to enhance `ggplot` with interactivity through `ggplotly` , make interactive `leaflet` maps and create dashboards with `flexdashboard`
+
+**Readings:**
+
+-   Sarah Williams, ["Big Data for Cities is Not New," Data Action: Using Data for Public Good, Chapter 1. 2020.](https://drive.google.com/file/d/1RNPcCy6otSZ6F4mVg5JWeto4WDeHnAyz/view?usp=sharing)
+-   D'Ignazio, Catherine, and Lauren Klein. 2021. "[Who Collects the Data? A Tale of Three Maps.](https://mit-serc.pubpub.org/pub/tale-of-three-maps/release/1)" MIT Case Studies in Social and Ethical Responsibilities of Computing, no. Winter 2021 (February).
+  
+
+#### W04 (Nov 13 -- Nov 17): Place Opportunity
+
+**Lecture:** (1) Package introduction. (2) We will examine opportunity analysis and mapping, which is a strategy used to compare multiple measures of sociodemographic well-being to create a single measure of how supportive a place is for economic and social mobility.
+
+**Lab:** Standardize and create indices from data. Focus on the obesogenic environment as one example of opportunity mapping. Touch base with groups on the project progress.
+  
+
+**Readings:**
+
+-   Stromberg, Brian. (2016). [Opportunity Mapping](https://nhc.org/wp-content/uploads/2017/10/Opportunity-Mapping.pdf). National Housing Conference.
+-   Brazil, N., Wagner, J., & Ramil, R. (2023). [Measuring and mapping neighborhood opportunity: A comparison of opportunity indices in California](https://doi.org/10.1177/23998083221129616). Environment and Planning B: Urban Analytics and City Science, 50(3), 757--775.
+  
+
+#### W05 (Nov 20 -- Nov 22): Transportation Equity
+
+**Lecture:** (1) Package introduction (cont.) (2) Discuss the concept and many different ways of measuring accessibility and how it relates to transportation equity.
+
+**Lab:** Use GTFS data and ACS data to explore and visualize access to transportation. This will allow us to identify the spatial disparities due to the unequal distribution of transportation infrastructure (e.g. transit stops, transit routes, transit frequency, etc.). 
+
+**Readings:**
+
+-   Karner, A., Rowangould, D., & London, J. (2016). [We Can Get There From Here: New Perspectives on Transportation Equity](https://escholarship.org/content/qt9zp565xr/qt9zp565xr.pdf?t=pryc3m). UC Davis: National Center for Sustainable Transportation.
+-   Grengs, J. (2010). [Job Accessibility and the Modal Mismatch in Detroit](https://doi.org/10.1016/j.jtrangeo.2009.01.012). Journal of Transport Geography 18 (1), 42--54.
+  
+
+#### W06 (Nov 27 -- Dec 1): Web Storytelling
+
+**Lecture:** Shiny apps and examples of R-based storytelling resources and examples
+
+**Lab:** Publish in an R-hosted website; Embedding interactive `flexdashboards` and embedding Shiny Apps
+  
+
+#### W07 (Dec 4 -- Dec 8): Work on Projects
+  
+
+#### W08 (Dec 11 -- Dec 13): Presentation

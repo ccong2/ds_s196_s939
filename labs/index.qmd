@@ -1,3 +1,21 @@
 ---
 title: "Schedule Overview"
 ---
+
+### Schedule
+
+W01 (Oct 23 - Oct 27): What Does Urban Data Science Do
+
+W02 (Oct 30 - Nov 3): Exploratory Data Analysis
+
+W03 (Nov 6 - Nov 10): Census Data and Demographic Analysis
+
+W04 (Nov 13 -- Nov 17): Create interactive graphs and maps
+
+W05 (Nov 20 -- Nov 22): Spatial Analysis
+
+W06 (Nov 27 -- Dec 1): Web Storytelling I
+
+W07 (Dec 4 -- Dec 8): Web Storytelling II
+
+W08 (Dec 11 -- Dec 13): Presentation

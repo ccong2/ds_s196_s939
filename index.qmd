@@ -6,7 +6,7 @@ Urban science draws on statistics, visualization, and spatial analysis technique
 
 ::: columns
 ::: {.column width="50%"}
-![](img/pic.gif)
+![](./img/pic.gif)
 :::
 
 ::: {.column width="10%"}
@@ -15,14 +15,14 @@ Urban science draws on statistics, visualization, and spatial analysis technique
 ::: {.column width="40%"}
 ### Course Information
 
--   **Class Time:** M, W: 9:00-11:30 AM
+-   **Class Time:** M, W: 9:30-11:00 AM
 -   **Location:** Building 9-450
--   **Canvas Site:**
+-   **Canvas Site:** https://canvas.mit.edu/courses/23126
 
 ### Instructor
 
 -   **Cong Cong**
 -   ccong2\@mit.edu \| 9-547
--   Office Hours: F 2:30-4:00 PM
+-   Office Hours: Th 2:30-4:00 PM
 :::
 :::

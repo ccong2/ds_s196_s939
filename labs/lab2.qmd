@@ -1,1 +1,261 @@
+---
+title: "Exploratory Data Analysis with ![](../img/Rlogo.png){width=60px}"
+subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
+date: "Last Updated `r Sys.Date()`"
+format: html
+editor: visual
+---
 
+# Overview
+
+This week's Lab Exercise is designed to help you apply some of the tools available within the [tidyverse](https://www.tidyverse.org) for data wrangling. This particular exercise focuses on the [dplyr](https://dplyr.tidyverse.org/index.html) package and the [ggplot2](https://ggplot2.tidyverse.org) package. It also begins to engage with data visualization best practices by demonstrating how to create and interpret a variety of graphics with the *ggplot2* package.
+
+**Exploratory data analysis (EDA)** is a phase of a larger data science workflow---or perhaps a philosophy---that emphasizes getting to know the data before rushing to analyze it using this more rigid approaches like hypothesis tests. EDA relies heavily on the creation and interpretation of **graphics** in order to build familiarity and gain fundamental insights that can inform more sophisticated analyses later on. Data visualization is arguably the most important tool for exploratory data analysis because the information conveyed by graphical display can be very quickly absorbed and because it is generally easy to recognize patterns in a graphical display. There are several overarching goals of exploratory data analysis, including:
+
+1.  To determine if there are any problems with your dataset.
+2.  To determine whether the question you are asking can be answered by the data that you have.
+3.  To begin formulating an answer to your question.
+
+# Our study topic today
+
+In the 2017 [Tax Cuts and Jobs Act](https://www.congress.gov/115/bills/hr1/BILLS-115hr1enr.pdf), a new federal incentive was introduced to encourage investment in low-income and undercapitalized communities. States were given the chance to select specific census tracts as Opportunity Zones, where investors could enjoy tax benefits for their eligible investments. Although, there's been [a lot of curiosity](https://www.urban.org/policy-centers/metropolitan-housing-and-communities-policy-center/projects/opportunity-zones) among practitioners and researchers regarding how effective the program is and whether the designations made by governors were successful.
+
+If you are interested in the locations of these Opportunity Zones, you can check out [this map](https://opportunityzones.hud.gov/resources/map). The pink geometries reflected on the map are [census tracts](https://www.census.gov/programs-surveys/geography/about/glossary.html#par_textimage_13), which we often use as a proxy for neighborhoods, especially in urban areas. Just find a familiar place, and see which areas have been designated as Opportunity Zones.
+
+Now please navigate to Urban Institute's website about [Opportunity Zones](https://www.urban.org/policy-centers/metropolitan-housing-and-communities-policy-center/projects/opportunity-zones), find the link "Download tract-level data on all Opportunity Zones", and **download this dataset** to your "data" folder within your Lab 2 project folder. Open it in Excel and take a quick look. This data lists tracts nationwide that were designated an Opportunity Zones, along with essential Census demographic data that describe these tracts.
+
+When done well, exploratory data analysis is guided by the [**question(s)**]{style="color: green;"} you are trying to answer. The central question we are exploring in this Lab Exercise is: "Is there a distinguishable difference in economic conditions between designated and not-designated census tracts?" We will explore our data to first determine if there are problems with the dataset then to decide if you can answer your [**question(s)**]{style="color: green;"} with this dataset.
+
+To stay organized, you should load packages at the beginning of your script or markdown document.
+
+```{r label="Set Package Repository and Load R Packages", message=FALSE, warning=FALSE, include=FALSE}
+library(readxl)
+library(tidyverse)
+library(DataExplorer)
+```
+
+# Read and examine our data
+
+Use `read_xlsx` from the `readxl` package will read Microsoft Excel files into data tables.
+
+```{r label="Read data", message=FALSE, warning=FALSE, include=FALSE}
+ozs <- read_xlsx("../data/urbaninstitute_tractlevelozanalysis_update01142021.xlsx")
+```
+
+Now look at the "Environment" panel on the top-right of your R interface, you should see the new variable `ozs`. You can also see this variable 27 variables (columns) and 42178 observations (rows). Click it to preview the content of `ozs`. Alternatively, you could preview it by typing `View(ozs)` in your console.
+
+Here are the column definitions:
+
+-   **geoid**: combined state, county, tract FIPS (Federal Information Processing Standards) code this is a unique identification number for each census tract. If it is the first time you heard of tracts, they are sub-areas of a county defined for the purpose of taking a census.
+-   **state**: the name of the state
+-   **county**: the county name
+-   **Designated**: 1 if the tract was designated an Opportunity Zone
+-   **Type**: category for OZ designation
+-   **Population**: total population
+-   **PovertyRate**: poverty rate
+-   **medhhincome**: median household income
+-   **medrent**: median gross rent (per month)
+-   **vacancyrate**: residential vacancy rate
+-   **unemprate:** unemployment rate
+-   **pctwhitealone**: white population (%)
+-   **pctblackalone**: black population (%)
+-   **pctHispanic**: latino population (%)
+-   **Metro**: tract in a metropolitan area
+
+------------------------------------------------------------------------
+
+### Your practice
+
+There are commonly used commands in base R that provide an initial check of a dataset, for example:
+
+-   `dim()`, `ncol()`, `nrow()`
+-   `colnames()`
+-   `glimpse()`
+-   `head()`, `tail()`
+-   `str()`
+-   `summary()`
+
+Insert a new code chunk and experiment with a few of these functions. What each function accomplishes?
+
+------------------------------------------------------------------------
+
+Beside the basic data structures, There are a few other things I'll encourage you to inspect during the initial check process:
+
+**Completeness**
+
+By viewing the first several rows of the dataset, we can already spot some N/A values. For example, there is a field named `Designated` which is 1 when an eligible tract was designated as an opportunity zone, and N/A where the tract was not designated. (In fact, for our analysis, it's better to recode these NAs to equal 0 instead, which we will do in a bit).
+
+There are N/As in many of the statistics fields as well, which indicate unavailable information for that specific data point. (If you never see "N/A" in the first 20 some rows, it will be too soon).
+
+How many missing values are there and would that be a hurdle for my analysis? It will be great to have a sense of completeness in terms of what proportion of a field actually holds data. `DataExplorer` is a handy tool to quickly understand datasets.
+
+```{r label="missingvalues", message=FALSE, warning=FALSE}
+DataExplorer::plot_missing(ozs)
+```
+
+**Unique values of categorical variables**
+
+The `unique()` base R function extracts unique elements in a large set of values. We can use it to specific columns to see what entries we have here. It also helps us to see if there is anything we need to clean up, such as typos or incorrect names, before proceeding to more analysis. For this dataset, we can take a look at the `state` column. What we have here in this column are all U.S. territories as well as a few NA values.
+
+```{r label="uniquevalues", message=FALSE, warning=FALSE}
+unique(ozs$state) 
+```
+
+**Range of numerical variables**
+
+For numeric columns, it'll be helpful to visually inspect whether the values fall within the expected range, how the values are distributed, and whether there are any wacky numbers like -999 (often used in SPSS files to indicate missing data), etc. A quick histogram helps us to see the value distribution. Additionally, it visualizes patterns by dividing the data set into groups (or bins) of equal length, then communicating how many or what proportion of the observations fall within each of those "bins".
+
+```{r label="hist-1", message=FALSE, warning=FALSE}
+# We can use the base R function hist() to check one variable:
+hist(ozs$Population)
+```
+
+```{r label="hist-2", message=FALSE, warning=FALSE}
+# Or use the DataExplorer package to check multiple variables at the same time
+DataExplorer::plot_histogram(ozs[,c(10:13)])
+```
+
+------------------------------------------------------------------------
+
+### Your practice
+
+Check the `DesignatedOZ` column - what values does it contain?
+
+------------------------------------------------------------------------
+
+# Data Cleanning
+
+The Urban Institute has coded the designated variable as either taking a value of 1 when designated or NA when not. We can recode the NA values in `DesignatedOZ` for legibility. In the following code, we uses the `dplyr` function: `mutate` to modify `DesignatedOZ` in place. We replaced the numbers with texts since the NA and 1 here have no mathematical meaning.
+
+```{r label="recode", message=FALSE, warning=FALSE}
+ozs <- ozs |> mutate(DesignatedOZ = 
+                ifelse(is.na(DesignatedOZ), "Not Designated", "Designated"))
+```
+
+There are a few columns (such as `SE_Flag`) that we won't need for this analysis. We can use `select` in `dplyr` function to select a subset of columns to work on. `select` allows you to retain specified columns. If there is a minus sign in front, that means to drop these specified columns.
+
+```{r}
+ozs <- ozs |> select(-c(dec_score, SE_Flag, Metro, Micro, NoCBSAType))
+```
+
+# Exploring Variation Within Variables
+
+The code chunk below creates a **boxplot** to contrast the distribution of poverty rates between designated opportunity zones and undesignated zones. A boxplot is a very commonly used EDA tool that allows us to quickly visualize the distribution of a single variable or column of data if we are working with a data frame. Note that we are using what should now be familiar conventions to construct the graphic beginning with the `ggplot` function, then adding more features with the `+` operator and other functions [listed in the package reference](https://ggplot2.tidyverse.org/reference/index.html).
+
+-   `ggplot(data = ozs)`: This is the main plotting function. `ozs` is your dataset we use.
+-   `geom_boxplot()`: Recall that geometric layers are called **geoms**. It tells R what kind of geometry you want to use visualize the data.
+-   `aes(x = DesignatedOZ, y = PovertyRate)`: The `aes()` function is where you tell `ggplot` which variable goes on the x axis followed by which variable goes on the y axis.
+-   The `labs` function sets the labels. Because the legend is showing the **fill** component of the plot, we use the **fill** argument in the `labs` function to set the name of the legend itself.
+-   We used a new function `scale_y_continuous` to specify y axis properties. Here we are making sure the poverty rate are labeled as percentages. If you remove this line, they will by default show as decimal numbers.
+
+```{r label="boxplot", message=FALSE, warning=FALSE}
+ggplot(data = ozs) +
+  geom_boxplot(aes(x = DesignatedOZ, y = PovertyRate, fill = DesignatedOZ)) + 
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "", x = "Opportunity Zone Eligible Tracts", y = "Poverty Rate", fill = "Tracts")
+```
+
+We can create **cross-tabulations** or **contingency tables** as a complement to visual EDA tools like boxplots and histograms. An easy way to do this is to use existing functions in the `dplyr` package. A brief demonstration is given in the code chunk below.
+
+```{r label = "Cross-Tabulation", message=FALSE}
+ozs |> 
+  count(state, DesignatedOZ)
+```
+
+### Exercise 1
+
+Insert a new code chunk and a markdown section below this one to "catch" your responses. Please review what we have learned and proceed with the questions below.
+
+1.  Which of the variables (columns) are continuous and which are categorical (e.g., factor)?
+    -   **Hint:** Recall that a variable is categorical if it can only take one of a small set of values and continuous if it can take any of an infinite set of ordered values.
+    -   Which function or approach did you use to answer this question?
+2.  Are there variables (columns) with missing data values?
+    -   Which function or approach did you use to answer this question?
+3.  Create a graphic that contrasts the distribution of the unemployment rate in designated zones and in undesignated zones in this dataset.
+    -   Interpret the graphic(s) you have created and include 2-3 sentences of text explanation (i.e., in an RMarkdown section)
+
+# Exploring Variation Between Variables
+
+We are often interested in bivariate relationships or how two variables relate to one another. **Scatterplots** are often used to visualize the association between two **continuous variables**. They can reveal much about the [nature of the relationship](https://www.jmp.com/en_hk/statistics-knowledge-portal/exploratory-data-analysis/scatter-plot.html) between two variables.
+
+Let's use a subset of our data - tracts in Massachusetts - to perform this part of analysis. You can definitely use the entire dataset, it's just there will be over 40,000 points showing on the graph.
+
+```{r label="massachusetts", message=FALSE, warning=FALSE}
+ozs_ma <- ozs |> filter(state == "Massachusetts") 
+```
+
+Now we begin by creating a scatterplot of poverty rate and unemployment rate. A [`theme` template](https://ggplot2.tidyverse.org/reference/ggtheme.html) is applied here for a cleaner look.
+
+```{r label="Scatterplot-Copper", message=FALSE, warning=FALSE}
+ggplot(ozs_ma) +
+  geom_point(aes(unemprate, PovertyRate)) +
+  labs(title = "Poverty rate vs. unemployment rate in Opportunity Zone eligible tracts", 
+       subtitle = "State of Massachusetts",
+       x = "Unemployment rate",
+       y = "Poverty rate",
+       caption = "Source: Urban Institute (2018)") + 
+  theme_bw()
+```
+
+What can we say about the hypothesized relationship between the unemployment rate and the poverty rate? As we move from left to right along the x-axis (i.e., as unthe employment rate creases), the amount of poverty rate reported also increases.
+
+As a complement to the scatterplot, we can use the base R `cor` function to calculate the (Pearson by default, see the documentation for other options) **correlation** between any continuous variables in the dataset. The `DataExplorer` package is also designed to help us quickly understand patterns in our data. We demonstrate both in the following code.
+
+If you are unfamiliar with reading a correlation matrix, the values range between -1 and 1 where:
+
+-   -1 indicates a perfectly negative linear correlation between two variables
+-   0 indicates no linear correlation between two variables
+-   1 indicates a perfectly positive linear correlation between two variables
+
+```{r label="correlation-1", message=FALSE, warning=FALSE}
+ozs_ma |> select(Population:medrent, pctwhite:BAorhigher) |> 
+  na.omit() |> 
+  stats::cor(use = "complete.obs")
+```
+
+```{r label="correlation-2", message=FALSE, warning=FALSE}
+ozs_ma |> select(Population:medrent, pctwhite:BAorhigher) |> 
+  na.omit() |> 
+  DataExplorer::plot_correlation()
+```
+
+An additional note to the code above is that we selected several continuous variables that we want to inspect, and removed NA values so that the cocorrelationalues can be correctly calculated.
+
+------------------------------------------------------------------------
+
+What can we do if we are interested in statistical associations between **categorical variables**? The typical approach is to summarise the values under each category and visualize them using **barcharts**.
+
+In the following code, you can see our familiar `group_by` + `summarise` process used to calculate the average median house income by county in Massachusetts. This summarized table is then piped to `ggplot()` for visualization.
+
+```{r label="barchart", message=FALSE, warning=FALSE}
+ozs_ma |> 
+  group_by(county, DesignatedOZ) |>  
+  summarise(
+    Tracts = n(),
+    Income = mean(medhhincome, na.rm=TRUE)) |> 
+  ggplot() +
+  geom_col(aes(x = county, y = Income, fill = DesignatedOZ), 
+           position = "dodge") 
+```
+
+### Exercise 2
+
+Take a few minutes to read this bar chart below:
+
+![](../img/lab2-emp.png)
+
+How can we modify our code to replicate the bar chart in this image? You'll notice that you can achieve most of the features by tweaking our previous examples, plus a little bit more exploration. In a new code chunk, please copy and paste our last bar chart code, and try your best to address the following questions.
+
+1.  Please add the title, subtitle, x- and y-axis labels, and the data source annotation to your bar chart.
+2.  The background looks much cleaner. Please choose a theme template for your bar chart.
+3.  The x-axis labels are titled to 45 degrees. How can I achieve this? [Hint](https://ggplot2.tidyverse.org/reference/theme.html).
+4.  The labels on the y-axis are formatted in thousands with commas. This can be achieved by using the same function `scale_y_continuous(labels = scales::percent)` we have seen before. [Hint](https://ggplot2.tidyverse.org/reference/scale_continuous.html).
+5.  Lastly, the counties are not arranged alphabetically, but rather by the income values mapped to the y-axis, starting from large to small. How can I achieve this? [Hint](https://blog.albertkuo.me/post/2022-01-04-reordering-geom-col-and-geom-bar-by-count-or-value/).
+
+# Work Products
+
+Please submit a .qmd file and knitted HTML file that shows your work and responses for each of the **Exercises** included in this lab. Look back at our EDA question "Is there a distinguishable difference in economic conditions between designated and not-designated census tracts?" Discuss what you have found so far and how you would like to further investigate this question.
+
+Also, briefly comment on your experience with R during this lab exercise. Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 7.**
+
+### 

@@ -1,1 +1,180 @@
+---
+title: "Get started with ![](../img/Rlogo.png){width=60px}"
+subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
+date: "Last Updated `r Sys.Date()`"
+format: html
+editor: visual
+---
 
+This practice exercise provides some more structured exploration and practice with Quarto Document (R Markdown format). We will mix Markdown sections with code chunks, build familiarity with basic data types, and experiment with importing a tabular dataset. Because this is an in-class exercise, there is nothing you need to submit---the goal is to apply what we have read and seen in the lectures.
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+# Practice formatting text with Quarto
+
+After you download today's lab folder, launch RStudio by double clicking the "lab1.Rproj" file. Go to **File - New File - Quarto Document** to create a new Quarto document. The prompt shown below will appear. Type in a document title and your name.
+
+![](../img/lab1_quarto.PNG){width="450"}
+
+You will see a template file. At the very top of the notebook we have the [YAML](https://en.wikipedia.org/wiki/YAML) or "Yet Another Markdown Language" header which begins and ends with three dashes `---`. At the very least, it specifies the title, author and output format when the document is rendered. There can be other options specified in the YAML, particularly if you are rendering to a format other than HTML (see [the reading](https://r4ds.had.co.nz/r-markdown-formats.html) from this week).
+
+Let's add another line to the YAML header:
+
+> date: \<insert the date that the file is created\>.
+
+Below the YAML is where the Markdown sections typically begin. The interface looks pretty much like a Word document. There is a toolbar that allows you to make bold or italic text, create a bullet list, insert a link or an image, insert a code block, etc.
+
+On the very left of this toolbar, click the **"Source"** button to switch Markdown editing mode. These are sections of text that usually explain or contextualize the code and graphics and are formatted using [Markdown syntax](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf). For example:
+
+-   #: a header element.
+-   \*\*: bold text.
+-   \*: italic text.
+-   \` : code blocks.
+
+### Your practice
+
+In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, use text formatting to add 3-5 sentences as a Markdown section below your YAML that explain---in your own words---the following:
+
+-   What Building Energy Use Disclosure Ordinance is about?
+-   What does the ordinance require?
+-   Why do advocates argue that building energy use disclosure is desirable?
+
+You may edit your text either in the **"Source"** or **"Visual"** panel, or switch them back and forth to get familiar with both. Make sure to make gratuitous use of bold, italics, etc. in your text. You have access to the "Markdown Quick Reference" directly from RStudio (**Help - Markdown Quick Reference**).
+
+Now you should **Save**. RStudio will guide you to save the file in the folder where your "Rproj" file is. Then click the **"Render"** button on top of your toolbar (or click Ctrl+Shift+K) to render the current document. The document is rendered by the [`knitr` package](https://yihui.org/knitr/). You can immediately see your nicely formatted document in a web browser.
+
+# Insert a video
+
+You've probably already seen a video on the Cambridge webpage. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the **"Source"** panel.
+
+![](../img/lab1_youtube.PNG)
+
+What we have above is HTML code. A quick explanation without going into lots of detail:
+
+-   The \<iframe\> tag is what inserts the video (or another document) in line with the Markdown text.
+-   The src attribute provides the URL for the video
+-   The remaining attributes outline the specifics of how the video will appear.
+
+For our purposes, the most important of these attributes is **data-external="1"**. This attribute is typically **NOT SPECIFIED** in the embed code you find on the web by default and **YOU WILL NEED TO ADD IT** in order for video content to render in your output. This attribute is currently required for the `knitr` package to properly render video content.
+
+### Your practice
+
+Embed this video in your Markdown section after the introductory sentences you have written. Knit your notebook again and inspect your work.
+
+# Insert Code Chunks
+
+As you know, the other component of a Quarto Document is code chunks. Recall that code chunks are where the R code lives in a notebook. These are easy to spot as shaded blocks leading by {r} as shown below. (In the Source panel, they always have three backticks followed by {r}).
+
+```{r}
+1 + 1
+```
+
+In accordance with the ordinance, the City maintains BEUDO data for individual properties from 2015-2021. You can view the data on the [Cambridge Open Data Portal](https://data.cambridgema.gov/Energy-and-the-Environment/Cambridge-Building-Energy-and-Water-Use-Data-Discl/72g6-j7aq/). Take a few moments to explore the dataset by scrolling down the page and viewing the "Columns in this Dataset" and "Table Preview" sections in particular. Now **download this dataset in CSV format and save it in your "data" folder**, which is already created within your project folder.
+
+Insert a code chunk in your Quarto document by going to **Code - Insert Chunk**. I usually use the shortcut key RStudio provides (Alt+Ctrl+I). Type a few things in the chunk and make it look like the following:
+
+```{verbatim}
+{r label="loadtidyverse", message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+The `label` option is not required, but can be helpful when you render the notebook (otherwise you will see "unnamed-chunk" in the Render tab next to the Console tab). The other options (described [in greater detail here](https://rmarkdown.rstudio.com/lesson-3.html)) suppress all warnings and messages that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.
+
+Run this code chunk to load `tidyverse` package. You can either click the green triangle on the top-right of this chunk, or use Ctrl+Enter.
+
+### Your practice
+
+In your Console, type in `?readr::read_csv` and hit Enter. Review the documentation for `read_csv` paying special attention to the "Arguments" and "Examples" sections of the help page. Note that the double colon above tells us that the function `read_csv` is located within the `readr` package, which happens to be part of the `tidyverse` suite of R packages.
+
+1.  **Insert a new code chunk and write a line of code that imports your data stored in the .csv file and assigns it to an object called `energy`.**
+
+2.  **Use the `colnames()` function to get a quick sense of the column names of this dataset.**
+
+```{r include=FALSE}
+energy <- read_csv("../data/Cambridge_Building_Energy_and_Water_Use_Data_Disclosure_2015-2021.csv")
+```
+
+Run your code chunks. You will be able to see in the rendered output the dimensions of the dataset (always written as rows x columns), the names of the columns, and the data type of each column.
+
+# Examine a subset of your data
+
+We can also explore some of the `tidyverse` package functionality described in [the second assigned reading](https://dplyr.tidyverse.org/) for today. Take another look at this, then proceed to insert a new code chunk like the one below:
+
+```{r label="createMITdata", message=FALSE, warning=FALSE}
+mit_energy <- energy |> 
+  filter(Owner == "MASSACHUSETTS INSTITUTE OF TECHNOLOGY") |> 
+  filter(!is.na(`Total GHG Emissions (Metric Tons CO2e)`))
+```
+
+The above code uses the pipe `|>` operator to "chain together" lines of code. You can type it in using Shift+Ctrl+M.
+
+Our code above uses the `filter` function from the `dplyr` package (which is also part of `tidyverse` suite) to create a new dataset that only contains energy use records from MIT buildings that are not missing the total GHG emission attribute.
+
+Now we are going to create some summary data using the `MIT_energy` dataset. Go ahead and create another code chunk like the one below:
+
+```{r label=annualcount, message=FALSE, warning=FALSE}
+mit_energy |> 
+  group_by(`Data Year`) |> 
+  summarise(count = n())
+```
+
+We use `dplyr::group_by` function applied to it such that observations (i.e., rows) are grouped according to the value of this attribute, then the result is passed to the `dplyr::summarise` function to generate a **total number of records** per year. By default, the `n()` function generates a new attribute (i.e., column), which we here name as "count".  
+
+Because there is no `<-` operator, the resulting table is displayed but **it is not stored** in an object that we can go back to later.
+
+We can use the same `group_by` + `summarise` chain to calculate the **total GHG emissions** per year, just by identifying the right column to summarise. Note that we are now giving a new name to the year column too.
+
+```{r label=annualsum, message=FALSE, warning=FALSE}
+mit_energy |> 
+  group_by(year = `Data Year`) |> 
+  summarise(count = n(),
+            total_emission = sum(`Total GHG Emissions (Metric Tons CO2e)`))
+```
+
+### Your practice
+
+1.  Modify the last code chunk to add more summary results for all MIT buildings. In a new code chunk, please display a table that shows the following results:
+
+-   the total number of reports per year,
+-   the total GHG emission per year,
+-   the average GHG emissions (divide your `total_emission` by `count`),
+-   and the average GHG emission intensity (use the column `Total GHG Emissions Intensity (kgCO2e/ft2)`).
+
+Your table should look like something like this:
+
+![](../img/lab1_table.PNG){fig-align="center" width="482"}
+
+2.  We mentioned that our resulting table is only displayed but not stored, now in your code chunk, add `summary_data <-` to store your output as a new object. Run the code and you should now see this object in RStudio Environment panel.
+
+Compare your results with the following code. If you used the same variable name as our example, you should be able to directly run the subsequent code chunk and plot the emission stats over the years! (We will talk more about plotting so don't worry if it now looks unfamiliar).
+
+```{r label=result, message=FALSE, warning=FALSE}
+summary_data <- mit_energy |> 
+    group_by(year = `Data Year`) |> 
+    summarise(count = n(),
+              total_emission = mean(`Total GHG Emissions (Metric Tons CO2e)`),
+              avg_emission = total_emission/count,
+              avg_intensity = mean(`Total GHG Emissions Intensity (kgCO2e/ft2)`)) 
+
+```
+
+```{r label=ggplot, message=FALSE, warning=FALSE}
+plot1 <- ggplot(summary_data)+
+  geom_line(aes(x = year, y = avg_emission))
+  
+plot2 <- ggplot(summary_data)+
+  geom_line(aes(x = year, y = avg_intensity))
+
+require(gridExtra)
+grid.arrange(plot1, plot2, nrow = 2)
+```
+
+Does this graph tell you something? To complete your working document, please write a few sentences describing your insights through analyzing this dataset. Now **Save**, **Render** it again, and Celebrate!
+
+```         
+------
+```
+
+In this lab we have introduced how to create and develop a Quarto Document. We have also introduced some commonly-used `dplyr` funtions including `filter`, `group_by` and `summarise`. This is a soft introduction to `dplyr` and data wrangling in advance of the main event in Week 2.

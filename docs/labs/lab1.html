@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2023-10-12">
 
-<title>Applied Data Science for Cities – lab1</title>
+<title>Applied Data Science for Cities - Get started with </title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -64,7 +99,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -90,11 +125,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Syllabus</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../lectures/index.html" rel="" target="">
- <span class="menu-text">Lectures</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../labs/index.html" rel="" target="">
+    <a class="nav-link active" href="../labs/index.html" rel="" target="" aria-current="page">
  <span class="menu-text">Labs</span></a>
   </li>  
   <li class="nav-item">
@@ -111,21 +142,301 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab1.html">01 Cambridge Building Energy: R, Quarto, dplyr essentials</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">01 Cambridge Building Energy: R, Quarto, dplyr essentials</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 Opportunity Zones: tidyverse, ggplot2 packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 Racial Distribution: tidycensus, tidyr packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 Airbnb in Chicago: plotly and leaflet packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 Obesogenic Built Environment: sf, osmdata packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab6.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06 Shiny Example</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#practice-formatting-text-with-quarto" id="toc-practice-formatting-text-with-quarto" class="nav-link active" data-scroll-target="#practice-formatting-text-with-quarto">Practice formatting text with Quarto</a>
+  <ul class="collapse">
+  <li><a href="#your-practice" id="toc-your-practice" class="nav-link" data-scroll-target="#your-practice">Your practice</a></li>
+  </ul></li>
+  <li><a href="#insert-a-video" id="toc-insert-a-video" class="nav-link" data-scroll-target="#insert-a-video">Insert a video</a>
+  <ul class="collapse">
+  <li><a href="#your-practice-1" id="toc-your-practice-1" class="nav-link" data-scroll-target="#your-practice-1">Your practice</a></li>
+  </ul></li>
+  <li><a href="#insert-code-chunks" id="toc-insert-code-chunks" class="nav-link" data-scroll-target="#insert-code-chunks">Insert Code Chunks</a>
+  <ul class="collapse">
+  <li><a href="#your-practice-2" id="toc-your-practice-2" class="nav-link" data-scroll-target="#your-practice-2">Your practice</a></li>
+  </ul></li>
+  <li><a href="#examine-a-subset-of-your-data" id="toc-examine-a-subset-of-your-data" class="nav-link" data-scroll-target="#examine-a-subset-of-your-data">Examine a subset of your data</a>
+  <ul class="collapse">
+  <li><a href="#your-practice-3" id="toc-your-practice-3" class="nav-link" data-scroll-target="#your-practice-3">Your practice</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Get started with <img src="../img/Rlogo.png" class="img-fluid" width="60"></h1>
+<p class="subtitle lead"><span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span></p>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 12, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>This practice exercise provides some more structured exploration and practice with Quarto Document (R Markdown format). We will mix Markdown sections with code chunks, build familiarity with basic data types, and experiment with importing a tabular dataset. Because this is an in-class exercise, there is nothing you need to submit—the goal is to apply what we have read and seen in the lectures.</p>
+<section id="practice-formatting-text-with-quarto" class="level1">
+<h1>Practice formatting text with Quarto</h1>
+<p>After you download today’s lab folder, launch RStudio by double clicking the “lab1.Rproj” file. Go to <strong>File - New File - Quarto Document</strong> to create a new Quarto document. The prompt shown below will appear. Type in a document title and your name.</p>
+<p><img src="../img/lab1_quarto.PNG" class="img-fluid" width="450"></p>
+<p>You will see a template file. At the very top of the notebook we have the <a href="https://en.wikipedia.org/wiki/YAML">YAML</a> or “Yet Another Markdown Language” header which begins and ends with three dashes <code>---</code>. At the very least, it specifies the title, author and output format when the document is rendered. There can be other options specified in the YAML, particularly if you are rendering to a format other than HTML (see <a href="https://r4ds.had.co.nz/r-markdown-formats.html">the reading</a> from this week).</p>
+<p>Let’s add another line to the YAML header:</p>
+<blockquote class="blockquote">
+<p>date: &lt;insert the date that the file is created&gt;.</p>
+</blockquote>
+<p>Below the YAML is where the Markdown sections typically begin. The interface looks pretty much like a Word document. There is a toolbar that allows you to make bold or italic text, create a bullet list, insert a link or an image, insert a code block, etc.</p>
+<p>On the very left of this toolbar, click the <strong>“Source”</strong> button to switch Markdown editing mode. These are sections of text that usually explain or contextualize the code and graphics and are formatted using <a href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf">Markdown syntax</a>. For example:</p>
+<ul>
+<li>#: a header element.</li>
+<li>**: bold text.</li>
+<li>*: italic text.</li>
+<li>` : code blocks.</li>
+</ul>
+<section id="your-practice" class="level3">
+<h3 class="anchored" data-anchor-id="your-practice">Your practice</h3>
+<p>In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing <a href="https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance">this website</a> to become familiar with the ordinance (in general). Then, use text formatting to add 3-5 sentences as a Markdown section below your YAML that explain—in your own words—the following:</p>
+<ul>
+<li>What Building Energy Use Disclosure Ordinance is about?</li>
+<li>What does the ordinance require?</li>
+<li>Why do advocates argue that building energy use disclosure is desirable?</li>
+</ul>
+<p>You may edit your text either in the <strong>“Source”</strong> or <strong>“Visual”</strong> panel, or switch them back and forth to get familiar with both. Make sure to make gratuitous use of bold, italics, etc. in your text. You have access to the “Markdown Quick Reference” directly from RStudio (<strong>Help - Markdown Quick Reference</strong>).</p>
+<p>Now you should <strong>Save</strong>. RStudio will guide you to save the file in the folder where your “Rproj” file is. Then click the <strong>“Render”</strong> button on top of your toolbar (or click Ctrl+Shift+K) to render the current document. The document is rendered by the <a href="https://yihui.org/knitr/"><code>knitr</code> package</a>. You can immediately see your nicely formatted document in a web browser.</p>
+</section>
+</section>
+<section id="insert-a-video" class="level1">
+<h1>Insert a video</h1>
+<p>You’ve probably already seen a video on the Cambridge webpage. Let’s assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the <strong>“Source”</strong> panel.</p>
+<p><img src="../img/lab1_youtube.PNG" class="img-fluid"></p>
+<p>What we have above is HTML code. A quick explanation without going into lots of detail:</p>
+<ul>
+<li>The &lt;iframe&gt; tag is what inserts the video (or another document) in line with the Markdown text.</li>
+<li>The src attribute provides the URL for the video</li>
+<li>The remaining attributes outline the specifics of how the video will appear.</li>
+</ul>
+<p>For our purposes, the most important of these attributes is <strong>data-external=“1”</strong>. This attribute is typically <strong>NOT SPECIFIED</strong> in the embed code you find on the web by default and <strong>YOU WILL NEED TO ADD IT</strong> in order for video content to render in your output. This attribute is currently required for the <code>knitr</code> package to properly render video content.</p>
+<section id="your-practice-1" class="level3">
+<h3 class="anchored" data-anchor-id="your-practice-1">Your practice</h3>
+<p>Embed this video in your Markdown section after the introductory sentences you have written. Knit your notebook again and inspect your work.</p>
+</section>
+</section>
+<section id="insert-code-chunks" class="level1">
+<h1>Insert Code Chunks</h1>
+<p>As you know, the other component of a Quarto Document is code chunks. Recall that code chunks are where the R code lives in a notebook. These are easy to spot as shaded blocks leading by {r} as shown below. (In the Source panel, they always have three backticks followed by {r}).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>In accordance with the ordinance, the City maintains BEUDO data for individual properties from 2015-2021. You can view the data on the&nbsp;<a href="https://data.cambridgema.gov/Energy-and-the-Environment/Cambridge-Building-Energy-and-Water-Use-Data-Discl/72g6-j7aq/">Cambridge Open Data Portal</a>.&nbsp;Take a few moments to explore the dataset by scrolling down the page and viewing the “Columns in this Dataset” and “Table Preview” sections in particular. Now <strong>download this dataset in CSV format and save it in your “data” folder</strong>, which is already created within your project folder.</p>
+<p>Insert a code chunk in your Quarto document by going to <strong>Code - Insert Chunk</strong>. I usually use the shortcut key RStudio provides (Alt+Ctrl+I). Type a few things in the chunk and make it look like the following:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{r label="loadtidyverse", message=FALSE, warning=FALSE}</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>library(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>label</code> option is not required, but can be helpful when you render the notebook (otherwise you will see “unnamed-chunk” in the Render tab next to the Console tab). The other options (described <a href="https://rmarkdown.rstudio.com/lesson-3.html">in greater detail here</a>) suppress all warnings and messages that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.</p>
+<p>Run this code chunk to load <code>tidyverse</code> package. You can either click the green triangle on the top-right of this chunk, or use Ctrl+Enter.</p>
+<section id="your-practice-2" class="level3">
+<h3 class="anchored" data-anchor-id="your-practice-2">Your practice</h3>
+<p>In your Console, type in <code>?readr::read_csv</code> and hit Enter. Review the documentation for <code>read_csv</code> paying special attention to the “Arguments” and “Examples” sections of the help page. Note that the double colon above tells us that the function <code>read_csv</code> is located within the <code>readr</code> package, which happens to be part of the <code>tidyverse</code> suite of R packages.</p>
+<ol type="1">
+<li><p><strong>Insert a new code chunk and write a line of code that imports your data stored in the .csv file and assigns it to an object called <code>energy</code>.</strong></p></li>
+<li><p><strong>Use the <code>colnames()</code> function to get a quick sense of the column names of this dataset.</strong></p></li>
+</ol>
+<p>Run your code chunks. You will be able to see in the rendered output the dimensions of the dataset (always written as rows x columns), the names of the columns, and the data type of each column.</p>
+</section>
+</section>
+<section id="examine-a-subset-of-your-data" class="level1">
+<h1>Examine a subset of your data</h1>
+<p>We can also explore some of the <code>tidyverse</code> package functionality described in <a href="https://dplyr.tidyverse.org/">the second assigned reading</a> for today. Take another look at this, then proceed to insert a new code chunk like the one below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mit_energy <span class="ot">&lt;-</span> energy <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Owner <span class="sc">==</span> <span class="st">"MASSACHUSETTS INSTITUTE OF TECHNOLOGY"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">Total GHG Emissions (Metric Tons CO2e)</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The above code uses the pipe <code>|&gt;</code> operator to “chain together” lines of code. You can type it in using Shift+Ctrl+M.</p>
+<p>Our code above uses the <code>filter</code> function from the <code>dplyr</code> package (which is also part of <code>tidyverse</code> suite) to create a new dataset that only contains energy use records from MIT buildings that are not missing the total GHG emission attribute.</p>
+<p>Now we are going to create some summary data using the <code>MIT_energy</code> dataset. Go ahead and create another code chunk like the one below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mit_energy <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">Data Year</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 2
+  `Data Year` count
+        &lt;dbl&gt; &lt;int&gt;
+1        2015   129
+2        2016   134
+3        2017   130
+4        2018   134
+5        2019   111
+6        2020   115
+7        2021   138</code></pre>
+</div>
+</div>
+<p>We use <code>dplyr::group_by</code>&nbsp;function applied to it such that observations (i.e., rows) are grouped according to the value of this attribute, then the result is passed to the&nbsp;<code>dplyr::summarise</code>&nbsp;function to generate a <strong>total number of records</strong> per year. By default, the&nbsp;<code>n()</code>&nbsp;function generates a new attribute (i.e., column), which we here name as “count”. &nbsp;</p>
+<p>Because there is no&nbsp;<code>&lt;-</code>&nbsp;operator, the resulting table is displayed but&nbsp;<strong>it is not stored</strong>&nbsp;in an object that we can go back to later.</p>
+<p>We can use the same <code>group_by</code> + <code>summarise</code> chain to calculate the <strong>total GHG emissions</strong> per year, just by identifying the right column to summarise. Note that we are now giving a new name to the year column too.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mit_energy <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="at">year =</span> <span class="st">`</span><span class="at">Data Year</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_emission =</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">Total GHG Emissions (Metric Tons CO2e)</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+   year count total_emission
+  &lt;dbl&gt; &lt;int&gt;          &lt;dbl&gt;
+1  2015   129        204461.
+2  2016   134        193679.
+3  2017   130        198031.
+4  2018   134        197218.
+5  2019   111        168946.
+6  2020   115        160568.
+7  2021   138        195230.</code></pre>
+</div>
+</div>
+<section id="your-practice-3" class="level3">
+<h3 class="anchored" data-anchor-id="your-practice-3">Your practice</h3>
+<ol type="1">
+<li>Modify the last code chunk to add more summary results for all MIT buildings. In a new code chunk, please display a table that shows the following results:</li>
+</ol>
+<ul>
+<li>the total number of reports per year,</li>
+<li>the total GHG emission per year,</li>
+<li>the average GHG emissions (divide your <code>total_emission</code> by <code>count</code>),</li>
+<li>and the average GHG emission intensity (use the column <code>Total GHG Emissions Intensity (kgCO2e/ft2)</code>).</li>
+</ul>
+<p>Your table should look like something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/lab1_table.PNG" class="img-fluid figure-img" width="482"></p>
+</figure>
+</div>
+<ol start="2" type="1">
+<li>We mentioned that our resulting table is only displayed but not stored, now in your code chunk, add <code>summary_data &lt;-</code> to store your output as a new object. Run the code and you should now see this object in RStudio Environment panel.</li>
+</ol>
+<p>Compare your results with the following code. If you used the same variable name as our example, you should be able to directly run the subsequent code chunk and plot the emission stats over the years! (We will talk more about plotting so don’t worry if it now looks unfamiliar).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>summary_data <span class="ot">&lt;-</span> mit_energy <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="at">year =</span> <span class="st">`</span><span class="at">Data Year</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">total_emission =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Total GHG Emissions (Metric Tons CO2e)</span><span class="st">`</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">avg_emission =</span> total_emission<span class="sc">/</span>count,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">avg_intensity =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Total GHG Emissions Intensity (kgCO2e/ft2)</span><span class="st">`</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_data)<span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_emission))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_data)<span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_intensity))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab1_files/figure-html/ggplot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Does this graph tell you something? To complete your working document, please write a few sentences describing your insights through analyzing this dataset. Now <strong>Save</strong>, <strong>Render</strong> it again, and Celebrate!</p>
+<pre><code>------</code></pre>
+<p>In this lab we have introduced how to create and develop a Quarto Document. We have also introduced some commonly-used <code>dplyr</code> funtions including <code>filter</code>, <code>group_by</code> and <code>summarise</code>. This is a soft introduction to <code>dplyr</code> and data wrangling in advance of the main event in Week 2.</p>
+
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

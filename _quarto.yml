@@ -15,8 +15,6 @@ website:
         text: "Home"
       - href: syllabus/index.qmd
         text: "Syllabus"
-      - href: lectures/index.qmd
-        text: "Lectures"
       - href: labs/index.qmd
         text: "Labs"
       - href: howto/index.qmd
@@ -29,39 +27,23 @@ website:
     right: "Made with R and [Quarto](https://quarto.org/)"
 
   sidebar:
-    - title: "Lectures"
-      contents:
-        - section: "Lectures"
-          contents:
-            - text: "01 What does urban data science do" 
-              file: lectures/index.qmd
-            - text: "02 Population and Census"
-              file: lectures/lecture2.qmd
-            - text: "03 Neighborhood Dynamics"
-              file: lectures/lecture3.qmd
-            - text: "04 Place Opportunity"
-              file: lectures/lecture4.qmd
-            - text: "05 Accessibility Analysis"
-              file: lectures/lecture5.qmd
-            - text: "06 Web Storytelling"
-              file: lectures/lecture6.qmd
-
-
     - title: "Labs"
       contents:
         - section: "Labs"
           contents:
-            - text: "01 Data wrangling + visualization pipeline"
+            - text: "Schedule"
               file: labs/index.qmd
-            - text: "02 More data-wrangling tools"
+            - text: "01 Cambridge Building Energy: R, Quarto, dplyr essentials"
+              file: labs/lab1.qmd
+            - text: "02 Opportunity Zones: tidyverse, ggplot2 packages"
               file: labs/lab2.qmd
-            - text: "03 Enhanced Visualization"
+            - text: "03 Racial Distribution: tidycensus, tidyr packages"
               file: labs/lab3.qmd
-            - text: "04 Describe neighborhood characteristics"
+            - text: "04 Airbnb in Chicago: plotly and leaflet packages"
               file: labs/lab4.qmd
-            - text: "05 Work with GTFS"
+            - text: "05 Obesogenic Built Environment: sf, osmdata packages"
               file: labs/lab5.qmd
-            - text: "06 Shiny Apps and Dashboards"
+            - text: "06 Shiny Example"
               file: labs/lab6.qmd
 
     

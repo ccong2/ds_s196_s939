@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-10-12">
+<meta name="dcterms.date" content="2023-10-17">
 
 <title>Applied Data Science for Cities - Get started with </title>
 <style>
@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#your-practice-1" id="toc-your-practice-1" class="nav-link" data-scroll-target="#your-practice-1">Your practice</a></li>
   </ul></li>
-  <li><a href="#insert-code-chunks" id="toc-insert-code-chunks" class="nav-link" data-scroll-target="#insert-code-chunks">Insert Code Chunks</a>
+  <li><a href="#download-and-read-data" id="toc-download-and-read-data" class="nav-link" data-scroll-target="#download-and-read-data">Download and read data</a>
   <ul class="collapse">
   <li><a href="#your-practice-2" id="toc-your-practice-2" class="nav-link" data-scroll-target="#your-practice-2">Your practice</a></li>
   </ul></li>
@@ -258,7 +258,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 12, 2023</p>
+      <p class="date">October 17, 2023</p>
     </div>
   </div>
   
@@ -288,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="your-practice" class="level3">
 <h3 class="anchored" data-anchor-id="your-practice">Your practice</h3>
-<p>In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing <a href="https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance">this website</a> to become familiar with the ordinance (in general). Then, use text formatting to add 3-5 sentences as a Markdown section below your YAML that explain—in your own words—the following:</p>
+<p>In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing <a href="https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance">this website</a> to become familiar with the ordinance (in general). Then, add 3-5 sentences below your YAML section that explain—in your own words—the following:</p>
 <ul>
 <li>What Building Energy Use Disclosure Ordinance is about?</li>
 <li>What does the ordinance require?</li>
@@ -300,7 +300,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="insert-a-video" class="level1">
 <h1>Insert a video</h1>
-<p>You’ve probably already seen a video on the Cambridge webpage. Let’s assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the <strong>“Source”</strong> panel.</p>
+<p>You’ve probably noticed there is a video on the Cambridge webpage. Let’s assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the <strong>“Source”</strong> panel.</p>
 <p><img src="../img/lab1_youtube.PNG" class="img-fluid"></p>
 <p>What we have above is HTML code. A quick explanation without going into lots of detail:</p>
 <ul>
@@ -314,8 +314,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Embed this video in your Markdown section after the introductory sentences you have written. Knit your notebook again and inspect your work.</p>
 </section>
 </section>
-<section id="insert-code-chunks" class="level1">
-<h1>Insert Code Chunks</h1>
+<section id="download-and-read-data" class="level1">
+<h1>Download and read data</h1>
 <p>As you know, the other component of a Quarto Document is code chunks. Recall that code chunks are where the R code lives in a notebook. These are easy to spot as shaded blocks leading by {r} as shown below. (In the Source panel, they always have three backticks followed by {r}).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -341,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="examine-a-subset-of-your-data" class="level1">
 <h1>Examine a subset of your data</h1>
-<p>We can also explore some of the <code>tidyverse</code> package functionality described in <a href="https://dplyr.tidyverse.org/">the second assigned reading</a> for today. Take another look at this, then proceed to insert a new code chunk like the one below:</p>
+<p>We can also explore some of the <code>tidyverse</code> package functionality described <a href="https://dplyr.tidyverse.org/">here</a> and <a href="https://info201.github.io/dplyr.html">here</a>. Take another look at this, then proceed to insert a new code chunk like the one below:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mit_energy <span class="ot">&lt;-</span> energy <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Owner <span class="sc">==</span> <span class="st">"MASSACHUSETTS INSTITUTE OF TECHNOLOGY"</span>) <span class="sc">|&gt;</span> </span>
@@ -408,29 +408,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>We mentioned that our resulting table is only displayed but not stored, now in your code chunk, add <code>summary_data &lt;-</code> to store your output as a new object. Run the code and you should now see this object in RStudio Environment panel.</li>
 </ol>
-<p>Compare your results with the following code. If you used the same variable name as our example, you should be able to directly run the subsequent code chunk and plot the emission stats over the years! (We will talk more about plotting so don’t worry if it now looks unfamiliar).</p>
+<p>If you used the same column name as our example, you should be able to directly run the subsequent code chunk and plot the emission stats over the years! (We will talk more about plotting so don’t worry if it now looks unfamiliar).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>summary_data <span class="ot">&lt;-</span> mit_energy <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(<span class="at">year =</span> <span class="st">`</span><span class="at">Data Year</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">total_emission =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Total GHG Emissions (Metric Tons CO2e)</span><span class="st">`</span>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">avg_emission =</span> total_emission<span class="sc">/</span>count,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">avg_intensity =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Total GHG Emissions Intensity (kgCO2e/ft2)</span><span class="st">`</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_data)<span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_emission))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_data)<span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_intensity))</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_data)<span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_emission))<span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"MIT buildings average GHG emissions (Metric Tons CO2e)"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_data)<span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> avg_intensity))<span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"MIT buildings average GHG emission intensity (kgCO2e/ft2)"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab1_files/figure-html/ggplot-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Does this graph tell you something? To complete your working document, please write a few sentences describing your insights through analyzing this dataset. Now <strong>Save</strong>, <strong>Render</strong> it again, and Celebrate!</p>
+<p>Does this graph look interesting/surprising/expected to you? What else do you want to know if you want to delve deeper into this topic? To complete your working document, please write a few sentences describing your thoughts through analyzing this dataset. Now <strong>Save</strong>, <strong>Render</strong> it again, and Celebrate!</p>
 <pre><code>------</code></pre>
 <p>In this lab we have introduced how to create and develop a Quarto Document. We have also introduced some commonly-used <code>dplyr</code> funtions including <code>filter</code>, <code>group_by</code> and <code>summarise</code>. This is a soft introduction to <code>dplyr</code> and data wrangling in advance of the main event in Week 2.</p>
 

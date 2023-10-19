@@ -4,18 +4,41 @@ title: "Schedule Overview"
 
 ### Schedule
 
-W01 (Oct 23 - Oct 27): What Does Urban Data Science Do
+W01 (Oct 23 - Oct 27):
 
-W02 (Oct 30 - Nov 3): Exploratory Data Analysis
+-   Course Overview
+-   Lab1: Cambridge Building Energy: R, Quarto, `dplyr` essentials
 
-W03 (Nov 6 - Nov 10): Census Data and Demographic Analysis
+W02 (Oct 30 - Nov 3):
 
-W04 (Nov 13 -- Nov 17): Create interactive graphs and maps
+-   Exploratory Data Analysis
+-   Lab 2: Opportunity Zones: `tidyverse`, `ggplot2` packages
 
-W05 (Nov 20 -- Nov 22): Spatial Analysis
+W03 (Nov 6 - Nov 10):
 
-W06 (Nov 27 -- Dec 1): Web Storytelling I
+-   Census Data and Demographic Analysis
+-   Lab 3: Racial Distribution: `tidycensus`, `tidyr` packages
 
-W07 (Dec 4 -- Dec 8): Web Storytelling II
+W04 (Nov 13 -- Nov 17):
 
-W08 (Dec 11 -- Dec 13): Presentation
+-   Create interactive graphs and maps
+-   Lab 4: Airbnb in Chicago: `plotly` and `leaflet` packages
+
+W05 (Nov 20 -- Nov 22):
+
+-   Spatial Analysis; Obtain data from multiple sources
+-   Lab 5: Obesogenic Built Environment: sf, osmdata packages
+
+W06 (Nov 27 -- Dec 1):
+
+-   Web Storytelling I
+-   Shiny apps and examples 
+
+W07 (Dec 4 -- Dec 8):
+
+-   Web Storytelling II
+-   Work on projects
+
+W08 (Dec 11 -- Dec 13):
+
+-   Presentation

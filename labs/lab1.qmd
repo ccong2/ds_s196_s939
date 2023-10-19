@@ -35,7 +35,7 @@ On the very left of this toolbar, click the **"Source"** button to switch Markdo
 
 ### Your practice
 
-In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, use text formatting to add 3-5 sentences as a Markdown section below your YAML that explain---in your own words---the following:
+In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, add 3-5 sentences below your YAML section that explain---in your own words---the following:
 
 -   What Building Energy Use Disclosure Ordinance is about?
 -   What does the ordinance require?
@@ -47,7 +47,7 @@ Now you should **Save**. RStudio will guide you to save the file in the folder w
 
 # Insert a video
 
-You've probably already seen a video on the Cambridge webpage. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the **"Source"** panel.
+You've probably noticed there is a video on the Cambridge webpage. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the **"Source"** panel.
 
 ![](../img/lab1_youtube.PNG)
 
@@ -63,7 +63,7 @@ For our purposes, the most important of these attributes is **data-external="1"*
 
 Embed this video in your Markdown section after the introductory sentences you have written. Knit your notebook again and inspect your work.
 
-# Insert Code Chunks
+# Download and read data
 
 As you know, the other component of a Quarto Document is code chunks. Recall that code chunks are where the R code lives in a notebook. These are easy to spot as shaded blocks leading by {r} as shown below. (In the Source panel, they always have three backticks followed by {r}).
 
@@ -100,7 +100,7 @@ Run your code chunks. You will be able to see in the rendered output the dimensi
 
 # Examine a subset of your data
 
-We can also explore some of the `tidyverse` package functionality described in [the second assigned reading](https://dplyr.tidyverse.org/) for today. Take another look at this, then proceed to insert a new code chunk like the one below:
+We can also explore some of the `tidyverse` package functionality described [here](https://dplyr.tidyverse.org/) and [here](https://info201.github.io/dplyr.html). Take another look at this, then proceed to insert a new code chunk like the one below:
 
 ```{r label="createMITdata", message=FALSE, warning=FALSE}
 mit_energy <- energy |> 
@@ -148,9 +148,7 @@ Your table should look like something like this:
 
 2.  We mentioned that our resulting table is only displayed but not stored, now in your code chunk, add `summary_data <-` to store your output as a new object. Run the code and you should now see this object in RStudio Environment panel.
 
-Compare your results with the following code. If you used the same variable name as our example, you should be able to directly run the subsequent code chunk and plot the emission stats over the years! (We will talk more about plotting so don't worry if it now looks unfamiliar).
-
-```{r label=result, message=FALSE, warning=FALSE}
+```{r label=result, message=FALSE, warning=FALSE, include=FALSE}
 summary_data <- mit_energy |> 
     group_by(year = `Data Year`) |> 
     summarise(count = n(),
@@ -160,18 +158,22 @@ summary_data <- mit_energy |>
 
 ```
 
+If you used the same column name as our example, you should be able to directly run the subsequent code chunk and plot the emission stats over the years! (We will talk more about plotting so don't worry if it now looks unfamiliar).
+
 ```{r label=ggplot, message=FALSE, warning=FALSE}
 plot1 <- ggplot(summary_data)+
-  geom_line(aes(x = year, y = avg_emission))
+  geom_line(aes(x = year, y = avg_emission))+
+  ggtitle("MIT buildings average GHG emissions (Metric Tons CO2e)")
   
 plot2 <- ggplot(summary_data)+
-  geom_line(aes(x = year, y = avg_intensity))
+  geom_line(aes(x = year, y = avg_intensity))+
+  ggtitle("MIT buildings average GHG emission intensity (kgCO2e/ft2)")
 
 require(gridExtra)
 grid.arrange(plot1, plot2, nrow = 2)
 ```
 
-Does this graph tell you something? To complete your working document, please write a few sentences describing your insights through analyzing this dataset. Now **Save**, **Render** it again, and Celebrate!
+Does this graph look interesting/surprising/expected to you? What else do you want to know if you want to delve deeper into this topic? To complete your working document, please write a few sentences describing your thoughts through analyzing this dataset. Now **Save**, **Render** it again, and Celebrate!
 
 ```         
 ------

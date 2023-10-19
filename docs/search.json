@@ -7,20 +7,6 @@
     "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
-    "objectID": "howto/index.html",
-    "href": "howto/index.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
-  },
-  {
-    "objectID": "howto/index.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "href": "howto/index.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "title": "Applied Data Science for Cities",
-    "section": "This website is under construction, please check back later for updates! 😄",
-    "text": "This website is under construction, please check back later for updates! 😄"
-  },
-  {
     "objectID": "howto/setupr.html",
     "href": "howto/setupr.html",
     "title": "Applied Data Science for Cities",
@@ -46,7 +32,7 @@
     "href": "labs/index.html",
     "title": "Schedule Overview",
     "section": "",
-    "text": "Schedule\nW01 (Oct 23 - Oct 27): What Does Urban Data Science Do\nW02 (Oct 30 - Nov 3): Exploratory Data Analysis\nW03 (Nov 6 - Nov 10): Census Data and Demographic Analysis\nW04 (Nov 13 – Nov 17): Create interactive graphs and maps\nW05 (Nov 20 – Nov 22): Spatial Analysis\nW06 (Nov 27 – Dec 1): Web Storytelling I\nW07 (Dec 4 – Dec 8): Web Storytelling II\nW08 (Dec 11 – Dec 13): Presentation"
+    "text": "Schedule\nW01 (Oct 23 - Oct 27):\n\nCourse Overview\nLab1: Cambridge Building Energy: R, Quarto, dplyr essentials\n\nW02 (Oct 30 - Nov 3):\n\nExploratory Data Analysis\nLab 2: Opportunity Zones: tidyverse, ggplot2 packages\n\nW03 (Nov 6 - Nov 10):\n\nCensus Data and Demographic Analysis\nLab 3: Racial Distribution: tidycensus, tidyr packages\n\nW04 (Nov 13 – Nov 17):\n\nCreate interactive graphs and maps\nLab 4: Airbnb in Chicago: plotly and leaflet packages\n\nW05 (Nov 20 – Nov 22):\n\nSpatial Analysis; Obtain data from multiple sources\nLab 5: Obesogenic Built Environment: sf, osmdata packages\n\nW06 (Nov 27 – Dec 1):\n\nWeb Storytelling I\nShiny apps and examples \n\nW07 (Dec 4 – Dec 8):\n\nWeb Storytelling II\nWork on projects\n\nW08 (Dec 11 – Dec 13):\n\nPresentation"
   },
   {
     "objectID": "labs/lab1.html",
@@ -61,83 +47,6 @@
     "title": "Exploratory Data Analysis with ",
     "section": "",
     "text": "This week’s Lab Exercise focuses on the dplyr package and the ggplot2 package. It also begins to engage with data visualization best practices by demonstrating how to create and interpret a variety of graphics.\nExploratory data analysis (EDA) is a phase of a larger data science workflow—or perhaps a philosophy—that emphasizes getting to know the data before rushing to analyze it using this more rigid approaches like hypothesis tests. EDA relies heavily on the creation and interpretation of graphics in order to build familiarity and gain fundamental insights that can inform more sophisticated analyses later on. There are several overarching goals of exploratory data analysis, including:\n\nTo determine if there are any problems with your dataset.\nTo determine whether the question you are asking can be answered by the data that you have.\nTo begin formulating an answer to your question."
-  },
-  {
-    "objectID": "resources/analysis.html",
-    "href": "resources/analysis.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
-  },
-  {
-    "objectID": "resources/analysis.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "href": "resources/analysis.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "title": "Applied Data Science for Cities",
-    "section": "This website is under construction, please check back later for updates! 😄",
-    "text": "This website is under construction, please check back later for updates! 😄"
-  },
-  {
-    "objectID": "resources/data.html",
-    "href": "resources/data.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
-  },
-  {
-    "objectID": "resources/data.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "href": "resources/data.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "title": "Applied Data Science for Cities",
-    "section": "This website is under construction, please check back later for updates! 😄",
-    "text": "This website is under construction, please check back later for updates! 😄"
-  },
-  {
-    "objectID": "resources/index.html",
-    "href": "resources/index.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
-  },
-  {
-    "objectID": "resources/index.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "href": "resources/index.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "title": "Applied Data Science for Cities",
-    "section": "This website is under construction, please check back later for updates! 😄",
-    "text": "This website is under construction, please check back later for updates! 😄"
-  },
-  {
-    "objectID": "resources/inspiration.html",
-    "href": "resources/inspiration.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
-  },
-  {
-    "objectID": "resources/inspiration.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "href": "resources/inspiration.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "title": "Applied Data Science for Cities",
-    "section": "This website is under construction, please check back later for updates! 😄",
-    "text": "This website is under construction, please check back later for updates! 😄"
-  },
-  {
-    "objectID": "resources/textbook.html",
-    "href": "resources/textbook.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Urban analytics draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities and neighborhoods covering a set of fundamental concepts of descriptive approaches, quantitative and spatial analysis in R, and principles of reproducible data analysis. Students learn to communicate the results of visualization and analysis for use in decision-making and policy development and to critique those processes."
-  },
-  {
-    "objectID": "resources/textbook.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "href": "resources/textbook.html#this-website-is-under-construction-please-check-back-later-for-updates",
-    "title": "Applied Data Science for Cities",
-    "section": "This website is under construction, please check back later for updates! 😄",
-    "text": "This website is under construction, please check back later for updates! 😄"
-  },
-  {
-    "objectID": "syllabus/index.html",
-    "href": "syllabus/index.html",
-    "title": "Applied Data Science for Cities",
-    "section": "",
-    "text": "Description\nUrban data science draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities using a set of descriptive approaches, quantitative and spatial analysis in R. We will learn how to describe community characteristics with small area census data, work with local administrative data, and think about how our analysis of quantitative data fit with other forms of data and engagement to fill in gaps in knowledge.\nLearning objectives:\n\nGain familiarity with R as a data analysis, mapping, and storytelling tool.\nBe able to identify relevant open datasets in support of your research question.\nArticulate the main arguments for your data analysis product and how it supports planning and decision-making regarding an issue of local/national significance.\n\n\n\nHow Will We Be Learning\nLecture: Class meetings are generally divided into lecture (Mondays) and laboratory sessions (Wednesdays) that focus on concepts and hand-on applications, respectively.\nLab: We will provide data science tutorials using R. Each lab tutorial aims to solve a specific urban data science problem in addition to building coding skills. Lab reports are due before the subsequent lab period and should be written independently.\nExtension readings: We provide a light material list that focuses on specific topics each week. These resources are meant to expand your knowledge and enhance your project completion capabilities.\nUrban data science project: The term project for the course will focus on integrating the tools of data science to explore a specific real-world planning issue or research question. This is a group project and students will define the scope of the project and identify specific deliverable(s) early in the semester. Reproducing an existing analysis or study using different data or an alternate study area is also acceptable for the term project.\n\n\nPrerequisites\nThis is a relatively fast-paced course so students can benefit from some prior knowledge working in R and RStudio. However, this is not a course prerequisite. Our first course sessions will focus on ensuring that we are all familiar with some of the basic work environment and methods which we’ll make use of over the semester.\n\n\nAssessment\n\n\n\n\n\n\n\nAssignment\nWeight\n\n\n\n\nLab Reports\nPackage Introduction\nProject Scope Memo\nProject Presentation\nAttendance\n40%\n10%\n10%\n30%\n10%\n\n\n\n\n\nKey Logistics\nLab Exercises: You will be working on lab on most Wednesday classes and submit a short report before the subsequent class. Details will be specified in each of the assignments distributed at the beginning of the lab session.\nPackage Introduction: Each student is expected to introduce one package to the class that is relevant to your research interests. The objectives are (1) to foster a collaborative approach to acquiring familiarity with the ever-increasing new packages, and (2) to identify valuable existing R packages applicable to your study. A separate guideline will be distributed at the beginning of the course.\nProject Scope Memo: Due Friday, Nov 17.\nThe purpose of this memo is to communicate the scope of your project (what you will do) and your strategies for collecting, visualizing, and analyzing data (how you will do it). A separate guideline will be distributed at the beginning of the course.\nProject Presentation: Week 8 (Dec 11 – Dec 13), class time.\n\n\nLate policy\nTo keep all students on a relatively level playing field, a late assignment will be accepted up until one week after the original due date for a loss of a half-letter grade (e.g., an A becomes an A-). After one week, late assignments will receive no credit and will not be accepted.\n\n\nSoftware\nWe use R and R Studio as the coding environment to develop analysis and applications. You can install the software on your personal computers from here and here.\n\n\nCommunication\nPlan on using our class Slack channel, email, and office hours to get help with troubleshooting problems as they arise in your work. I also encourage you to work with others in the class to troubleshoot problems - it is highly likely that others in the class have encountered similar problems, and this also allows us to create a repository of our problems and responses.\nEmail: I check emails quite frequently, but I will not always be able to respond to emails right away. Please plan accordingly so that you don’t miss deadlines.\nSlack: We have a Slack workspace that is accessible through Canvas for general communication, including homework Q&A, resource exchange, project collaboration, etc.\nOffice hours: Please consult the top of the syllabus for specific times. I will announce if there are any changes or exceptions. I’m happy to answer any specific coding questions, or chat and help shape the objective and scope of your projects.\n\n\nEthics\nAcademic Integrity: Violations to academic integrity are unacceptable at MIT and DUSP. Instances of misconduct include but are not limited to plagiarism, cheating, deliberately unauthorized use of course data and material.\nCollaboration Policy: While team collaboration is encouraged, students should specify their role and tasks in a project. A positive and constructive attitude for teamwork is essential for a successful completion of the course.\nDiversity and Inclusion: MIT highly values a diverse, friendly, respectful, and inclusive learning environment among students, faculty, and staff. We welcome all individuals regardless of their origin, citizenship, gender identity, sexual orientation, religious and pollical beliefs. Please contact me or departmental staff if you have any question / consideration regarding this."
   },
   {
     "objectID": "labs/lab2.html#download-data-and-load-packages",
@@ -159,5 +68,12 @@
     "title": "Exploratory Data Analysis with ",
     "section": "Scatterplot with marginal histograms",
     "text": "Scatterplot with marginal histograms\nThis requires a new package ggExtra. But the other syntax should be familiar now.\n\np &lt;- ggplot(ozs_ma, aes(pctBlack, PovertyRate)) + \n  geom_point(aes(color = DesignatedOZ)) + \n  theme_bw()\nggExtra::ggMarginal(p, type = \"histogram\", groupFill = TRUE)"
+  },
+  {
+    "objectID": "syllabus/index.html",
+    "href": "syllabus/index.html",
+    "title": "Applied Data Science for Cities",
+    "section": "",
+    "text": "Description\nUrban data science draws upon statistics, visualization, and computation to better understand and ultimately shape cities. This course emphasizes telling stories about cities using a set of descriptive approaches, quantitative and spatial analysis in R. We will learn how to describe community characteristics with small area census data, work with local administrative data, and think about how our analysis of quantitative data fit with other forms of data and engagement to fill in gaps in knowledge.\nLearning objectives:\n\nGain familiarity with R as a data analysis, mapping, and storytelling tool.\nBe able to identify relevant open datasets in support of your research question.\nArticulate the main arguments for your data analysis product and how it supports planning and decision-making regarding an issue of local/national significance.\n\n\n\nHow Will We Be Learning\nLecture: Class meetings are generally divided into lecture (Mondays) and laboratory sessions (Wednesdays) that focus on concepts and hand-on applications, respectively.\nLab: We will provide data science tutorials using R. Each lab tutorial aims to solve a specific urban data science problem in addition to building coding skills. Lab reports are due before the subsequent lab period and should be written independently.\nExtension readings: We provide a light material list that focuses on specific topics each week. These resources are meant to expand your knowledge and enhance your project completion capabilities.\nUrban data science project: The term project for the course will focus on integrating the tools of data science to explore a specific real-world planning issue or research question. This is a group project and students will define the scope of the project and identify specific deliverable(s) early in the semester. Reproducing an existing analysis or study using different data or an alternate study area is also acceptable for the term project.\n\n\nPrerequisites\nThis is a relatively fast-paced course so students can benefit from some prior knowledge working in R and RStudio. However, this is not a course prerequisite. Our first course sessions will focus on ensuring that we are all familiar with some of the basic work environment and methods which we’ll make use of over the semester.\n\n\nAssessment\n\n\n\n\n\n\n\nAssignment\nWeight\n\n\n\n\nLab Reports\nPackage Introduction\nProject Scope Memo\nProject Presentation\nAttendance\n40%\n10%\n10%\n30%\n10%\n\n\n\n\n\nKey Logistics\nLab Exercises: You will be working on lab on most Wednesday classes and submit a short report before the subsequent class. Details will be specified in each of the assignments distributed at the beginning of the lab session.\nPackage Introduction: Each student is expected to introduce one package to the class that is relevant to your research interests. The objectives are (1) to foster a collaborative approach to acquiring familiarity with the ever-increasing new packages, and (2) to identify valuable existing R packages applicable to your study. A separate guideline will be distributed at the beginning of the course.\nProject Scope Memo: Due Friday, Nov 17.\nThe purpose of this memo is to communicate the scope of your project (what you will do) and your strategies for collecting, visualizing, and analyzing data (how you will do it). A separate guideline will be distributed at the beginning of the course.\nProject Presentation: Week 8 (Dec 11 – Dec 13), class time.\n\n\nLate policy\nTo keep all students on a relatively level playing field, a late assignment will be accepted up until one week after the original due date for a loss of a half-letter grade (e.g., an A becomes an A-). After one week, late assignments will receive no credit and will not be accepted.\n\n\nSoftware\nWe use R and R Studio as the coding environment to develop analysis and applications. You can install the software on your personal computers from here and here.\n\n\nCommunication\nPlan on using our class Slack channel, email, and office hours to get help with troubleshooting problems as they arise in your work. I also encourage you to work with others in the class to troubleshoot problems - it is highly likely that others in the class have encountered similar problems, and this also allows us to create a repository of our problems and responses.\nEmail: I check emails quite frequently, but I will not always be able to respond to emails right away. Please plan accordingly so that you don’t miss deadlines.\nSlack: We have a Slack workspace that is accessible through Canvas for general communication, including homework Q&A, resource exchange, project collaboration, etc.\nOffice hours: Please consult the top of the syllabus for specific times. I will announce if there are any changes or exceptions. I’m happy to answer any specific coding questions, or chat and help shape the objective and scope of your projects.\n\n\nEthics\nAcademic Integrity: Violations to academic integrity are unacceptable at MIT and DUSP. Instances of misconduct include but are not limited to plagiarism, cheating, deliberately unauthorized use of course data and material.\nCollaboration Policy: While team collaboration is encouraged, students should specify their role and tasks in a project. A positive and constructive attitude for teamwork is essential for a successful completion of the course.\nDiversity and Inclusion: MIT highly values a diverse, friendly, respectful, and inclusive learning environment among students, faculty, and staff. We welcome all individuals regardless of their origin, citizenship, gender identity, sexual orientation, religious and pollical beliefs. Please contact me or departmental staff if you have any question / consideration regarding this."
   }
 ]

@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2023-11-07">
 
-<title>Applied Data Science for Cities – lab3</title>
+<title>Applied Data Science for Cities - Download and analyze Census data with </title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -61,6 +96,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -184,15 +221,2278 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#a-review-of-tidycensus-key-steps" id="toc-a-review-of-tidycensus-key-steps" class="nav-link" data-scroll-target="#a-review-of-tidycensus-key-steps">A review of <code>tidycensus</code> key steps</a></li>
+  <li><a href="#part-1-map-racial-distribution" id="toc-part-1-map-racial-distribution" class="nav-link" data-scroll-target="#part-1-map-racial-distribution">Part 1 Map racial distribution</a>
+  <ul class="collapse">
+  <li><a href="#construct-multiple-variables" id="toc-construct-multiple-variables" class="nav-link" data-scroll-target="#construct-multiple-variables">Construct multiple variables</a></li>
+  <li><a href="#modify-geographies" id="toc-modify-geographies" class="nav-link" data-scroll-target="#modify-geographies">Modify Geographies</a></li>
+  <li><a href="#join-another-census-data" id="toc-join-another-census-data" class="nav-link" data-scroll-target="#join-another-census-data">Join another Census data</a></li>
+  <li><a href="#reshape-data-from-wide-to-long-format" id="toc-reshape-data-from-wide-to-long-format" class="nav-link" data-scroll-target="#reshape-data-from-wide-to-long-format">Reshape data from wide to long format</a></li>
+  <li><a href="#create-a-faceted-map" id="toc-create-a-faceted-map" class="nav-link" data-scroll-target="#create-a-faceted-map">Create a faceted map</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  </ul></li>
+  <li><a href="#part-2-measure-racial-segregation" id="toc-part-2-measure-racial-segregation" class="nav-link" data-scroll-target="#part-2-measure-racial-segregation">Part 2 Measure Racial Segregation</a>
+  <ul class="collapse">
+  <li><a href="#indicators-for-measuring-segregation" id="toc-indicators-for-measuring-segregation" class="nav-link" data-scroll-target="#indicators-for-measuring-segregation">Indicators for measuring segregation</a>
+  <ul class="collapse">
+  <li><a href="#dissimilarity" id="toc-dissimilarity" class="nav-link" data-scroll-target="#dissimilarity">Dissimilarity</a></li>
+  <li><a href="#interaction" id="toc-interaction" class="nav-link" data-scroll-target="#interaction">Interaction</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#work-products" id="toc-work-products" class="nav-link" data-scroll-target="#work-products">Work products</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Download and analyze Census data with <img src="../img/Rlogo.png" class="img-fluid" width="60"></h1>
+<p class="subtitle lead"><span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span></p>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 7, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Today we have a two-part lab, in which we are going to use American Community Survey (ACS) data to approach a classic planning question: what is the racial distribution like in my study area? We will address this question by creating both visual representations and numerical indicators, two potential research directions involving Census data in R.</p>
+<p>In the first part, we are going to focus our study on the City of Chicago, which is situated in Cook County, Illinois. The tract-level Census data is available for states and counties but not for individual cities. Therefore, we will need to extract data for Chicago from the broader dataset encompassing Cook County, taking advantage of the spatial data object returned by <code>tidycensus</code>.</p>
+<p>In the second part, we will examine racial segregation in Chicago. Using available Census data, we can apply segregation indicators to assess the degree of racial group segregation within given regions. This involves continuously using and extending the fundamental <code>dplyr</code> data wrangling skills.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You may need to install the packages: tigris, sf and gt</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="a-review-of-tidycensus-key-steps" class="level1">
+<h1>A review of <code>tidycensus</code> key steps</h1>
+<p>In order to use <code>tidycensus</code> to download data, you’ll need the following:</p>
+<ul>
+<li>A Census API key (if you don’t already have one, please <a href="https://api.census.gov/data/key_signup.html">request one from the census bureau</a>)</li>
+<li>A desired geography to look up (for example, tract- or block group-level data)</li>
+<li>The variables we want to look up (for example, the <a href="https://api.census.gov/data/2021/acs/acs5/variables.html">complete variable list</a> for 2021 5-year ACS, you can also retrieve this list by calling <code>load_variables()</code>)</li>
+</ul>
+<p>Optionally, you will also need to specify:</p>
+<ul>
+<li>The state and county names to define your study region.</li>
+<li>The census year you want data for (we’ll start with 2021)</li>
+<li>The survey you’d like to use (Decennial Census, ACS 1-, or 5-year data)</li>
+</ul>
+<p>As a review, this example below returns the number of non-Hispanic White alone population and the number of total population by tract in Cook County, Illinois. The table we consult is <a href="https://data.census.gov/table/ACSDT1Y2022.B03002?q=B03002">B03002: Hispanic or Latino Origin by Race</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cook_race <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="st">"B03002_002"</span>,<span class="st">"B03002_001"</span>), </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"wide"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The two arguments that we added to this download call are essential for integrating Census data into the R data processing pipeline:</p>
+<ul>
+<li><p><code>output = "wide"</code> downloads data in a format that is easier for column-wise calculation. It does so by creating two columns (“_E” and “_M”, representing the estimate and margin of error) for each variable.</p></li>
+<li><p><code>geometry = TRUE</code> returns a <a href="https://r-spatial.github.io/sf/articles/sf1.html">simple features</a> (<code>sf</code>) object with spatial information saved for each tract. What we need to know for such objects are: 1) they can be handled by the <code>sf</code> package, which has been the dominant spatial data library in R for years; and 2) the presence of the <code>geometry</code> variable within an <code>sf</code> object is pivotal for enabling spatial analysis.</p></li>
+</ul>
+<p>As we did in class, we can use <code>mutate</code> to create a new column <code>percent_white</code> that represents the percentage of the White population, and pass this column to <code>ggplot</code> as the fill “aesthetic” (i.e.&nbsp;fill) of our mapping.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cook_race <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent_white =</span> (B03002_002E<span class="sc">/</span>B03002_001E)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> percent_white))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab3_files/figure-html/example-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="part-1-map-racial-distribution" class="level1">
+<h1>Part 1 Map racial distribution</h1>
+<section id="construct-multiple-variables" class="level2">
+<h2 class="anchored" data-anchor-id="construct-multiple-variables">Construct multiple variables</h2>
+<p>In most cases, our data requirements from the Census won’t be limited to just two variables. A common practice is to <strong>save</strong> <strong>a number of variables</strong> (possibly spanning multiple tables) <strong>as a single object</strong> and then insert this object into the download call. See the following code. Notice that we can also <strong>rename the IDs</strong> into something more descriptive during this process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">White =</span> <span class="st">"B03002_003"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Black =</span> <span class="st">"B03002_004"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">AIAN =</span> <span class="st">"B03002_005"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Asian =</span> <span class="st">"B03002_006"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">NHPI =</span> <span class="st">"B03002_007"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Hispanic =</span> <span class="st">"B03002_012"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Totpop =</span> <span class="st">"B03002_001"</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Go ahead and perform the <code>get_acs</code> with the input <code>vars</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cook_race <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> vars,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"wide"</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Take a quick look at the race data we have downloaded. As we requested data in a “wide” format, each variable has its “<em>E”</em> and <em>”</em>M” columns.</p>
+<p>We can use <code>dplyr::select</code> to slim down this dataset by <strong>excluding the margin-of-error columns</strong>, we can select columns whose names have a pattern that <code>ends_with("E")</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cook_race <span class="ot">&lt;-</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  cook_race <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOID, NAME, <span class="fu">ends_with</span>(<span class="st">"E"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="modify-geographies" class="level2">
+<h2 class="anchored" data-anchor-id="modify-geographies">Modify Geographies</h2>
+<p>Let’s consider a situation where the study area does not align with the provided geographies. Take the city of Chicago, for instance, which cannot be directly inserted into the <code>get_acs</code> argument as it is not a county. How is Chicago located within Cook County exactly? We can use another census-related package <code>tigris</code> for a visual check of the place boundaries. <code>tigris</code> fetches census geographics. You can think of it as a programmatic way of downloading TIGER/Line Shapefiles.</p>
+<p>The function <code>place</code> fetches <a href="https://www.census.gov/programs-surveys/bas/information/cdp.html">census-designated place</a>. The city of Chicago is one of such places in Illinois.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache=</span><span class="cn">TRUE</span>) <span class="co"># This is to allow tigris to use caching for downloaded data so that we don't need to fetch the same data again every time you need it.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the boundary of Chicago. </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>chi_boundary <span class="ot">&lt;-</span> <span class="fu">places</span>(<span class="at">state =</span> <span class="st">"IL"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">==</span> <span class="st">"Chicago"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s plot the two shapefiles together to see the overlay:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> cook_race)<span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> chi_boundary, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab3_files/figure-html/overlaycheck-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Both the Census table and geography we have obtained are <code>sf</code> objects. An extensive vignette with examples using <code>sf</code> may be found <a href="https://r-spatial.github.io/sf/">here</a>. In this lab, we will only use the <code>st_intersection</code> function to perform a geometric intersection between two spatial objects.</p>
+<p>In the following code, we will <strong>extract tract-level racial data that fall within the boundary of the City of Chicago</strong>. The modified result will be saved to a new name <code>chicago_race</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chicago_race <span class="ot">&lt;-</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_intersection</span>(cook_race, chi_boundary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check your <code>chicago_race</code> object. <code>st_intersection</code> returns a result that combines the attributes of both input tables. That is why we have a table that has 26 columns as opposed to 10. Let’s do another round of <code>select</code> , then this dataset is good to go.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>chicago_race <span class="ot">&lt;-</span> chicago_race <span class="sc">|&gt;</span> <span class="fu">select</span>(GEOID<span class="sc">:</span>TotpopE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Pause here</strong> and use <code>saveRDS</code> function to save the <code>chicago_race</code> dataset to your data folder. We want to keep an intermediate result so that you can always come back. A quick check - it now has 862 rows and 10 columns.</p>
+<p><code>saveRDS(chicago_race, "data/&lt;your file name&gt;.rds")</code></p>
+<p>If you were wondering what the file type <code>.rds</code> is, it’s a more flexible way to save and load R objects compared to other formats like CSV or plain text files, which may lose some data structure information (such as spatial information).<br>
+<strong>Note:</strong> At this point, you can also save <code>chicago_race</code> as a <strong>shapefile</strong>, which is fully compatible with GIS software. Even if you aren’t conducting extensive spatial analysis within R, you can choose to download data in R and then transfer it to your GIS software of choice for further geospatial processing and visualization. The function is <code>st_write(chicago_race, "data/&lt;your file name&gt;.shp")</code></p>
+</section>
+<section id="join-another-census-data" class="level2">
+<h2 class="anchored" data-anchor-id="join-another-census-data">Join another Census data</h2>
+<p>A simple measure of racial wealth disparity is to look at how income levels and racial backgrounds are spread among tracts. We can go back to download median household income data and join it with our existing racial dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cook_income <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B19013_001"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"wide"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We are going to use a new function <code>left_join</code> from the <code>dplyr</code> package. You can read about <a href="https://dplyr.tidyverse.org/reference/mutate-joins.html#inner-join">different joining types</a> and <a href="https://r4ds.hadley.nz/joins.html">illustrative examples</a> here. But simply put, we are trying to combine two datasets (x and y) based on a shared column. A left join keeps all the rows from x. If a value in the key column in x doesn’t exist in y, the row will contain NA values for all the y columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>joined_data <span class="ot">&lt;-</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(chicago_race, cook_income, <span class="at">by=</span><span class="st">"GEOID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(joined_data)<span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>WhiteE<span class="sc">/</span>TotpopE, <span class="at">y=</span>B19013_001E), <span class="at">cex =</span> .<span class="dv">5</span>, <span class="at">alpha =</span> .<span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Tract Median Household Income vs White Population"</span>, <span class="at">x =</span> <span class="st">"Percent White"</span>, <span class="at">y =</span> <span class="st">"Median Household Income"</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)<span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma)<span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab3_files/figure-html/plot_income-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>If you are curious, you can modify the plot to show the relationship between income and the percentage of other racial groups.</p>
+</section>
+<section id="reshape-data-from-wide-to-long-format" class="level2">
+<h2 class="anchored" data-anchor-id="reshape-data-from-wide-to-long-format">Reshape data from wide to long format</h2>
+<p>We now have estimates of each group captured in separate columns, along with a total population column. We could make six new columns to calculate and store the percentages for racial groups, but it would make the dataset a bit cumbersome.</p>
+<p>We have two functions in <code>tidyr</code> to help us transform the dataset structure: <code>pivot_wider</code> and <code>pivot_longer</code>. For example, using <code>pivot_longer</code>, we can stack the six variables and make multiple rows for each unique identifier.</p>
+<p>The essential arguments of <code>pivot_longer</code> are:</p>
+<ul>
+<li><code>cols</code>: the portion of the dataset you want to modify. For instance, here we will leave the <code>TotpopE</code> as its own column and only modify the racial group columns.</li>
+<li><code>names_to</code> and <code>values_to</code>: conceptually we need two new columns, one for stacking the racial group names and another for the corresponding values. Here we are giving the former a name called “racial_groups”, and the latter a name called “estimate”. The names are totally your choice.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>chi_race_long <span class="ot">&lt;-</span> chicago_race <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(WhiteE<span class="sc">:</span>HispanicE),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"racial_groups"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"estimate"</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>From here, calculating the population rate will be much easier. What we will do in the following code are:</p>
+<ol type="1">
+<li>use <code>mutate</code> to calculate the race-specific population rate (divide the racial group population column by the total population column),</li>
+<li>use <code>select</code> to select the variables we need and remove the others</li>
+</ol>
+<p>Make sure to examine each row and figure out how they impact the results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>chi_race_long <span class="ot">&lt;-</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  chi_race_long <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> <span class="fu">round</span>((estimate<span class="sc">/</span>TotpopE)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOID, NAME, racial_groups, TotpopE, estimate, percent) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Take a look at the <code>racial_groups</code> column of <code>chi_race</code> dataset. You’ll see there is always a character “E” at the end of each racial group name, carried over from the original Census data. This is something we can fix using a string modification function <code>str_sub</code>. We take each string and keep all characters from the beginning (the start of the string) up to the second-to-last character. So, it essentially removes the last character from each string.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>chi_race_long <span class="ot">&lt;-</span> chi_race_long <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">racial_groups =</span> <span class="fu">str_sub</span>(racial_groups, <span class="at">end =</span> <span class="sc">-</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A quick check of what your dataset <code>chi_race_long</code> should look like at this step. If you are unsure about your result, you can read your stored RDS data again, then run the code chunks labeled “data-wrangling-1” through “data-wrangling-3”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>chi_race_long <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="rohiffdltz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rohiffdltz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rohiffdltz thead, #rohiffdltz tbody, #rohiffdltz tfoot, #rohiffdltz tr, #rohiffdltz td, #rohiffdltz th {
+  border-style: none;
+}
+
+#rohiffdltz p {
+  margin: 0;
+  padding: 0;
+}
+
+#rohiffdltz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rohiffdltz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rohiffdltz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rohiffdltz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rohiffdltz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rohiffdltz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rohiffdltz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rohiffdltz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rohiffdltz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rohiffdltz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rohiffdltz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rohiffdltz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rohiffdltz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rohiffdltz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rohiffdltz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rohiffdltz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rohiffdltz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rohiffdltz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rohiffdltz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rohiffdltz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rohiffdltz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rohiffdltz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rohiffdltz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rohiffdltz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rohiffdltz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rohiffdltz .gt_left {
+  text-align: left;
+}
+
+#rohiffdltz .gt_center {
+  text-align: center;
+}
+
+#rohiffdltz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rohiffdltz .gt_font_normal {
+  font-weight: normal;
+}
+
+#rohiffdltz .gt_font_bold {
+  font-weight: bold;
+}
+
+#rohiffdltz .gt_font_italic {
+  font-style: italic;
+}
+
+#rohiffdltz .gt_super {
+  font-size: 65%;
+}
+
+#rohiffdltz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rohiffdltz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rohiffdltz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rohiffdltz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rohiffdltz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rohiffdltz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rohiffdltz .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="GEOID">GEOID</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="NAME">NAME</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="racial_groups">racial_groups</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="TotpopE">TotpopE</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="estimate">estimate</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="percent">percent</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="geometry">geometry</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="GEOID" class="gt_row gt_right">17031230200</td>
+<td headers="NAME" class="gt_row gt_left">Census Tract 2302, Cook County, Illinois</td>
+<td headers="racial_groups" class="gt_row gt_left">White</td>
+<td headers="TotpopE" class="gt_row gt_right">1979</td>
+<td headers="estimate" class="gt_row gt_right">709</td>
+<td headers="percent" class="gt_row gt_right">35.83</td>
+<td headers="geometry" class="gt_row gt_center">list(c(-87.713305, -87.711901, -87.706877, -87.706765, -87.70686, -87.70855, -87.71018, -87.713417, -87.713305, 41.910037, 41.910059, 41.910147, 41.910714, 41.913716, 41.913705, 41.91363, 41.913589, 41.910037))</td></tr>
+    <tr><td headers="GEOID" class="gt_row gt_right">17031230200</td>
+<td headers="NAME" class="gt_row gt_left">Census Tract 2302, Cook County, Illinois</td>
+<td headers="racial_groups" class="gt_row gt_left">Black</td>
+<td headers="TotpopE" class="gt_row gt_right">1979</td>
+<td headers="estimate" class="gt_row gt_right">164</td>
+<td headers="percent" class="gt_row gt_right">8.29</td>
+<td headers="geometry" class="gt_row gt_center">list(c(-87.713305, -87.711901, -87.706877, -87.706765, -87.70686, -87.70855, -87.71018, -87.713417, -87.713305, 41.910037, 41.910059, 41.910147, 41.910714, 41.913716, 41.913705, 41.91363, 41.913589, 41.910037))</td></tr>
+    <tr><td headers="GEOID" class="gt_row gt_right">17031230200</td>
+<td headers="NAME" class="gt_row gt_left">Census Tract 2302, Cook County, Illinois</td>
+<td headers="racial_groups" class="gt_row gt_left">AIAN</td>
+<td headers="TotpopE" class="gt_row gt_right">1979</td>
+<td headers="estimate" class="gt_row gt_right">0</td>
+<td headers="percent" class="gt_row gt_right">0.00</td>
+<td headers="geometry" class="gt_row gt_center">list(c(-87.713305, -87.711901, -87.706877, -87.706765, -87.70686, -87.70855, -87.71018, -87.713417, -87.713305, 41.910037, 41.910059, 41.910147, 41.910714, 41.913716, 41.913705, 41.91363, 41.913589, 41.910037))</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="create-a-faceted-map" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-faceted-map">Create a faceted map</h2>
+<p>In our long-format data table, racial group names are consolidated within a single column. We can create a map that visualizes the distribution of the <code>percent</code> attribute while categorizing it based on the <code>racial groups</code> attribute.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>chi_race_long <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> percent, <span class="at">color =</span> percent)) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>( <span class="sc">~</span> racial_groups) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_sf</span>(<span class="at">datum =</span> <span class="cn">NA</span>) <span class="sc">+</span> </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab3_files/figure-html/factedmap-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The <code>facet_wrap</code> in the code takes one categorical variable as its input (<code>racial_groups</code>) and breaks the data into subsets accordingly. The <code>~</code> here is a shorthand for “relative to”, meaning I’m gonna split the whole data based on their relationship to <code>racial_groups</code>.</p>
+</section>
+<section id="exercise" class="level2">
+<h2 class="anchored" data-anchor-id="exercise">Exercise</h2>
+<p>Now that you have some new tools that you are familiar with, please <strong>start a new .qmd or .Rmd Document</strong>, and try your hand at the following:</p>
+<p>1) Create a dataset for the City of Chicago that shows the percentage of households that are experiencing housing cost burden (i.e.&nbsp;spending 30 percent or more of income on housing costs), grouped by housing ownership (owner-occupied or renter-occupied).</p>
+<ul>
+<li><p>The universe of this characteristic is reflected in the <a href="https://api.census.gov/data/2019/acs/acs5/groups/B25106.html">B25106 table</a>.</p></li>
+<li><p>If we want a count of all owner-occupied households experiencing cost burden, we need to sum these variables: B25106_006, B25106_010, B25106_014, B25106_018, B25106_022. If we want a count of all renter-occupied households experiencing cost burden, we need to sum up B25106_028, B25106_032, B25106_036, B25106_040, B25106_044.</p></li>
+<li><p>The total number of owner-occupied households is B25106_002; The total number of renter-occupied households is B25106_024.</p></li>
+</ul>
+<p><strong>2) Create maps depicting the percentages of the resident population experiencing housing cost burdens in both owner-occupied and renter-occupied housing.</strong></p>
+<ul>
+<li>You can choose to create two individual maps, or one faceted map. But in either case, your calculated percentage values should go to the <code>geom_sf(fill = )</code> argument.</li>
+</ul>
+</section>
+</section>
+<section id="part-2-measure-racial-segregation" class="level1">
+<h1>Part 2 Measure Racial Segregation</h1>
+<p>In the second part of the lab, we will start to think about summary measures of the extent to which these groups are segregated within the city. We will use census tracts as a unit of analysis to help us describe racial segregation.</p>
+<p>There are, of course, <a href="https://www.urban.org/research/data-methods/data-analysis/quantitative-data-analysis/segregation-measures">many ways to measure segregation</a>, from more traditional methods that rely on ACS data and residential context, to more spatial and temporal dynamic methods that take advantage of human behavior data and mobile tracking data. In this analysis, we will look at the “evenness” and “exposure” indices summarized by <a href="https://www.jstor.org/stable/2579183">Massey and Denton (1988)</a>, and primarily refer to <a href="https://www.dartmouth.edu/~segregation/IndicesofSegregation.pdf">this document</a> to create two relatively straightforward indicators of segregation measurement.</p>
+<p>For local administrative, planning, and data collection purposes, Chicago is divided into 77 community areas, and these areas are further grouped into 7 administrative regions.</p>
+<p><img src="../img/lab3_chi_region.jpg" class="img-fluid" width="534"></p>
+<p>To save the in-class data processing time, we will read in a prepared dataset, which is built on the racial distribution of all tracts within Chicago, but <strong>each tract is assigned to its respective region, indicated in the <code>Region</code> column.</strong> The dataset also includes the total population sum for all tracts within each specific region, presented in columns labeled as <code>sum_xxx</code>.</p>
+<p>Please download <code>chi_race_region.rds</code> and put it in your data folder. This data was produced using this code <code>lab3_acs.R</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>chi_race_region <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/chi_race_region.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="indicators-for-measuring-segregation" class="level2">
+<h2 class="anchored" data-anchor-id="indicators-for-measuring-segregation">Indicators for measuring segregation</h2>
+<section id="dissimilarity" class="level3">
+<h3 class="anchored" data-anchor-id="dissimilarity">Dissimilarity</h3>
+<p><em>Dissimilarity</em> is a measure of <em>evenness</em> between two populations. Conceptually, dissimilarity represents the proportion of a group that would need to move in order to create a uniform distribution of population.</p>
+<p>A dissimilarity score of 0 would mean a completely even distribution of two populations (no segregation). A dissimilarity score of 1 would mean a completely segregated minority population (100% of the minority population would need to move to achieve an even distribution among the population. Dissimilarity is calculated as follows:</p>
+<p><span class="math display">\[ D = 0.5\Sigma_{i=1}^{n}|\frac{w_{i}}{W}-\frac{b_{i}}{B}| \]</span></p>
+<p>If we are interested in measuring non-Hispanic Black-White Dissimilarity, then:</p>
+<ul>
+<li><span class="math inline">\(w_{i}\)</span> is the White population of tract i</li>
+<li><span class="math inline">\(W\)</span> is the total number of White population in the region;</li>
+<li><span class="math inline">\(b{i}\)</span> is the Black population in tract i;</li>
+<li><span class="math inline">\(B\)</span> is the total number of Black population in the region;</li>
+</ul>
+<p>With the dataset structure we have constructed, calculating D can be broken down into a series of codable parts: 1) Calculate fractions inside the absolute value for each row; 2) use <code>abs()</code> to find the absolute value; 3) use <code>group_by()</code> to sum up the data for each region; 4) multiply the numbers by 0.5.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dissimilarity <span class="ot">&lt;-</span> chi_race_region <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dissimilarity =</span> <span class="fu">abs</span>(Black <span class="sc">/</span> sum_Black <span class="sc">-</span> White <span class="sc">/</span> sum_White)) <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Dissimilarity =</span> <span class="fu">round</span>(<span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">sum</span>(Dissimilarity), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Create a more presentable table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dissimilarity <span class="sc">|&gt;</span>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="bxpoellxws" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bxpoellxws table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bxpoellxws thead, #bxpoellxws tbody, #bxpoellxws tfoot, #bxpoellxws tr, #bxpoellxws td, #bxpoellxws th {
+  border-style: none;
+}
+
+#bxpoellxws p {
+  margin: 0;
+  padding: 0;
+}
+
+#bxpoellxws .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bxpoellxws .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bxpoellxws .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bxpoellxws .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bxpoellxws .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bxpoellxws .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bxpoellxws .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bxpoellxws .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bxpoellxws .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bxpoellxws .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bxpoellxws .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bxpoellxws .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bxpoellxws .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bxpoellxws .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bxpoellxws .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxpoellxws .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bxpoellxws .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bxpoellxws .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bxpoellxws .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxpoellxws .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bxpoellxws .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxpoellxws .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bxpoellxws .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxpoellxws .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bxpoellxws .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxpoellxws .gt_left {
+  text-align: left;
+}
+
+#bxpoellxws .gt_center {
+  text-align: center;
+}
+
+#bxpoellxws .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bxpoellxws .gt_font_normal {
+  font-weight: normal;
+}
+
+#bxpoellxws .gt_font_bold {
+  font-weight: bold;
+}
+
+#bxpoellxws .gt_font_italic {
+  font-style: italic;
+}
+
+#bxpoellxws .gt_super {
+  font-size: 65%;
+}
+
+#bxpoellxws .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bxpoellxws .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bxpoellxws .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bxpoellxws .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bxpoellxws .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bxpoellxws .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bxpoellxws .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Region">Region</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Dissimilarity">Dissimilarity</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Region" class="gt_row gt_left">CENTRAL</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.489</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">FAR SOUTH</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.829</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">NORTH</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.542</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">NORTHWEST</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.449</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">SOUTHEAST</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.702</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">SOUTHWEST</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.827</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">WEST</td>
+<td headers="Dissimilarity" class="gt_row gt_right">0.772</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p><code>gt</code> is powerful tool for creating elegant and customizable tables with ease. For instance, we can add a few more lines to enhance this table by adding colorization based on the values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dissimilarity <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Black-White Dissimilarity in Chicago Regions"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="st">`</span><span class="at">Dissimilarity</span><span class="st">`</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> scales<span class="sc">::</span><span class="fu">col_numeric</span>(</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"darkred"</span>),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">domain  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="osyasahhwz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#osyasahhwz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#osyasahhwz thead, #osyasahhwz tbody, #osyasahhwz tfoot, #osyasahhwz tr, #osyasahhwz td, #osyasahhwz th {
+  border-style: none;
+}
+
+#osyasahhwz p {
+  margin: 0;
+  padding: 0;
+}
+
+#osyasahhwz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#osyasahhwz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#osyasahhwz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#osyasahhwz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#osyasahhwz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#osyasahhwz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#osyasahhwz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#osyasahhwz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#osyasahhwz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#osyasahhwz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#osyasahhwz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#osyasahhwz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#osyasahhwz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#osyasahhwz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#osyasahhwz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osyasahhwz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#osyasahhwz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#osyasahhwz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#osyasahhwz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osyasahhwz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#osyasahhwz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osyasahhwz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#osyasahhwz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osyasahhwz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#osyasahhwz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#osyasahhwz .gt_left {
+  text-align: left;
+}
+
+#osyasahhwz .gt_center {
+  text-align: center;
+}
+
+#osyasahhwz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#osyasahhwz .gt_font_normal {
+  font-weight: normal;
+}
+
+#osyasahhwz .gt_font_bold {
+  font-weight: bold;
+}
+
+#osyasahhwz .gt_font_italic {
+  font-style: italic;
+}
+
+#osyasahhwz .gt_super {
+  font-size: 65%;
+}
+
+#osyasahhwz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#osyasahhwz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#osyasahhwz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#osyasahhwz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#osyasahhwz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#osyasahhwz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#osyasahhwz .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="">Black-White Dissimilarity in Chicago Regions</td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Region">Region</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Dissimilarity">Dissimilarity</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Region" class="gt_row gt_left">CENTRAL</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #D28C7B; color: #FFFFFF;">0.489</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">FAR SOUTH</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #A63C29; color: #FFFFFF;">0.829</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">NORTH</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #CC7F6D; color: #FFFFFF;">0.542</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">NORTHWEST</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #D79585; color: #000000;">0.449</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">SOUTHEAST</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #B85B46; color: #FFFFFF;">0.702</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">SOUTHWEST</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #A63D2A; color: #FFFFFF;">0.827</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">WEST</td>
+<td headers="Dissimilarity" class="gt_row gt_right" style="background-color: #AE4A36; color: #FFFFFF;">0.772</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>How would you interpret these dissimilarity values? Where is Black-White dissimilarity the highest within the region? Where is it the lowest? Does the result confirm the racial distribution map we produced in the first part?</p>
+</section>
+<section id="interaction" class="level3">
+<h3 class="anchored" data-anchor-id="interaction">Interaction</h3>
+<p>A second common measure of segregation is interaction, which assesses <em>isolation</em> levels rather than spatial distribution directly. Such indices typically estimate the likelihood of individuals from one group encountering or interacting with members of another group, based upon their distribution within areal subunits (tracts). For instance, non-Hispanic Black-White interaction is calculated as follows:</p>
+<p><span class="math display">\[
+I=\Sigma_{i=1}^{n}(\frac{b_{i}}{B})(\frac{w_{i}}{t_{i}})
+\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(b_{i}\)</span> is the Black population of tract i;</li>
+<li>B is the Black population of the region;</li>
+<li><span class="math inline">\(w_{i}\)</span> is the White population of tract i;</li>
+<li><span class="math inline">\(t_{i}\)</span> is the total population of tract i.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>interaction <span class="ot">&lt;-</span> chi_race_region <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Interaction =</span> (Black<span class="sc">/</span>sum_Black) <span class="sc">*</span> (White<span class="sc">/</span>Totpop)) <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Region) <span class="sc">|&gt;</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Interaction =</span> <span class="fu">sum</span>(Interaction, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The maximum value of I depends both on the distribution of ethnic groups AND on the proportion of minorities in the city. But generally speaking, higher values mean two groups are more likely to be evenly distributed, and lower values mean a more segregated minority population.</p>
+<p>Create a similar table for the non-Hispanic Black-White interaction index:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>interaction <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="st">"Black-White Interaction in Chicago Regions"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="st">`</span><span class="at">Interaction</span><span class="st">`</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> scales<span class="sc">::</span><span class="fu">col_numeric</span>(</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"darkred"</span>, <span class="st">"white"</span>),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">domain  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="etzbdcfpvy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#etzbdcfpvy table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#etzbdcfpvy thead, #etzbdcfpvy tbody, #etzbdcfpvy tfoot, #etzbdcfpvy tr, #etzbdcfpvy td, #etzbdcfpvy th {
+  border-style: none;
+}
+
+#etzbdcfpvy p {
+  margin: 0;
+  padding: 0;
+}
+
+#etzbdcfpvy .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#etzbdcfpvy .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#etzbdcfpvy .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#etzbdcfpvy .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#etzbdcfpvy .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#etzbdcfpvy .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#etzbdcfpvy .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#etzbdcfpvy .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#etzbdcfpvy .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#etzbdcfpvy .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#etzbdcfpvy .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#etzbdcfpvy .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#etzbdcfpvy .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#etzbdcfpvy .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#etzbdcfpvy .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#etzbdcfpvy .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#etzbdcfpvy .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#etzbdcfpvy .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#etzbdcfpvy .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#etzbdcfpvy .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#etzbdcfpvy .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#etzbdcfpvy .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#etzbdcfpvy .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#etzbdcfpvy .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#etzbdcfpvy .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#etzbdcfpvy .gt_left {
+  text-align: left;
+}
+
+#etzbdcfpvy .gt_center {
+  text-align: center;
+}
+
+#etzbdcfpvy .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#etzbdcfpvy .gt_font_normal {
+  font-weight: normal;
+}
+
+#etzbdcfpvy .gt_font_bold {
+  font-weight: bold;
+}
+
+#etzbdcfpvy .gt_font_italic {
+  font-style: italic;
+}
+
+#etzbdcfpvy .gt_super {
+  font-size: 65%;
+}
+
+#etzbdcfpvy .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#etzbdcfpvy .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#etzbdcfpvy .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#etzbdcfpvy .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#etzbdcfpvy .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#etzbdcfpvy .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#etzbdcfpvy .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="">Black-White Interaction in Chicago Regions</td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Region">Region</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Interaction">Interaction</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Region" class="gt_row gt_left">CENTRAL</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #C87765; color: #FFFFFF;">0.423</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">FAR SOUTH</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #931B0E; color: #FFFFFF;">0.053</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">NORTH</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #CB7D6B; color: #FFFFFF;">0.449</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">NORTHWEST</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #C67360; color: #FFFFFF;">0.405</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">SOUTHEAST</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #91150A; color: #FFFFFF;">0.038</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">SOUTHWEST</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #93190D; color: #FFFFFF;">0.049</td></tr>
+    <tr><td headers="Region" class="gt_row gt_left">WEST</td>
+<td headers="Interaction" class="gt_row gt_right" style="background-color: #962112; color: #FFFFFF;">0.071</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>How would you interpret these interaction values? Where is Black-White interaction the highest within the region? Where is it the lowest? Does the result confirm the racial distribution map we produced in the first part?</p>
+</section>
+</section>
+</section>
+<section id="work-products" class="level1">
+<h1>Work products</h1>
+<p>Please submit <strong>a .qmd (or .Rmd) file</strong> and <strong>a</strong> <strong>knitted HTML file</strong> that shows your work and responses for each of the <strong>Exercise</strong> included in this lab. Please <strong>upload your report to Canvas</strong> <strong>by the end of day, Tuesday, Nov 14.</strong></p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

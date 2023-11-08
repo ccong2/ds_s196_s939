@@ -370,7 +370,7 @@ devtools::install_github("hadley/emo")
 
 How would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region, and where are they the lowest? Does the result seem to confirm the racial distribution map we produced in the first part?
 
-Same methods can be used for any other two groups, such as Nonwhite-White, or Latino-White. You have the option to experiment with these values, but for this lab, I only request interpretation/diagnosis using the measure of segregation `r emo::ji("smile")`.
+The same methods can be used for any other two groups, such as Nonwhite-White, or Latino-White. You have the option to experiment with these values, but for this lab, I only request interpretation/diagnosis using the measure of segregation `r emo::ji("smile")`.
 
 # Work products
 

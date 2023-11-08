@@ -228,6 +228,6 @@
     "href": "labs/lab3.html#exercise-2",
     "title": "Download and analyze Census data with ",
     "section": "Exercise 2",
-    "text": "Exercise 2\nHow would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region, and where are they the lowest? Does the result seem to confirm the racial distribution map we produced in the first part?\nSame methods can be used for any other two groups, such as Nonwhite-White, or Latino-White. You have the option to experiment with these values, but for this lab, I only request interpretation/diagnosis using the measure of segregation 😄."
+    "text": "Exercise 2\nHow would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region, and where are they the lowest? Does the result seem to confirm the racial distribution map we produced in the first part?\nThe same methods can be used for any other two groups, such as Nonwhite-White, or Latino-White. You have the option to experiment with these values, but for this lab, I only request interpretation/diagnosis using the measure of segregation 😄."
   }
 ]

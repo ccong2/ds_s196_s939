@@ -27,8 +27,18 @@ library(gt)
 
 In order to use `tidycensus` to download data, you'll need the following:
 
--   A Census API key (if you don't already have one, please [request one from the census bureau](https://api.census.gov/data/key_signup.html))
+-   A Census API key (Here is where you can [request one from the census bureau](https://api.census.gov/data/key_signup.html))
+
+    Rather than hard-coding the Census API key, we can save it to our [.Renviron](https://support.rstudio.com/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf). If you are working on the same computer, you should only have to install the key once:
+
+    `Sys.setenv(CENSUS_API_KEY="yourkeyinquotationmarks")`
+
+    To verify that your Census API key is saved to your .Renviron file, simply type the following into the **Console** and press **Enter**:
+
+    `Sys.getenv("CENSUS_API_KEY")`
+
 -   A desired geography to look up (for example, tract- or block group-level data)
+
 -   The variables we want to look up (for example, the [complete variable list](https://api.census.gov/data/2021/acs/acs5/variables.html) for 2021 5-year ACS, you can also retrieve this list by calling `load_variables()`)
 
 Optionally, you will also need to specify:
@@ -85,8 +95,6 @@ cook_race <- get_acs(
   geometry = TRUE) 
 ```
 
-Take a quick look at the race data we have downloaded. As we requested data in a "wide" format, each variable has its "*E"* and *"*M" columns.
-
 We can use `dplyr::select` to slim down this dataset by **excluding the margin-of-error columns**, we can select columns whose names have a pattern that `ends_with("E")`.
 
 ```{r label="3-remove_moe", message = FALSE, warning=FALSE}
@@ -97,7 +105,7 @@ cook_race <-
 
 ## Modify Geographies
 
-Let's consider a situation where the study area does not align with the provided geographies. Take the city of Chicago, for instance, which cannot be directly inserted into the `get_acs` argument as it is not a county. How is Chicago located within Cook County exactly? We can use another census-related package `tigris` for a visual check of the place boundaries. `tigris` fetches census geographics. You can think of it as a programmatic way of downloading TIGER/Line Shapefiles.
+Places like Chicago cannot be directly inserted into the `get_acs` argument as it is not a county. How is Chicago located within Cook County exactly? We can use another census-related package `tigris` for a visual check of the place boundaries. `tigris` fetches census geographics. You can think of it as a programmatic way of downloading TIGER/Line Shapefiles.
 
 The function `place` fetches [census-designated place](https://www.census.gov/programs-surveys/bas/information/cdp.html). The city of Chicago is one of such places in Illinois.
 
@@ -126,7 +134,7 @@ chicago_race <-
   st_intersection(cook_race, chi_boundary)
 ```
 
-Check your `chicago_race` object. `st_intersection` returns a result that combines the attributes of both input tables. That is why we have a table that has 26 columns as opposed to 10. Let's do another round of `select` , then this dataset is good to go.
+`st_intersection` returns a result that combines the attributes of both input tables. That is why we have a table that has 26 columns as opposed to 10. Let's do another round of `select` , then this dataset is good to go.
 
 ```{r label = "6-removevariables", message = FALSE, warning=FALSE}
 chicago_race <- chicago_race |> select(GEOID:TotpopE)
@@ -204,7 +212,7 @@ chi_race_long <-
   select(GEOID, NAME, racial_groups, TotpopE, estimate, percent) 
 ```
 
-The `racial_groups` column has a character "E" at the end of each racial group name, carried over from the original Census data. This is something we can fix using a string modification function `str_sub`. We take each string and keep all characters from the beginning (the start of the string) up to the second-to-last character. So, it essentially removes the last character from each string.
+The `racial_groups` column has a character "E" at the end of each racial group name, carried over from the original Census data. This is something we can fix using a string modification function `str_sub`. We will keep all characters from the beginning (the start of the string) up to the second-to-last character. So, it essentially removes the last character from each string.
 
 ```{r label="data-wrangling-3"}
 chi_race_long <- chi_race_long |> 
@@ -219,7 +227,7 @@ chi_race_long |> head(3) |> gt()
 
 ## Create a faceted map
 
-In our long-format data table, racial group names are consolidated within a single column. We can create a map that visualizes the distribution of the `percent` attribute while categorizing it based on the `racial groups` attribute.
+In our long-format data table, racial group names are consolidated within a single column. We can create a map that visualizes the distribution of the `percent` attribute while categorizing it based on the `racial_groups` attribute.
 
 ```{r label="factedmap", message = FALSE, warning=FALSE}
 chi_race_long |>

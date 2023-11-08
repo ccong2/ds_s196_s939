@@ -15,6 +15,7 @@ In the first part, we are going to focus our study on the City of Chicago, which
 In the second part, we will examine racial segregation in Chicago. Using available Census data, we can apply segregation indicators to assess the degree of racial group segregation within given regions. This involves continuously using and extending the fundamental `dplyr` data wrangling skills.
 
 ```{r label="loadpackages", message = FALSE, warning=FALSE}
+
 # You may need to install the packages: tigris, sf and gt
 library(tidyverse)
 library(tidycensus)
@@ -140,7 +141,7 @@ chicago_race <-
 chicago_race <- chicago_race |> select(GEOID:TotpopE)
 ```
 
-**Pause here** and use `saveRDS` function to save the `chicago_race` dataset to your data folder. We want to keep an intermediate result so that you can always come back. A quick check - it now has 862 rows and 10 columns.
+Pause here and use `saveRDS` function to save the `chicago_race` dataset to your data folder. We want to keep an intermediate result so that you can always come back. A quick check - it now has 862 rows and 10 columns.
 
 `saveRDS(chicago_race, "data/<your file name>.rds")`
 
@@ -149,7 +150,7 @@ chicago_race <- chicago_race |> select(GEOID:TotpopE)
 
 ## Join another Census data
 
-A simple measure of racial wealth disparity is to look at how income levels and racial backgrounds are spread among tracts. We can go back to download median household income data and join it with our existing racial dataset.
+Wide format data has unique GEOIDs, and thus can be easily joined with another table. A simple measure of racial wealth disparity is to look at how income levels and racial backgrounds are spread among tracts. We can go back to download median household income data and join it with our existing racial dataset.
 
 ```{r label = "income", message = FALSE, warning=FALSE}
 cook_income <- get_acs(
@@ -252,7 +253,7 @@ Now that you have some new tools that you are familiar with, please **start a ne
 
 -   The total number of owner-occupied households is B25106_002; The total number of renter-occupied households is B25106_024.
 
-**2) Create maps depicting the percentages of the resident population experiencing housing cost burdens in both owner-occupied and renter-occupied housing.**
+**2) Create maps depicting the percentages of households experiencing housing cost burdens in both owner-occupied and renter-occupied housing.**
 
 -   You can choose to create two individual maps, or one faceted map. But in either case, your calculated percentage values should go to the `geom_sf(fill = )` argument.
 -   Visually compare the housing cost burden maps and the racial distribution maps, and briefly provide your interpretations.
@@ -363,7 +364,13 @@ interaction |>
 
 ## Exercise 2
 
-How would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region? Where are they the lowest? Does the result confirm the racial distribution map we produced in the first part?
+```{r include=FALSE}
+devtools::install_github("hadley/emo")
+```
+
+How would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region, and where are they the lowest? Does the result seem to confirm the racial distribution map we produced in the first part?
+
+Same methods can be used for any other two groups, such as Nonwhite-White, or Latino-White. You have the option to experiment with these values, but for this lab, I only request interpretation/diagnosis using the measure of segregation `r emo::ji("smile")`.
 
 # Work products
 

@@ -55,15 +55,6 @@ The two arguments that we added to this download call are essential for integrat
 
 -   `geometry = TRUE` returns a [simple features](https://r-spatial.github.io/sf/articles/sf1.html) (`sf`) object with spatial information saved for each tract. What we need to know for such objects are: 1) they can be handled by the `sf` package, which has been the dominant spatial data library in R for years; and 2) the presence of the `geometry` variable within an `sf` object is pivotal for enabling spatial analysis.
 
-As we did in class, we can use `mutate` to create a new column `percent_white` that represents the percentage of the White population, and pass this column to `ggplot` as the fill "aesthetic" (i.e. fill) of our mapping.
-
-```{r label = "example-2", message = FALSE, warning=FALSE}
-cook_race |> 
-  mutate(percent_white = (B03002_002E/B03002_001E)*100) |> 
-  ggplot() + 
-  geom_sf(aes(fill = percent_white))
-```
-
 # Part 1 Map racial distribution
 
 ## Construct multiple variables
@@ -213,7 +204,7 @@ chi_race_long <-
   select(GEOID, NAME, racial_groups, TotpopE, estimate, percent) 
 ```
 
-Take a look at the `racial_groups` column of `chi_race` dataset. You'll see there is always a character "E" at the end of each racial group name, carried over from the original Census data. This is something we can fix using a string modification function `str_sub`. We take each string and keep all characters from the beginning (the start of the string) up to the second-to-last character. So, it essentially removes the last character from each string.
+The `racial_groups` column has a character "E" at the end of each racial group name, carried over from the original Census data. This is something we can fix using a string modification function `str_sub`. We take each string and keep all characters from the beginning (the start of the string) up to the second-to-last character. So, it essentially removes the last character from each string.
 
 ```{r label="data-wrangling-3"}
 chi_race_long <- chi_race_long |> 
@@ -241,7 +232,7 @@ chi_race_long |>
 
 The `facet_wrap` in the code takes one categorical variable as its input (`racial_groups`) and breaks the data into subsets accordingly. The `~` here is a shorthand for "relative to", meaning I'm gonna split the whole data based on their relationship to `racial_groups`.
 
-## Exercise
+## Exercise 1
 
 Now that you have some new tools that you are familiar with, please **start a new .qmd or .Rmd Document**, and try your hand at the following:
 
@@ -256,6 +247,7 @@ Now that you have some new tools that you are familiar with, please **start a ne
 **2) Create maps depicting the percentages of the resident population experiencing housing cost burdens in both owner-occupied and renter-occupied housing.**
 
 -   You can choose to create two individual maps, or one faceted map. But in either case, your calculated percentage values should go to the `geom_sf(fill = )` argument.
+-   Visually compare the housing cost burden maps and the racial distribution maps, and briefly provide your interpretations.
 
 # Part 2 Measure Racial Segregation
 
@@ -322,8 +314,6 @@ dissimilarity |>
   )
 ```
 
-How would you interpret these dissimilarity values? Where is Black-White dissimilarity the highest within the region? Where is it the lowest? Does the result confirm the racial distribution map we produced in the first part?
-
 ### Interaction
 
 A second common measure of segregation is interaction, which assesses *isolation* levels rather than spatial distribution directly. Such indices typically estimate the likelihood of individuals from one group encountering or interacting with members of another group, based upon their distribution within areal subunits (tracts). For instance, non-Hispanic Black-White interaction is calculated as follows:
@@ -363,8 +353,10 @@ interaction |>
   )
 ```
 
-How would you interpret these interaction values? Where is Black-White interaction the highest within the region? Where is it the lowest? Does the result confirm the racial distribution map we produced in the first part?
+## Exercise 2
+
+How would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region? Where are they the lowest? Does the result confirm the racial distribution map we produced in the first part?
 
 # Work products
 
-Please submit **a .qmd (or .Rmd) file** and **a** **knitted HTML file** that shows your work and responses for each of the **Exercise** included in this lab. Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 14.**
+Please submit **a .qmd (or .Rmd) file** and **a** **knitted HTML file** that shows your work and responses for each of the **Exercises** included in this lab. Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 14.**

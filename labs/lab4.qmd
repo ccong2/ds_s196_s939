@@ -1,6 +1,6 @@
 ---
 title: "Creating Interactive Graphs and Maps with ![](../img/Rlogo.png){width=60px}"
-subtitle: <span style="color:orange">11.S954 Applied Data Science for Citie</span>
+subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
 editor: visual
@@ -174,7 +174,7 @@ leaflet() |>
 
 To enable popup tooltips to display information upon user clicks, we need to define the appearance of labels using formatted text. In this text `listing_popup`, each line shows **"item name: `airbnb` attribute values"**. This label format is then added into `addCircleMarkers` as the input of the `popup` argument.
 
-The HTML tags (\<br&gt and \<b&gt...\<b&gt) may look unfamiliar but they suggest that this string is intended for display in an HTML context, where line breaks and bold formatting are relevant.
+The HTML tags (\<br\> and \<b\>...\<b\>) may look unfamiliar but they suggest that this string is intended for display in an HTML context, where line breaks and bold formatting are relevant.
 
 ```{r label="add popups", message=FALSE, warning=FALSE}
 listing_popup <-

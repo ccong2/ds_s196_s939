@@ -390,7 +390,7 @@ Of course, there are a number of things we can do to make our dashboard look eve
 
 # Work Product
 
-Let's publish your work to [Rpubs](#0)! On the top-right corner of your R working panel, you will find a blue Publish icon called "publish the application or document". Click that and you will be directed to this screen below:
+Let's publish your work to [Rpubs](https://rpubs.com/)! On the top-right corner of your R working panel, you will find a blue Publish icon called "publish the application or document". Click that and you will be directed to this screen below:
 
 ![](../img/lab4_pub.PNG){width="453"}
 

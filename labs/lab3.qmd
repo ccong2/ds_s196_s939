@@ -272,8 +272,12 @@ To save the in-class data processing time, we will read in a prepared dataset, w
 
 Please download `chi_race_region.rds` and put it in your data folder. This data was produced using this code `lab3_acs.R`.
 
-```{r label="readchiregions", message = FALSE, warning=FALSE}
+```{r label="readchiregions", message = FALSE, warning=FALSE, echo=FALSE}
 chi_race_region <- readRDS("../data/chi_race_region.rds")
+```
+
+```{r label="notrun", eval=FALSE}
+chi_race_region <- readRDS("data/chi_race_region.rds")
 ```
 
 ## Indicators for measuring segregation
@@ -374,4 +378,10 @@ The same methods can be used for any other two groups, such as Nonwhite-White, o
 
 # Work products
 
-Please submit **a .qmd (or .Rmd) file** and **a** **knitted HTML file** that shows your work and responses for each of the **Exercises** included in this lab. Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 14.**
+Please submit **a .qmd (or .Rmd) file** and **a** **rendered HTML file** that shows your work and responses for each of the **Exercises** included in this lab.
+
+A quick tip: if you include `self_contained = TRUE` in your YAML header, you won't lose the pictures of your html file.
+
+![](/img/lab3-html.PNG)
+
+Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 14.**

@@ -41,7 +41,7 @@ website:
               file: labs/lab3.qmd
             - text: "04 Airbnb in Chicago: plotly and leaflet packages"
               file: labs/lab4.qmd
-            - text: "05 Obesogenic Built Environment: sf, osmdata packages"
+            - text: "05 Walkable Environment: sf, osmdata packages"
               file: labs/lab5.qmd
             - text: "06 Shiny Example"
               file: labs/lab6.qmd

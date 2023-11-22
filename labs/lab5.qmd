@@ -353,7 +353,7 @@ ggplot(score) +
 
 ### **Optional:**
 
-Here are some other approaches for presenting our results in response to suggestions - for example, a formatted and sortable table:
+Here are some other approaches for presenting our results, in response to suggestions - for example, a formatted and sortable table:
 
 ```{r message = FALSE, warning=FALSE}
 # Rescore the sub-dimensional indices to 0-100 as well

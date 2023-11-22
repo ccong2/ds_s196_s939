@@ -155,8 +155,8 @@ In order to obtain data from OSM, you will need to specify:
 A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two latitude-longitude pairs.
 
 ```{r message = FALSE, warning=FALSE}
-# (lat, lon) of Lower left and Upper right corners 
-bbox = c(42.22791,-71.19124,42.39698,-70.80449)
+# (lon, lat) of Lower left and Upper right corners 
+bbox = c(-71.188, 42.238, -70.924, 42.393)
 ```
 
 In most cases, they can be directly identified by character strings.
@@ -166,6 +166,7 @@ In most cases, they can be directly identified by character strings.
 However, recently there seem to be some issues with `bbox` direct address query. I implemented [a workaround here](https://stackoverflow.com/questions/76835293/error-when-querying-osmdata-package-http-405-method-not-allowed) so that we can still obtain a bounding box by entering a place name.
 
 ```{r message = FALSE, warning=FALSE}
+# This may need you to `install.packages("nominatimlite")`
 bbox <- sf::st_bbox(nominatimlite::geo_lite_sf(
   address = "Boston, MA, USA", 
   points_only = FALSE))   

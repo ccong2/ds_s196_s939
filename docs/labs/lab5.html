@@ -95,6 +95,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+
 <script src="../site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <script src="../site_libs/jquery-1.12.4/jquery.min.js"></script>
 <link href="../site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
@@ -104,6 +105,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="../site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
 <script src="../site_libs/leaflet-binding-2.1.2/leaflet.js"></script>
+<script src="../site_libs/core-js-2.5.3/shim.min.js"></script>
+<script src="../site_libs/react-17.0.0/react.min.js"></script>
+<script src="../site_libs/react-17.0.0/react-dom.min.js"></script>
+<script src="../site_libs/reactwidget-1.0.0/react-tools.js"></script>
+<link href="../site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+<script src="../site_libs/reactable-binding-0.4.4/reactable.js"></script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -251,9 +258,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#standardize-indicators" id="toc-standardize-indicators" class="nav-link" data-scroll-target="#standardize-indicators">Standardize indicators</a></li>
   <li><a href="#specify-the-directions" id="toc-specify-the-directions" class="nav-link" data-scroll-target="#specify-the-directions">Specify the directions</a></li>
   <li><a href="#aggregate-the-index" id="toc-aggregate-the-index" class="nav-link" data-scroll-target="#aggregate-the-index">Aggregate the index</a></li>
-  <li><a href="#check-the-result" id="toc-check-the-result" class="nav-link" data-scroll-target="#check-the-result">Check the result</a></li>
+  <li><a href="#check-the-result" id="toc-check-the-result" class="nav-link" data-scroll-target="#check-the-result">Check the result</a>
+  <ul class="collapse">
+  <li><a href="#optional" id="toc-optional" class="nav-link" data-scroll-target="#optional"><strong>Optional:</strong></a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#work-product" id="toc-work-product" class="nav-link" data-scroll-target="#work-product">Work Product</a></li>
   </ul>
 </nav>
     </div>
@@ -287,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>Geospatial data analysis figures prominently in cities and urban analytics. In this lab, we will introduce essential tools and processes to facilitate spatial analysis, along with demonstrating how to obtain and integrate data from open data sources.</p>
-<p>To put things into context, we are going to describe the walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D’s supporting walkability: Density, Diversity, and Design (<a href="https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf">Cervero and Kockelman, 1997</a>, Ewing et al., 2008), and later, five D’s that further include Destination accessibility and Diversity (Ewing &amp; Cervero, 2010).</p>
+<p>To put things into context, we are going to describe the walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D’s supporting walkability: Density, Diversity, and Design (<a href="https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf">Cervero and Kockelman, 1997</a>, Ewing et al., 2008), and later, five D’s that further include Destination accessibility and Diversity (<a href="https://www.tandfonline.com/doi/abs/10.1080/01944361003766766">Ewing &amp; Cervero, 2010</a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -307,9 +318,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>These indicators can be operationalized as follows:</p>
 <table class="table">
 <colgroup>
-<col style="width: 27%">
-<col style="width: 45%">
-<col style="width: 26%">
+<col style="width: 18%">
+<col style="width: 66%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -352,21 +363,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_read</span>(<span class="st">"data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">nbh_name =</span> blockgr202, <span class="at">population =</span> tot_pop_al)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups' from data source `D:\00_course prep\ds_s187_s954\data\Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 24 features and 37 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: 739715.8 ymin: 2908294 xmax: 812981.4 ymax: 2970217
-Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
-</div>
-</div>
 <p>Notice that this shapefile has a population by neighborhood that is ready to use, which is very nice, otherwise we will have to aggregate the census population ourselves.</p>
 <p>When we work with shapefiles of different sources, the first step is to check the <em>Coordinate Reference System (CRS)</em>. Places can appear differently in shape on maps when different CRSs are used due to the inherent distortions introduced during the process of projection.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(neighborhood)<span class="sc">$</span>epsg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(neighborhood)<span class="sc">$</span>epsg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2249</code></pre>
 </div>
@@ -374,8 +374,8 @@ Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
 <p>This informs us that the neighborhood shapefile is stored in a State Plane coordinate system Massachusetts Mainland, which has an EPSG code 2249. State Plane projections are 1) “projected”, meaning that x and y coordinates are in linear measurements, as opposed to degrees; and 2) are regional datums designed to provide accurate positioning data for North America specifically, as opposed to WGS84, which is a global datum. EPSG code is a standardized shorthand for referencing each CRS. Feel free to navigate to <a href="https://epsg.io/">epsg.io</a> and look around.</p>
 <p>We can calculate polygon areas using <code>st_area()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>neighborhood <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nbh_area =</span> <span class="fu">st_area</span>(geometry))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>neighborhood <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nbh_area =</span> <span class="fu">st_area</span>(geometry))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 24 features and 3 fields
 Geometry type: MULTIPOLYGON
@@ -410,27 +410,15 @@ First 10 features:
 <p>The new <code>nbh_area</code> column returns a unit object in square feet, which is consistent with the dataset’s projection. Although we can do basic math operations on unit objects, managing the units incurs memory overhead. Transforming them to simple numeric values is advisable if this information is not necessary to be carried along for the entire analysis.</p>
 <p>Using the population information, we can proceed to compute the population per square mile and add this column to the dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>neighborhood <span class="ot">&lt;-</span> neighborhood <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nbh_area =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geometry))) <span class="sc">|&gt;</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pop_density =</span> population<span class="sc">/</span>(nbh_area<span class="sc">/</span><span class="dv">27878400</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>neighborhood <span class="ot">&lt;-</span> neighborhood <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nbh_area =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(geometry))) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pop_density =</span> population<span class="sc">/</span>(nbh_area<span class="sc">/</span><span class="dv">27878400</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="density-of-sidewalks" class="level2">
 <h2 class="anchored" data-anchor-id="density-of-sidewalks">Density of sidewalks</h2>
 <p>From the front page of Analyze Boston, search for “sidewalk”, you will find the <a href="https://data.boston.gov/dataset/sidewalk-centerline">Sidewalk Centerline</a> shapefile. Download it to your data folder, unzip it and read it in R. What CRS is this shapefile using?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sidewalk <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/Sidewalk_Centerline.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `Sidewalk_Centerline' from data source 
-  `D:\00_course prep\ds_s187_s954\data\Sidewalk_Centerline.shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 110031 features and 3 fields
-Geometry type: LINESTRING
-Dimension:     XY
-Bounding box:  xmin: 742172.1 ymin: 2909272 xmax: 811805.7 ymax: 2969957
-Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sidewalk <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/Sidewalk_Centerline.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If we intersect the sidewalk and neighborhood shapefiles, we should be able to calculate the total length of sidewalk segments in each neighborhood. Similar to <code>st_area</code>, <code>st_length</code> is another geometry measurement function and calculates segment length.</p>
 <p>In the following code, we are going to:</p>
@@ -441,33 +429,33 @@ Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
 <li>group the line segments by neighborhood, summing up the sidewalk lengths within each neighborhood.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sidewalk_data <span class="ot">&lt;-</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_intersection</span>(sidewalk, neighborhood) <span class="sc">|&gt;</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">length =</span> <span class="fu">as.numeric</span>(<span class="fu">st_length</span>(geometry))) <span class="sc">|&gt;</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nbh_name) <span class="sc">|&gt;</span> </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sidewalk_length =</span> <span class="fu">sum</span>(length)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sidewalk_data <span class="ot">&lt;-</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_intersection</span>(sidewalk, neighborhood) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">length =</span> <span class="fu">as.numeric</span>(<span class="fu">st_length</span>(geometry))) <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nbh_name) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sidewalk_length =</span> <span class="fu">sum</span>(length)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Say we want to attach the total sidewalk length to our <code>neighborhood</code> data, we can join this information with <code>neighborhood</code>, using their shared attribute <code>name</code>. Recall that operations on attributes do not remove their geometry - but we can explicitly drop it using <code>st_drop_geometry()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sidewalk_data <span class="ot">&lt;-</span>  sidewalk_data <span class="sc">|&gt;</span> <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(neighborhood, <span class="at">by =</span> <span class="st">"nbh_name"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sidewalk_data <span class="ot">&lt;-</span>  sidewalk_data <span class="sc">|&gt;</span> <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(neighborhood, <span class="at">by =</span> <span class="st">"nbh_name"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then we’ll calculate sidewalk density using another pipeline:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sidewalk_data <span class="ot">&lt;-</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  sidewalk_data <span class="sc">|&gt;</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sidewalk_coverage =</span> <span class="fu">round</span>(sidewalk_length<span class="sc">/</span>nbh_area, <span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nbh_name, sidewalk_coverage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sidewalk_data <span class="ot">&lt;-</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  sidewalk_data <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sidewalk_coverage =</span> sidewalk_length<span class="sc">/</span>nbh_area) <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nbh_name, sidewalk_coverage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>At this point, you can remove some datasets that you don’t anticipate using again.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(sidewalk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(sidewalk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="obtain-and-process-osm-data" class="level1">
 <h1>Obtain and process OSM data</h1>
-<p>For the other nutrition-related variables, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free <a href="https://overpass-turbo.eu/#">Overpass API</a>. In this lab, we will use the <code>osmdata</code> R package, which simplifies download queries without much understanding of the overpass query syntax.</p>
+<p>For the other nutrition-related variables, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free <a href="https://overpass-turbo.eu/#">Overpass API</a>. In this lab, we will use the <a href="https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html"><code>osmdata</code> R package</a>, which simplifies download queries without much understanding of the overpass query syntax.</p>
 <p>In order to obtain data from OSM, you will need to specify:</p>
 <ul>
 <li>a bounding box</li>
@@ -477,17 +465,17 @@ Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
 <h3 class="anchored" data-anchor-id="the-bounding-box">The bounding box</h3>
 <p>A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two latitude-longitude pairs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (lon, lat) of Lower left and Upper right corners </span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">71.188</span>, <span class="fl">42.238</span>, <span class="sc">-</span><span class="fl">70.924</span>, <span class="fl">42.393</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (lon, lat) of Lower left and Upper right corners </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">71.188</span>, <span class="fl">42.238</span>, <span class="sc">-</span><span class="fl">70.924</span>, <span class="fl">42.393</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In most cases, they can be directly identified by character strings.</p>
 <p><code>bbox = 'Boston, MA, USA'</code></p>
 <p>However, recently there seem to be some issues with <code>bbox</code> direct address query. I implemented <a href="https://stackoverflow.com/questions/76835293/error-when-querying-osmdata-package-http-405-method-not-allowed">a workaround here</a> so that we can still obtain a bounding box by entering a place name.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This may need you to `install.packages("nominatimlite")`</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(nominatimlite<span class="sc">::</span><span class="fu">geo_lite_sf</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">address =</span> <span class="st">"Boston, MA, USA"</span>, </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">points_only =</span> <span class="cn">FALSE</span>))   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This may need you to `install.packages("nominatimlite")`</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(nominatimlite<span class="sc">::</span><span class="fu">geo_lite_sf</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">address =</span> <span class="st">"Boston, MA, USA"</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">points_only =</span> <span class="cn">FALSE</span>))   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="the-key-value-pairs" class="level3">
@@ -498,22 +486,22 @@ Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
 <p>Here is <a href="https://wiki.openstreetmap.org/wiki/Map_Features">a complete list of key-value pairs on OSM</a>, in which values can be understood as specific types of places, and keys are their categories. These are the keywords you can use when downloading OSM data.</p>
 <p>For example, supermarket stores are categorized in OSM under <code>key=shop</code>, and <code>value=supermarket</code>. So that a query of all supermarkets within the boundary box of Boston can be constructed as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>supermarket <span class="ot">&lt;-</span> <span class="fu">opq</span>(bbox)<span class="sc">|&gt;</span>   </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="at">key =</span> <span class="st">"shop"</span>, <span class="at">value =</span> <span class="st">"supermarket"</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>supermarket <span class="ot">&lt;-</span> <span class="fu">opq</span>(bbox)<span class="sc">|&gt;</span>   </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="at">key =</span> <span class="st">"shop"</span>, <span class="at">value =</span> <span class="st">"supermarket"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The retrieved OSM object is a huge list that includes numerous attributes; What we need is an <code>sf</code> object named <code>osm_polygons</code> nested in this list. Let’s extract <code>osm_polygons</code>, then select only the name (and the attached geometry) of this object:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>supermarket <span class="ot">&lt;-</span> supermarket<span class="sc">$</span>osm_polygons <span class="sc">|&gt;</span> <span class="fu">select</span>(name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>supermarket <span class="ot">&lt;-</span> supermarket<span class="sc">$</span>osm_polygons <span class="sc">|&gt;</span> <span class="fu">select</span>(name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can make a quick plot, zoom in, and check the result.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addPolygons</span>(<span class="at">data =</span> supermarket)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addPolygons</span>(<span class="at">data =</span> supermarket)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-99861fa313b068ccb4cb" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-99861fa313b068ccb4cb">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addPolygons","args":[[[[{"lng":[-71.1206451,-71.12080330000001,-71.1207814,-71.12042099999999,-71.1203775,-71.12035419999999,-71.12026090000001,-71.1202845,-71.1202744,-71.1202567,-71.1201978,-71.1205284,-71.1205432,-71.1206451],"lat":[42.3416918,42.3419744,42.3420066,42.3421096,42.3420941,42.3421008,42.3419214,42.3419146,42.3418952,42.3419003,42.341787,42.3416925,42.341721,42.3416918]}]],[[{"lng":[-70.9910817,-70.9914022,-70.9912806,-70.9912228,-70.99084449999999,-70.9910817],"lat":[42.2414608,42.2415259,42.2420129,42.2421748,42.2420982,42.2414608]}]],[[{"lng":[-71.1130496,-71.113135,-71.113118,-71.1133699,-71.1132313,-71.1131345,-71.1131511,-71.1129866,-71.11298119999999,-71.112905,-71.1130496],"lat":[42.3735754,42.3735947,42.3736358,42.3736929,42.3740293,42.3740075,42.3739673,42.37393,42.3739431,42.3739258,42.3735754]}]],[[{"lng":[-70.996404,-70.99653309999999,-70.99659,-70.99663959999999,-70.9965807,-70.99630089999999,-70.99612260000001,-70.996404],"lat":[42.2536644,42.2537691,42.2537303,42.2537705,42.2538106,42.2540007,42.253856,42.2536644]}]],[[{"lng":[-71.0142105,-71.0141265,-71.014572,-71.01467270000001,-71.014602,-71.0146931,-71.01452740000001,-71.0144363,-71.0142105],"lat":[42.2661229,42.2659614,42.2657369,42.2658539,42.2658876,42.2660078,42.2661015,42.2659876,42.2661229]}]],[[{"lng":[-71.14980300000001,-71.1498189,-71.14931199999999,-71.148988,-71.14900179999999,-71.1487947,-71.1487478,-71.14880530000001,-71.1488003,-71.1487434,-71.1487047,-71.1486912,-71.148786,-71.1493542,-71.1493577,-71.1494304,-71.1494296,-71.14980300000001],"lat":[42.3748429,42.3748644,42.3758032,42.3756874,42.3757856,42.3758015,42.3754678,42.3754633,42.3754272,42.3754316,42.3751489,42.3750508,42.3750417,42.3749873,42.3749954,42.3749909,42.3749663,42.3748429]}]],[[{"lng":[-71.1111121,-71.1111891,-71.1109768,-71.110761,-71.110721,-71.110574,-71.11060999999999,-71.1107028,-71.11068400000001,-71.1111121],"lat":[42.3213306,42.3216368,42.3216662,42.3216961,42.3215371,42.3214805,42.3214291,42.3214647,42.32139,42.3213306]}]],[[{"lng":[-71.11415390000001,-71.1142009,-71.1143359,-71.1144658,-71.1143939,-71.1144101,-71.11390419999999,-71.1136381,-71.11346330000001,-71.1134443,-71.1138559,-71.11415390000001],"lat":[42.3607006,42.3607849,42.3607434,42.3609756,42.361029,42.3610579,42.3612135,42.3612954,42.3609829,42.3608278,42.3607923,42.3607006]}]],[[{"lng":[-71.04764280000001,-71.0473523,-71.0470413,-71.04733299999999,-71.04764280000001],"lat":[42.3516854,42.3520505,42.3519163,42.3515453,42.3516854]}]],[[{"lng":[-71.04081619999999,-71.0408171,-71.0408312,-71.0408971,-71.0409002,-71.0408348,-71.0408426,-71.0409679,-71.04090239999999,-71.04099239999999,-71.0409645,-71.0399707,-71.0399256,-71.0399245,-71.04039349999999,-71.0406103,-71.04081619999999],"lat":[42.3763308,42.3763413,42.3764997,42.376498,42.3765355,42.3765379,42.3766914,42.3767361,42.3768332,42.3768676,42.3769019,42.3769307,42.3763736,42.3763594,42.3763428,42.3763366,42.3763308]}]],[[{"lng":[-71.11430900000001,-71.11444830000001,-71.11409829999999,-71.11395899999999,-71.11430900000001],"lat":[42.3580643,42.358372,42.3584585,42.3581508,42.3580643]}]],[[{"lng":[-71.1232432,-71.1236256,-71.123617,-71.12404669999999,-71.12388060000001,-71.12306839999999,-71.1232432],"lat":[42.3522475,42.3522927,42.3523328,42.3523836,42.3531577,42.3530617,42.3522475]}]],[[{"lng":[-71.12014979999999,-71.1205587,-71.1205531,-71.1207091,-71.1208898,-71.1208676,-71.1208292,-71.1207991,-71.12078320000001,-71.1208228,-71.120801,-71.1199909,-71.1200135,-71.11987790000001,-71.119917,-71.1200403,-71.1201377,-71.12014979999999],"lat":[42.337892,42.3379429,42.3380102,42.3380205,42.3380324,42.3381346,42.3383127,42.3384551,42.3385259,42.3385331,42.338599,42.3384503,42.3383824,42.3383575,42.3381791,42.3379778,42.3379847,42.337892]}]],[[{"lng":[-71.04077580000001,-71.04105029999999,-71.04091680000001,-71.0411216,-71.0410959,-71.0410296,-71.0408559,-71.0406796,-71.04072480000001,-71.0405481,-71.0406471,-71.04069560000001,-71.0406629,-71.04077580000001],"lat":[42.2594729,42.2595465,42.2598215,42.2598764,42.2599293,42.2599116,42.2602694,42.2602859,42.2601925,42.2601451,42.2598137,42.2597142,42.2597054,42.2594729]}]],[[{"lng":[-71.0511205,-71.0513718,-71.0502637,-71.05001439999999,-71.05055,-71.0505175,-71.05075600000001,-71.0507866,-71.0511205],"lat":[42.3180039,42.3184319,42.3187903,42.3183655,42.3181924,42.318137,42.3180598,42.3181119,42.3180039]}]],[[{"lng":[-71.15696699999999,-71.15718529999999,-71.1572231,-71.1570048,-71.15696699999999],"lat":[42.2606838,42.2606568,42.260824,42.2608511,42.2606838]}]],[[{"lng":[-71.1390981,-71.1391234,-71.13905629999999,-71.1390688,-71.13924900000001,-71.13941,-71.1392432,-71.13925690000001,-71.1391125,-71.1389176,-71.1389739,-71.13895650000001,-71.1390981],"lat":[42.3372718,42.3373452,42.3373579,42.3373941,42.3373598,42.3378265,42.3378581,42.337898,42.3379254,42.3373603,42.3373496,42.3372988,42.3372718]}]],[[{"lng":[-71.10131629999999,-71.1015537,-71.10151860000001,-71.1015615,-71.10159899999999,-71.1020523,-71.1020039,-71.1021647,-71.1021202,-71.1020898,-71.10200810000001,-71.10180819999999,-71.10164399999999,-71.1012453,-71.101027,-71.1011883,-71.10131629999999],"lat":[42.3803572,42.3804382,42.3804903,42.3805057,42.3804527,42.3806036,42.3806952,42.3807564,42.3808311,42.3808174,42.3807957,42.3811252,42.381068,42.3809299,42.3808541,42.3805925,42.3803572]}]],[[{"lng":[-71.11167759999999,-71.11179060000001,-71.1122501,-71.11200890000001,-71.1120583,-71.1120887,-71.11211849999999,-71.1119953,-71.11132000000001,-71.11167759999999],"lat":[42.3832851,42.3833567,42.3836452,42.3838484,42.38388,42.3838995,42.3839185,42.3840243,42.3835921,42.3832851]}]],[[{"lng":[-71.0810322,-71.08153160000001,-71.08106720000001,-71.0804607,-71.08079619999999,-71.0809031,-71.0810322],"lat":[42.3087832,42.3090428,42.309535,42.3092196,42.3088642,42.3089199,42.3087832]}]],[[{"lng":[-71.1585881,-71.15846809999999,-71.15846500000001,-71.15861630000001,-71.1586697,-71.1586724,-71.1586731,-71.1586698,-71.1586654,-71.15864670000001,-71.1585881],"lat":[42.3706399,42.370541,42.3705386,42.3704474,42.3705382,42.3705395,42.3705655,42.3705711,42.3705867,42.3706067,42.3706399]}]],[[{"lng":[-71.1021428,-71.10219189999999,-71.1022395,-71.10222330000001,-71.10265699999999,-71.1026402,-71.1027624,-71.1026834,-71.10203079999999,-71.1021428],"lat":[42.3678816,42.3679006,42.3679191,42.367942,42.3681101,42.368134,42.3681814,42.3682934,42.3680404,42.3678816]}]],[[{"lng":[-71.1373296,-71.1374175,-71.1373734,-71.1381336,-71.1378758,-71.13779100000001,-71.137488,-71.1370483,-71.1370539,-71.13706879999999,-71.137019,-71.1372209,-71.1372729,-71.1373296],"lat":[42.3604478,42.3604693,42.3605685,42.3607546,42.3613823,42.3613615,42.3612874,42.3611798,42.3611671,42.3611335,42.3610162,42.3605624,42.3605752,42.3604478]}]],[[{"lng":[-71.08561880000001,-71.0861482,-71.08619469999999,-71.0862611,-71.0863245,-71.0863811,-71.0853923,-71.0852381,-71.0853315,-71.0849343,-71.0851553,-71.085081,-71.08561880000001],"lat":[42.3909271,42.3912216,42.3911758,42.3912139,42.3911504,42.391182,42.3921394,42.3920567,42.3919605,42.3917374,42.3915212,42.3914786,42.3909271]}]],[[{"lng":[-71.0268657,-71.0271917,-71.02729739999999,-71.0274799,-71.0272375,-71.0266026,-71.0264019,-71.0263641,-71.0262992,-71.02584210000001,-71.02588040000001,-71.0259259,-71.0259535,-71.0260002,-71.0260135,-71.0260665,-71.02639310000001,-71.02638930000001,-71.0264396,-71.0264375,-71.0264671,-71.0265132,-71.02661310000001,-71.02657290000001,-71.026681,-71.0266247,-71.0266694,-71.0267284,-71.0268657],"lat":[42.2705525,42.2708607,42.2707951,42.2709723,42.2711274,42.2714976,42.2716147,42.271579,42.2716168,42.2711845,42.2711119,42.2711252,42.2710725,42.2710861,42.2710609,42.2710762,42.2708857,42.2708145,42.270813,42.2707729,42.2707721,42.2708157,42.2707574,42.2707194,42.2706563,42.270603,42.2705769,42.2706326,42.2705525]}]],[[{"lng":[-71.1637903,-71.16397499999999,-71.16333400000001,-71.163321,-71.16256869999999,-71.16254429999999,-71.1627677,-71.1626363,-71.1627483,-71.162738,-71.16293880000001,-71.16293140000001,-71.16300990000001,-71.16300630000001,-71.1631084,-71.16311039999999,-71.1634538,-71.1634502,-71.1635517,-71.16356740000001,-71.16360090000001,-71.1636614,-71.1636529,-71.1637903],"lat":[42.2783711,42.2788291,42.2789717,42.2789396,42.2791068,42.2790462,42.2789966,42.2786705,42.2786457,42.27862,42.2785754,42.278557,42.2785395,42.2785308,42.2785081,42.278513,42.2784366,42.2784277,42.2784051,42.2784438,42.2784361,42.2784226,42.2784017,42.2783711]}]],[[{"lng":[-71.07003,-71.0700605,-71.07029850000001,-71.0696725,-71.0696401,-71.069565,-71.0695091,-71.06943510000001,-71.0694074,-71.0692569,-71.0691044,-71.07003],"lat":[42.2715482,42.2716019,42.2720202,42.2722151,42.2721581,42.2721815,42.2720832,42.2721063,42.2720577,42.2721045,42.2718364,42.2715482]}]],[[{"lng":[-71.05163810000001,-71.0516913,-71.0519031,-71.0521107,-71.0518361,-71.05163810000001],"lat":[42.3398842,42.3398376,42.3396523,42.3397803,42.3400063,42.3398842]}]],[[{"lng":[-71.1395996,-71.14083890000001,-71.1408294,-71.14077589999999,-71.1407172,-71.14063,-71.1404567,-71.1404423,-71.14038859999999,-71.1403893,-71.14026560000001,-71.140275,-71.1401747,-71.14016599999999,-71.14011910000001,-71.140108,-71.14001880000001,-71.139999,-71.13971770000001,-71.139707,-71.1396621,-71.1396467,-71.1395766,-71.1395598,-71.1394899,-71.1394624,-71.1395996],"lat":[42.3563295,42.3564997,42.3565381,42.3567546,42.3567465,42.3570792,42.3570554,42.3571102,42.3571099,42.357045,42.3570284,42.3569885,42.3569737,42.3570138,42.3570202,42.356989,42.3570046,42.3569489,42.3569087,42.3569452,42.3569548,42.3569249,42.3569432,42.3569127,42.3569338,42.3568755,42.3563295]}]],[[{"lng":[-71.1034535,-71.10345479999999,-71.1034963,-71.1035102,-71.1031811,-71.10318220000001,-71.1030291,-71.1030312,-71.1029369,-71.10293609999999,-71.1026652,-71.1026502,-71.1026164,-71.1026153,-71.10282979999999,-71.1028283,-71.1034535],"lat":[42.3237948,42.3238375,42.3238369,42.3242993,42.3243048,42.3243412,42.3243438,42.324414,42.3244156,42.3243864,42.3243909,42.3238948,42.3238953,42.3238587,42.3238551,42.3238051,42.3237948]}]],[[{"lng":[-71.1257461,-71.12609430000001,-71.1260571,-71.12611389999999,-71.1261214,-71.1262997,-71.12631690000001,-71.1263709,-71.1263172,-71.1266816,-71.1267082,-71.126577,-71.1265118,-71.12649589999999,-71.1262966,-71.12628890000001,-71.1262175,-71.1255256,-71.12553269999999,-71.12543669999999,-71.1256564,-71.12571749999999,-71.1257461],"lat":[42.251415,42.2515076,42.2515848,42.2515998,42.2515842,42.2516316,42.251596,42.2516103,42.2517213,42.2518184,42.2519063,42.2521783,42.252161,42.2521943,42.2521412,42.2521573,42.2521383,42.2519542,42.2519394,42.2519139,42.2514581,42.2514745,42.251415]}]],[[{"lng":[-71.1588921,-71.15884699999999,-71.158919,-71.1589311,-71.15907439999999,-71.1591196,-71.15911269999999,-71.1590875,-71.159059,-71.1589644,-71.1588921],"lat":[42.3703611,42.3703037,42.3702745,42.3702894,42.3702309,42.370233,42.3702752,42.3703904,42.3704205,42.3704607,42.3703611]}]],[[{"lng":[-71.10085650000001,-71.1009542,-71.1009798,-71.1010035,-71.10102500000001,-71.1009093,-71.100903,-71.1008071,-71.10056760000001,-71.1001212,-71.100064,-71.0999838,-71.0999041,-71.10085650000001],"lat":[42.343254,42.3434585,42.3434518,42.3435013,42.3435461,42.3435766,42.3435638,42.3435887,42.3436529,42.3437696,42.3436499,42.343671,42.3435046,42.343254]}]],[[{"lng":[-71.0343709,-71.034395,-71.0344431,-71.0343416,-71.03428940000001,-71.0343709],"lat":[42.3763785,42.3764169,42.37649,42.3765263,42.376447,42.3763785]}]],[[{"lng":[-71.10277290000001,-71.1027649,-71.10261629999999,-71.10229030000001,-71.10210979999999,-71.1018924,-71.1021283,-71.1021832,-71.1023572,-71.1026105,-71.10277290000001],"lat":[42.3650222,42.3650287,42.3651639,42.3654669,42.3656396,42.3655122,42.3652926,42.3653248,42.3651627,42.3649269,42.3650222]}]],[[{"lng":[-70.9240063,-70.9239812,-70.9240502,-70.92401030000001,-70.9239462,-70.9239285,-70.92322679999999,-70.9233061,-70.9240063],"lat":[42.2467977,42.2470994,42.2471026,42.2475818,42.2475789,42.2477432,42.24772,42.2467658,42.2467977]}]],[[{"lng":[-71.0422846,-71.04227419999999,-71.0430872,-71.0430772,-71.0431426,-71.0431353,-71.04319409999999,-71.0431482,-71.0432485,-71.0431968,-71.0429154,-71.0428749,-71.0415993,-71.04163130000001,-71.0414183,-71.04148600000001,-71.0414574,-71.04149820000001,-71.0418145,-71.0420611,-71.0422806,-71.0422846],"lat":[42.396053,42.3961127,42.3961892,42.3962471,42.3962533,42.3962952,42.3963008,42.3965661,42.3965756,42.3968747,42.3968487,42.3969687,42.3968482,42.3966632,42.3966431,42.3962518,42.3962505,42.3960065,42.3960046,42.3960164,42.396033,42.396053]}]],[[{"lng":[-70.9209986,-70.9209962,-70.92025580000001,-70.92025630000001,-70.9201712,-70.92017180000001,-70.92025649999999,-70.9202578,-70.9209986],"lat":[42.2500746,42.2497342,42.2497371,42.2498005,42.2498009,42.249884,42.2498837,42.2500774,42.2500746]}]],[[{"lng":[-71.1081372,-71.10737520000001,-71.1070969,-71.1072545,-71.10718489999999,-71.10769759999999,-71.10771509999999,-71.10780680000001,-71.1081372],"lat":[42.2620061,42.2624104,42.2621232,42.2620396,42.2619678,42.2616957,42.2617138,42.2616651,42.2620061]}]],[[{"lng":[-70.81987100000001,-70.8198257,-70.820286,-70.82091749999999,-70.8208444,-70.8208735,-70.82082490000001,-70.8208113,-70.8205935,-70.820607,-70.8205595,-70.82052950000001,-70.82046459999999,-70.8198794,-70.81987100000001],"lat":[42.2336619,42.233643,42.2330336,42.2332969,42.2333938,42.2334059,42.2334703,42.2334646,42.233753,42.2337586,42.2338214,42.2338089,42.2338948,42.2336508,42.2336619]}]],[[{"lng":[-71.11462040000001,-71.11457470000001,-71.11462299999999,-71.1146498,-71.1142546,-71.114144,-71.1140195,-71.11392650000001,-71.1138346,-71.1139277,-71.1137617,-71.11432139999999,-71.11462040000001],"lat":[42.275655,42.2756352,42.2755697,42.2755161,42.2753468,42.2752993,42.2754685,42.275431,42.275556,42.2755934,42.2758191,42.2760524,42.275655]}]],[[{"lng":[-71.1755498,-71.1756113,-71.1755593,-71.1748982,-71.1749097,-71.1747974,-71.17481100000001,-71.17458550000001,-71.1747943,-71.1749282,-71.1749169,-71.1756231,-71.17563440000001,-71.17573160000001,-71.1755498],"lat":[42.3186232,42.3186,42.3185246,42.3187738,42.3187904,42.3188327,42.3188524,42.3189374,42.3192402,42.3191897,42.3191734,42.3189072,42.3189235,42.3188869,42.3186232]}]],[[{"lng":[-70.9241105,-70.9237584,-70.9236033,-70.9239553,-70.9241105],"lat":[42.2491604,42.2492538,42.2489336,42.2488401,42.2491604]}]],[[{"lng":[-71.1255345,-71.1254473,-71.12539580000001,-71.1250314,-71.1251702,-71.1255345],"lat":[42.35274,42.3531282,42.3533578,42.3533131,42.3526953,42.35274]}]],[[{"lng":[-71.19130680000001,-71.1906673,-71.19055779999999,-71.1906362,-71.1906046,-71.19070240000001,-71.1907001,-71.1907598,-71.19093700000001,-71.1909338,-71.1909931,-71.1910917,-71.1911233,-71.191185,-71.19170699999999,-71.19167640000001,-71.19164739999999,-71.19130680000001],"lat":[42.3888017,42.3887731,42.3887028,42.3886362,42.3886159,42.3885328,42.3884866,42.388484,42.3883334,42.388288,42.3882857,42.3882019,42.3882222,42.3881698,42.3885049,42.3885309,42.3885122,42.3888017]}]],[[{"lng":[-71.0822884,-71.0819171,-71.0824892,-71.08272770000001,-71.0826285,-71.0827235,-71.0822884],"lat":[42.3329146,42.3332728,42.3335951,42.3333386,42.333264,42.3331765,42.3329146]}]],[[{"lng":[-71.0495519,-71.0490932,-71.0489384,-71.04895070000001,-71.0489705,-71.04898230000001,-71.04850570000001,-71.04857370000001,-71.04877689999999,-71.0488816,-71.049335,-71.0493522,-71.04936910000001,-71.04937390000001,-71.0495519],"lat":[42.2930245,42.2922288,42.2922776,42.292299,42.2923334,42.2923538,42.2925042,42.2926221,42.2929745,42.2931561,42.293013,42.2930429,42.2930723,42.2930806,42.2930245]}]],[[{"lng":[-70.99161770000001,-70.9916035,-70.991514,-70.9914275,-70.99178019999999,-70.9917708,-70.9919436,-70.9919537,-70.9920967,-70.9925669,-70.9928901,-70.99308190000001,-70.99161770000001],"lat":[42.2399247,42.2399636,42.2402122,42.2404552,42.2405268,42.2405548,42.2405886,42.2405618,42.2405908,42.2406844,42.2407476,42.2402161,42.2399247]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2,"smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[42.2324694,42.3969687],"lng":[-71.19170699999999,-70.8198257]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-40f4b230ca6bc3d9da58" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-40f4b230ca6bc3d9da58">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addPolygons","args":[[[[{"lng":[-71.1206451,-71.12080330000001,-71.1207814,-71.12042099999999,-71.1203775,-71.12035419999999,-71.12026090000001,-71.1202845,-71.1202744,-71.1202567,-71.1201978,-71.1205284,-71.1205432,-71.1206451],"lat":[42.3416918,42.3419744,42.3420066,42.3421096,42.3420941,42.3421008,42.3419214,42.3419146,42.3418952,42.3419003,42.341787,42.3416925,42.341721,42.3416918]}]],[[{"lng":[-70.9910817,-70.9914022,-70.9912806,-70.9912228,-70.99084449999999,-70.9910817],"lat":[42.2414608,42.2415259,42.2420129,42.2421748,42.2420982,42.2414608]}]],[[{"lng":[-71.1130496,-71.113135,-71.113118,-71.1133699,-71.1132313,-71.1131345,-71.1131511,-71.1129866,-71.11298119999999,-71.112905,-71.1130496],"lat":[42.3735754,42.3735947,42.3736358,42.3736929,42.3740293,42.3740075,42.3739673,42.37393,42.3739431,42.3739258,42.3735754]}]],[[{"lng":[-70.996404,-70.99653309999999,-70.99659,-70.99663959999999,-70.9965807,-70.99630089999999,-70.99612260000001,-70.996404],"lat":[42.2536644,42.2537691,42.2537303,42.2537705,42.2538106,42.2540007,42.253856,42.2536644]}]],[[{"lng":[-71.0142105,-71.0141265,-71.014572,-71.01467270000001,-71.014602,-71.0146931,-71.01452740000001,-71.0144363,-71.0142105],"lat":[42.2661229,42.2659614,42.2657369,42.2658539,42.2658876,42.2660078,42.2661015,42.2659876,42.2661229]}]],[[{"lng":[-71.14980300000001,-71.1498189,-71.14931199999999,-71.148988,-71.14900179999999,-71.1487947,-71.1487478,-71.14880530000001,-71.1488003,-71.1487434,-71.1487047,-71.1486912,-71.148786,-71.1493542,-71.1493577,-71.1494304,-71.1494296,-71.14980300000001],"lat":[42.3748429,42.3748644,42.3758032,42.3756874,42.3757856,42.3758015,42.3754678,42.3754633,42.3754272,42.3754316,42.3751489,42.3750508,42.3750417,42.3749873,42.3749954,42.3749909,42.3749663,42.3748429]}]],[[{"lng":[-71.1111121,-71.1111891,-71.1109768,-71.110761,-71.110721,-71.110574,-71.11060999999999,-71.1107028,-71.11068400000001,-71.1111121],"lat":[42.3213306,42.3216368,42.3216662,42.3216961,42.3215371,42.3214805,42.3214291,42.3214647,42.32139,42.3213306]}]],[[{"lng":[-71.11415390000001,-71.1142009,-71.1143359,-71.1144658,-71.1143939,-71.1144101,-71.11390419999999,-71.1136381,-71.11346330000001,-71.1134443,-71.1138559,-71.11415390000001],"lat":[42.3607006,42.3607849,42.3607434,42.3609756,42.361029,42.3610579,42.3612135,42.3612954,42.3609829,42.3608278,42.3607923,42.3607006]}]],[[{"lng":[-71.04764280000001,-71.0473523,-71.0470413,-71.04733299999999,-71.04764280000001],"lat":[42.3516854,42.3520505,42.3519163,42.3515453,42.3516854]}]],[[{"lng":[-71.04081619999999,-71.0408171,-71.0408312,-71.0408971,-71.0409002,-71.0408348,-71.0408426,-71.0409679,-71.04090239999999,-71.04099239999999,-71.0409645,-71.0399707,-71.0399256,-71.0399245,-71.04039349999999,-71.0406103,-71.04081619999999],"lat":[42.3763308,42.3763413,42.3764997,42.376498,42.3765355,42.3765379,42.3766914,42.3767361,42.3768332,42.3768676,42.3769019,42.3769307,42.3763736,42.3763594,42.3763428,42.3763366,42.3763308]}]],[[{"lng":[-71.11430900000001,-71.11444830000001,-71.11409829999999,-71.11395899999999,-71.11430900000001],"lat":[42.3580643,42.358372,42.3584585,42.3581508,42.3580643]}]],[[{"lng":[-71.1232432,-71.1236256,-71.123617,-71.12404669999999,-71.12388060000001,-71.12306839999999,-71.1232432],"lat":[42.3522475,42.3522927,42.3523328,42.3523836,42.3531577,42.3530617,42.3522475]}]],[[{"lng":[-71.12014979999999,-71.1205587,-71.1205531,-71.1207091,-71.1208898,-71.1208676,-71.1208292,-71.1207991,-71.12078320000001,-71.1208228,-71.120801,-71.1199909,-71.1200135,-71.11987790000001,-71.119917,-71.1200403,-71.1201377,-71.12014979999999],"lat":[42.337892,42.3379429,42.3380102,42.3380205,42.3380324,42.3381346,42.3383127,42.3384551,42.3385259,42.3385331,42.338599,42.3384503,42.3383824,42.3383575,42.3381791,42.3379778,42.3379847,42.337892]}]],[[{"lng":[-71.04077580000001,-71.04105029999999,-71.04091680000001,-71.0411216,-71.0410959,-71.0410296,-71.0408559,-71.0406796,-71.04072480000001,-71.0405481,-71.0406471,-71.04069560000001,-71.0406629,-71.04077580000001],"lat":[42.2594729,42.2595465,42.2598215,42.2598764,42.2599293,42.2599116,42.2602694,42.2602859,42.2601925,42.2601451,42.2598137,42.2597142,42.2597054,42.2594729]}]],[[{"lng":[-71.0511205,-71.0513718,-71.0502637,-71.05001439999999,-71.05055,-71.0505175,-71.05075600000001,-71.0507866,-71.0511205],"lat":[42.3180039,42.3184319,42.3187903,42.3183655,42.3181924,42.318137,42.3180598,42.3181119,42.3180039]}]],[[{"lng":[-71.15696699999999,-71.15718529999999,-71.1572231,-71.1570048,-71.15696699999999],"lat":[42.2606838,42.2606568,42.260824,42.2608511,42.2606838]}]],[[{"lng":[-71.1390981,-71.1391234,-71.13905629999999,-71.1390688,-71.13924900000001,-71.13941,-71.1392432,-71.13925690000001,-71.1391125,-71.1389176,-71.1389739,-71.13895650000001,-71.1390981],"lat":[42.3372718,42.3373452,42.3373579,42.3373941,42.3373598,42.3378265,42.3378581,42.337898,42.3379254,42.3373603,42.3373496,42.3372988,42.3372718]}]],[[{"lng":[-71.10131629999999,-71.1015537,-71.10151860000001,-71.1015615,-71.10159899999999,-71.1020523,-71.1020039,-71.1021647,-71.1021202,-71.1020898,-71.10200810000001,-71.10180819999999,-71.10164399999999,-71.1012453,-71.101027,-71.1011883,-71.10131629999999],"lat":[42.3803572,42.3804382,42.3804903,42.3805057,42.3804527,42.3806036,42.3806952,42.3807564,42.3808311,42.3808174,42.3807957,42.3811252,42.381068,42.3809299,42.3808541,42.3805925,42.3803572]}]],[[{"lng":[-71.11167759999999,-71.11179060000001,-71.1122501,-71.11200890000001,-71.1120583,-71.1120887,-71.11211849999999,-71.1119953,-71.11132000000001,-71.11167759999999],"lat":[42.3832851,42.3833567,42.3836452,42.3838484,42.38388,42.3838995,42.3839185,42.3840243,42.3835921,42.3832851]}]],[[{"lng":[-71.0810322,-71.08153160000001,-71.08106720000001,-71.0804607,-71.08079619999999,-71.0809031,-71.0810322],"lat":[42.3087832,42.3090428,42.309535,42.3092196,42.3088642,42.3089199,42.3087832]}]],[[{"lng":[-71.1585881,-71.15846809999999,-71.15846500000001,-71.15861630000001,-71.1586697,-71.1586724,-71.1586731,-71.1586698,-71.1586654,-71.15864670000001,-71.1585881],"lat":[42.3706399,42.370541,42.3705386,42.3704474,42.3705382,42.3705395,42.3705655,42.3705711,42.3705867,42.3706067,42.3706399]}]],[[{"lng":[-71.1021428,-71.10219189999999,-71.1022395,-71.10222330000001,-71.10265699999999,-71.1026402,-71.1027624,-71.1026834,-71.10203079999999,-71.1021428],"lat":[42.3678816,42.3679006,42.3679191,42.367942,42.3681101,42.368134,42.3681814,42.3682934,42.3680404,42.3678816]}]],[[{"lng":[-71.1373296,-71.1374175,-71.1373734,-71.1381336,-71.1378758,-71.13779100000001,-71.137488,-71.1370483,-71.1370539,-71.13706879999999,-71.137019,-71.1372209,-71.1372729,-71.1373296],"lat":[42.3604478,42.3604693,42.3605685,42.3607546,42.3613823,42.3613615,42.3612874,42.3611798,42.3611671,42.3611335,42.3610162,42.3605624,42.3605752,42.3604478]}]],[[{"lng":[-71.08561880000001,-71.0861482,-71.08619469999999,-71.0862611,-71.0863245,-71.0863811,-71.0853923,-71.0852381,-71.0853315,-71.0849343,-71.0851553,-71.085081,-71.08561880000001],"lat":[42.3909271,42.3912216,42.3911758,42.3912139,42.3911504,42.391182,42.3921394,42.3920567,42.3919605,42.3917374,42.3915212,42.3914786,42.3909271]}]],[[{"lng":[-71.0268657,-71.0271917,-71.02729739999999,-71.0274799,-71.0272375,-71.0266026,-71.0264019,-71.0263641,-71.0262992,-71.02584210000001,-71.02588040000001,-71.0259259,-71.0259535,-71.0260002,-71.0260135,-71.0260665,-71.02639310000001,-71.02638930000001,-71.0264396,-71.0264375,-71.0264671,-71.0265132,-71.02661310000001,-71.02657290000001,-71.026681,-71.0266247,-71.0266694,-71.0267284,-71.0268657],"lat":[42.2705525,42.2708607,42.2707951,42.2709723,42.2711274,42.2714976,42.2716147,42.271579,42.2716168,42.2711845,42.2711119,42.2711252,42.2710725,42.2710861,42.2710609,42.2710762,42.2708857,42.2708145,42.270813,42.2707729,42.2707721,42.2708157,42.2707574,42.2707194,42.2706563,42.270603,42.2705769,42.2706326,42.2705525]}]],[[{"lng":[-71.1637903,-71.16397499999999,-71.16333400000001,-71.163321,-71.16256869999999,-71.16254429999999,-71.1627677,-71.1626363,-71.1627483,-71.162738,-71.16293880000001,-71.16293140000001,-71.16300990000001,-71.16300630000001,-71.1631084,-71.16311039999999,-71.1634538,-71.1634502,-71.1635517,-71.16356740000001,-71.16360090000001,-71.1636614,-71.1636529,-71.1637903],"lat":[42.2783711,42.2788291,42.2789717,42.2789396,42.2791068,42.2790462,42.2789966,42.2786705,42.2786457,42.27862,42.2785754,42.278557,42.2785395,42.2785308,42.2785081,42.278513,42.2784366,42.2784277,42.2784051,42.2784438,42.2784361,42.2784226,42.2784017,42.2783711]}]],[[{"lng":[-71.07003,-71.0700605,-71.07029850000001,-71.0696725,-71.0696401,-71.069565,-71.0695091,-71.06943510000001,-71.0694074,-71.0692569,-71.0691044,-71.07003],"lat":[42.2715482,42.2716019,42.2720202,42.2722151,42.2721581,42.2721815,42.2720832,42.2721063,42.2720577,42.2721045,42.2718364,42.2715482]}]],[[{"lng":[-71.05163810000001,-71.0516913,-71.0519031,-71.0521107,-71.0518361,-71.05163810000001],"lat":[42.3398842,42.3398376,42.3396523,42.3397803,42.3400063,42.3398842]}]],[[{"lng":[-71.1395996,-71.14083890000001,-71.1408294,-71.14077589999999,-71.1407172,-71.14063,-71.1404567,-71.1404423,-71.14038859999999,-71.1403893,-71.14026560000001,-71.140275,-71.1401747,-71.14016599999999,-71.14011910000001,-71.140108,-71.14001880000001,-71.139999,-71.13971770000001,-71.139707,-71.1396621,-71.1396467,-71.1395766,-71.1395598,-71.1394899,-71.1394624,-71.1395996],"lat":[42.3563295,42.3564997,42.3565381,42.3567546,42.3567465,42.3570792,42.3570554,42.3571102,42.3571099,42.357045,42.3570284,42.3569885,42.3569737,42.3570138,42.3570202,42.356989,42.3570046,42.3569489,42.3569087,42.3569452,42.3569548,42.3569249,42.3569432,42.3569127,42.3569338,42.3568755,42.3563295]}]],[[{"lng":[-71.1034535,-71.10345479999999,-71.1034963,-71.1035102,-71.1031811,-71.10318220000001,-71.1030291,-71.1030312,-71.1029369,-71.10293609999999,-71.1026652,-71.1026502,-71.1026164,-71.1026153,-71.10282979999999,-71.1028283,-71.1034535],"lat":[42.3237948,42.3238375,42.3238369,42.3242993,42.3243048,42.3243412,42.3243438,42.324414,42.3244156,42.3243864,42.3243909,42.3238948,42.3238953,42.3238587,42.3238551,42.3238051,42.3237948]}]],[[{"lng":[-71.1257461,-71.12609430000001,-71.1260571,-71.12611389999999,-71.1261214,-71.1262997,-71.12631690000001,-71.1263709,-71.1263172,-71.1266816,-71.1267082,-71.126577,-71.1265118,-71.12649589999999,-71.1262966,-71.12628890000001,-71.1262175,-71.1255256,-71.12553269999999,-71.12543669999999,-71.1256564,-71.12571749999999,-71.1257461],"lat":[42.251415,42.2515076,42.2515848,42.2515998,42.2515842,42.2516316,42.251596,42.2516103,42.2517213,42.2518184,42.2519063,42.2521783,42.252161,42.2521943,42.2521412,42.2521573,42.2521383,42.2519542,42.2519394,42.2519139,42.2514581,42.2514745,42.251415]}]],[[{"lng":[-71.1588921,-71.15884699999999,-71.158919,-71.1589311,-71.15907439999999,-71.1591196,-71.15911269999999,-71.1590875,-71.159059,-71.1589644,-71.1588921],"lat":[42.3703611,42.3703037,42.3702745,42.3702894,42.3702309,42.370233,42.3702752,42.3703904,42.3704205,42.3704607,42.3703611]}]],[[{"lng":[-71.10085650000001,-71.1009542,-71.1009798,-71.1010035,-71.10102500000001,-71.1009093,-71.100903,-71.1008071,-71.10056760000001,-71.1001212,-71.100064,-71.0999838,-71.0999041,-71.10085650000001],"lat":[42.343254,42.3434585,42.3434518,42.3435013,42.3435461,42.3435766,42.3435638,42.3435887,42.3436529,42.3437696,42.3436499,42.343671,42.3435046,42.343254]}]],[[{"lng":[-71.0343709,-71.034395,-71.0344431,-71.0343416,-71.03428940000001,-71.0343709],"lat":[42.3763785,42.3764169,42.37649,42.3765263,42.376447,42.3763785]}]],[[{"lng":[-71.10277290000001,-71.1027649,-71.10261629999999,-71.10229030000001,-71.10210979999999,-71.1018924,-71.1021283,-71.1021832,-71.1023572,-71.1026105,-71.10277290000001],"lat":[42.3650222,42.3650287,42.3651639,42.3654669,42.3656396,42.3655122,42.3652926,42.3653248,42.3651627,42.3649269,42.3650222]}]],[[{"lng":[-70.9240063,-70.9239812,-70.9240502,-70.92401030000001,-70.9239462,-70.9239285,-70.92322679999999,-70.9233061,-70.9240063],"lat":[42.2467977,42.2470994,42.2471026,42.2475818,42.2475789,42.2477432,42.24772,42.2467658,42.2467977]}]],[[{"lng":[-71.0422846,-71.04227419999999,-71.0430872,-71.0430772,-71.0431426,-71.0431353,-71.04319409999999,-71.0431482,-71.0432485,-71.0431968,-71.0429154,-71.0428749,-71.0415993,-71.04163130000001,-71.0414183,-71.04148600000001,-71.0414574,-71.04149820000001,-71.0418145,-71.0420611,-71.0422806,-71.0422846],"lat":[42.396053,42.3961127,42.3961892,42.3962471,42.3962533,42.3962952,42.3963008,42.3965661,42.3965756,42.3968747,42.3968487,42.3969687,42.3968482,42.3966632,42.3966431,42.3962518,42.3962505,42.3960065,42.3960046,42.3960164,42.396033,42.396053]}]],[[{"lng":[-70.9209986,-70.9209962,-70.92025580000001,-70.92025630000001,-70.9201712,-70.92017180000001,-70.92025649999999,-70.9202578,-70.9209986],"lat":[42.2500746,42.2497342,42.2497371,42.2498005,42.2498009,42.249884,42.2498837,42.2500774,42.2500746]}]],[[{"lng":[-71.1081372,-71.10737520000001,-71.1070969,-71.1072545,-71.10718489999999,-71.10769759999999,-71.10771509999999,-71.10780680000001,-71.1081372],"lat":[42.2620061,42.2624104,42.2621232,42.2620396,42.2619678,42.2616957,42.2617138,42.2616651,42.2620061]}]],[[{"lng":[-70.81987100000001,-70.8198257,-70.820286,-70.82091749999999,-70.8208444,-70.8208735,-70.82082490000001,-70.8208113,-70.8205935,-70.820607,-70.8205595,-70.82052950000001,-70.82046459999999,-70.8198794,-70.81987100000001],"lat":[42.2336619,42.233643,42.2330336,42.2332969,42.2333938,42.2334059,42.2334703,42.2334646,42.233753,42.2337586,42.2338214,42.2338089,42.2338948,42.2336508,42.2336619]}]],[[{"lng":[-71.11462040000001,-71.11457470000001,-71.11462299999999,-71.1146498,-71.1142546,-71.114144,-71.1140195,-71.11392650000001,-71.1138346,-71.1139277,-71.1137617,-71.11432139999999,-71.11462040000001],"lat":[42.275655,42.2756352,42.2755697,42.2755161,42.2753468,42.2752993,42.2754685,42.275431,42.275556,42.2755934,42.2758191,42.2760524,42.275655]}]],[[{"lng":[-71.1755498,-71.1756113,-71.1755593,-71.1748982,-71.1749097,-71.1747974,-71.17481100000001,-71.17458550000001,-71.1747943,-71.1749282,-71.1749169,-71.1756231,-71.17563440000001,-71.17573160000001,-71.1755498],"lat":[42.3186232,42.3186,42.3185246,42.3187738,42.3187904,42.3188327,42.3188524,42.3189374,42.3192402,42.3191897,42.3191734,42.3189072,42.3189235,42.3188869,42.3186232]}]],[[{"lng":[-70.9241105,-70.9237584,-70.9236033,-70.9239553,-70.9241105],"lat":[42.2491604,42.2492538,42.2489336,42.2488401,42.2491604]}]],[[{"lng":[-71.1255345,-71.1254473,-71.12539580000001,-71.1250314,-71.1251702,-71.1255345],"lat":[42.35274,42.3531282,42.3533578,42.3533131,42.3526953,42.35274]}]],[[{"lng":[-71.19130680000001,-71.1906673,-71.19055779999999,-71.1906362,-71.1906046,-71.19070240000001,-71.1907001,-71.1907598,-71.19093700000001,-71.1909338,-71.1909931,-71.1910917,-71.1911233,-71.191185,-71.19170699999999,-71.19167640000001,-71.19164739999999,-71.19130680000001],"lat":[42.3888017,42.3887731,42.3887028,42.3886362,42.3886159,42.3885328,42.3884866,42.388484,42.3883334,42.388288,42.3882857,42.3882019,42.3882222,42.3881698,42.3885049,42.3885309,42.3885122,42.3888017]}]],[[{"lng":[-71.0822884,-71.0819171,-71.0824892,-71.08272770000001,-71.0826285,-71.0827235,-71.0822884],"lat":[42.3329146,42.3332728,42.3335951,42.3333386,42.333264,42.3331765,42.3329146]}]],[[{"lng":[-71.0495519,-71.0490932,-71.0489384,-71.04895070000001,-71.0489705,-71.04898230000001,-71.04850570000001,-71.04857370000001,-71.04877689999999,-71.0488816,-71.049335,-71.0493522,-71.04936910000001,-71.04937390000001,-71.0495519],"lat":[42.2930245,42.2922288,42.2922776,42.292299,42.2923334,42.2923538,42.2925042,42.2926221,42.2929745,42.2931561,42.293013,42.2930429,42.2930723,42.2930806,42.2930245]}]],[[{"lng":[-70.99161770000001,-70.9916035,-70.991514,-70.9914275,-70.99178019999999,-70.9917708,-70.9919436,-70.9919537,-70.9920967,-70.9925669,-70.9928901,-70.99308190000001,-70.99161770000001],"lat":[42.2399247,42.2399636,42.2402122,42.2404552,42.2405268,42.2405548,42.2405886,42.2405618,42.2405908,42.2406844,42.2407476,42.2402161,42.2399247]}]]],null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2,"smoothFactor":1,"noClip":false},null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[42.2324694,42.3969687],"lng":[-71.19170699999999,-70.8198257]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>Most of the supermarket locations are there. To prepare for our next step - joining them with our neighborhood dataset, we will do two additional things:</p>
@@ -522,97 +510,97 @@ Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
 <li>transform its CRS to be consistent with our neighborhood data.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>supermarket <span class="ot">&lt;-</span> </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  supermarket <span class="sc">|&gt;</span> </span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_centroid</span>(geometry) <span class="sc">|&gt;</span> </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">2249</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>supermarket <span class="ot">&lt;-</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  supermarket <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_centroid</span>(geometry) <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">2249</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="write-a-function" class="level3">
 <h3 class="anchored" data-anchor-id="write-a-function">Write a function</h3>
 <p>To streamline this “download - extract - transform” process, we can create a function to extract the specific elements required.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I name the function "get_osm". </span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The inputs are place name and the key-value pair</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The output is a spatial point sf object that stores the centroid of POIs.</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>get_osm <span class="ot">&lt;-</span> <span class="cf">function</span>(place, key, value){</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  bbox <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(nominatimlite<span class="sc">::</span><span class="fu">geo_lite_sf</span>(</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">address =</span> place,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">points_only =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> <span class="fu">opq</span>(bbox) <span class="sc">|&gt;</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_osm_feature</span>(<span class="at">key =</span> key, <span class="at">value =</span> value) <span class="sc">|&gt;</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">osmdata_sf</span>()</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> temp<span class="sc">$</span>osm_polygons <span class="sc">|&gt;</span> </span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(name) <span class="sc">|&gt;</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_centroid</span>(geometry) <span class="sc">|&gt;</span> </span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2249</span>)</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I name the function "get_osm". </span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The inputs are place name and the key-value pair</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The output is a spatial point sf object that stores the centroid of POIs.</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>get_osm <span class="ot">&lt;-</span> <span class="cf">function</span>(place, key, value){</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  bbox <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(nominatimlite<span class="sc">::</span><span class="fu">geo_lite_sf</span>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">address =</span> place,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">points_only =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> <span class="fu">opq</span>(bbox) <span class="sc">|&gt;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_osm_feature</span>(<span class="at">key =</span> key, <span class="at">value =</span> value) <span class="sc">|&gt;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">osmdata_sf</span>()</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> temp<span class="sc">$</span>osm_polygons <span class="sc">|&gt;</span> </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(name) <span class="sc">|&gt;</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_centroid</span>(geometry) <span class="sc">|&gt;</span> </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2249</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s use our function to download more POIs that could describe business activities. Note that this is not an exhaustive list, there may be further relevant points to consider.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>restaurant <span class="ot">&lt;-</span> <span class="fu">get_osm</span>(<span class="st">"Boston, MA, USA"</span>, <span class="st">"amenity"</span>, <span class="st">"restaurant"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fastfood <span class="ot">&lt;-</span> <span class="fu">get_osm</span>(<span class="st">"Boston, MA, USA"</span>, <span class="st">"amenity"</span>, <span class="st">"fast_food"</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>retail <span class="ot">&lt;-</span> <span class="fu">get_osm</span>(<span class="st">"Boston, MA, USA"</span>, <span class="st">"building"</span>, <span class="st">"retail"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>restaurant <span class="ot">&lt;-</span> <span class="fu">get_osm</span>(<span class="st">"Boston, MA, USA"</span>, <span class="st">"amenity"</span>, <span class="st">"restaurant"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fastfood <span class="ot">&lt;-</span> <span class="fu">get_osm</span>(<span class="st">"Boston, MA, USA"</span>, <span class="st">"amenity"</span>, <span class="st">"fast_food"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>retail <span class="ot">&lt;-</span> <span class="fu">get_osm</span>(<span class="st">"Boston, MA, USA"</span>, <span class="st">"building"</span>, <span class="st">"retail"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="calculate-the-number-of-pois-by-neighborhood" class="level2">
 <h2 class="anchored" data-anchor-id="calculate-the-number-of-pois-by-neighborhood">Calculate the number of POIs by neighborhood</h2>
-<p>Once the three OSM variables are generated, we can count the number of points within each neighborhood. <code>st_intersects</code> returns a logical value indicating whether the intersection occurs (True - there are points in this polygon, and False - no point is in this polygon). We then apply <code>lengths</code> to the result of <code>st_intersects</code> to count the number of TRUE values, which is the sum of the points that intersect with the polygon.</p>
+<p>Once the three OSM variables are generated, we can count the number of points within each neighborhood. In the following code, <code>st_intersects</code> returns a list of 24 (the number of neighborhoods), in which each element contains IDs of the points falling within this polygon. We then apply <code>lengths()</code> to the elements of <code>st_intersects</code> to count the number of IDs. (<code>lengths</code> is a base R function, it’s not calculating spatial lengths, but getting the length of elements of a list).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The `bind_cols` brings multiple vectors together to make a data frame</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>osm_data <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(neighborhood<span class="sc">$</span>nbh_name,</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, restaurant)),</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, fastfood)),</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, retail)),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, supermarket))</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(osm_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"nbh_name"</span>, <span class="st">"restaurant"</span>, <span class="st">"fastfood"</span>, <span class="st">"retail"</span>, <span class="st">"supermarket"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The `bind_cols` brings multiple vectors together to make a data frame</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>osm_data <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(neighborhood<span class="sc">$</span>nbh_name,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, restaurant)),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, fastfood)),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, retail)),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(neighborhood, supermarket))</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(osm_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"nbh_name"</span>, <span class="st">"restaurant"</span>, <span class="st">"fastfood"</span>, <span class="st">"retail"</span>, <span class="st">"supermarket"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then we can simply sum them up to have the total number of business-related POIs in each neighborhood, than factor in the population size to normalize the raw count.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>osm_data <span class="ot">&lt;-</span> osm_data <span class="sc">|&gt;</span> </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(neighborhood, <span class="at">by =</span> <span class="st">"nbh_name"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poi_density =</span> <span class="fu">ifelse</span>(population<span class="sc">&gt;</span><span class="dv">0</span>, (restaurant<span class="sc">+</span>fastfood<span class="sc">+</span>retail<span class="sc">+</span>supermarket)<span class="sc">/</span>(population<span class="sc">/</span><span class="dv">1000</span>), <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nbh_name, poi_density)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>osm_data <span class="ot">&lt;-</span> osm_data <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(neighborhood, <span class="at">by =</span> <span class="st">"nbh_name"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">poi_density =</span> <span class="fu">ifelse</span>(population<span class="sc">&gt;</span><span class="dv">0</span>, (restaurant<span class="sc">+</span>fastfood<span class="sc">+</span>retail<span class="sc">+</span>supermarket)<span class="sc">/</span>(population<span class="sc">/</span><span class="dv">1000</span>), <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(nbh_name, poi_density)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="assemble-results" class="level2">
 <h2 class="anchored" data-anchor-id="assemble-results">Assemble results</h2>
-<p>Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute <code>nbh_name</code>, so we can perform <code>left_join()</code> on two datasets at a time. But an alternative strategy is to use the purrr package’s&nbsp;<code>reduce()</code>&nbsp;function to combine multiple datasets at one time.</p>
+<p>Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute <code>nbh_name</code>, so we can perform <code>left_join()</code> on two datasets at a time. But an alternative strategy is to use the <code>purrr</code> package’s&nbsp;<code>reduce()</code>&nbsp;function to combine multiple datasets at one time.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(neighborhood, sidewalk_data, osm_data) <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(left_join, <span class="at">by =</span> <span class="st">"nbh_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">list</span>(neighborhood, sidewalk_data, osm_data) <span class="sc">|&gt;</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(left_join, <span class="at">by =</span> <span class="st">"nbh_name"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We have finally compiled the necessary dataset that incorporates all the indicators we have identified. Now let’s remove intermediary variables in the working environment, keeping only the <code>data</code> and prepare to create the index.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(population, nbh_area))</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">setdiff</span>(<span class="fu">ls</span>(), <span class="st">"data"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(population, nbh_area))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">setdiff</span>(<span class="fu">ls</span>(), <span class="st">"data"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="create-a-composite-index" class="level1">
 <h1>Create a composite index</h1>
-<p>There are many, many different methods to combine variables. We are going to create a relatively simple additive index by adding up our three indicators with equal weights. But before that, we need to standardize our variables to make sure they are at a comparable scale.</p>
+<p>There are many different methods to combine variables. We are going to create a relatively simple additive index by adding up our three indicators with equal weights. But before that, we need to standardize our variables to make sure they are at a comparable scale.</p>
 <section id="standardize-indicators" class="level2">
 <h2 class="anchored" data-anchor-id="standardize-indicators">Standardize indicators</h2>
 <p>Since our indicators end up having very different scales, we can’t interpret anything about the magnitude by comparing these values to each other. In many statistical analyses, such as multivariate linear regression, standardizing your data is usually an essential first step to prevent certain variables from dominating the analysis due to their larger numerical values.</p>
 <p>Z-score standardization converts data from various distributions into a common <em>unit</em> of measurement, which is the number of standard deviations from the mean. This conversion enables data points, regardless of their original spread, to be expressed in the same way.</p>
 <p>A z-score can be calculated by subtracting from a given observation the mean of all observations and then dividing by the standard deviation of all observations. R has us covered here - the <code>scale</code> function does exactly the same thing. Here we use a <code>mutate_at</code> function to perform the same alteration upon multiple variables we select. Take a look at the documentation for <code>mutate_at</code>, the <code>list</code> argument allows you to modify existing columns in place.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">vars</span>(</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>      pop_density,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>      sidewalk_coverage,</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>      poi_density</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(scale)</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">vars</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      pop_density,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      sidewalk_coverage,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      poi_density</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(scale)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="specify-the-directions" class="level2">
@@ -623,37 +611,527 @@ Projected CRS: NAD83 / Massachusetts Mainland (ftUS)</code></pre>
 <h2 class="anchored" data-anchor-id="aggregate-the-index">Aggregate the index</h2>
 <p>We are finally going to generate our composite index, where standardized values are simply added together. Based upon the table above, Here’s what that would look like:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> score <span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">index =</span> <span class="fu">sum</span>(pop_density, sidewalk_coverage, poi_density))<span class="sc">|&gt;</span> </span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> score <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">index =</span> <span class="fu">sum</span>(pop_density, sidewalk_coverage, poi_density))<span class="sc">|&gt;</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You may have noticed&nbsp;<code>rowwise()</code>. Typically, if we were to ask <code>dplyr</code> to mutate by providing a sum, it would do so by column.&nbsp;<code>rowwise()</code>&nbsp;modifies this and asks for something to happen across a data observation (row) instead of by column.</p>
 <p>We could analyze the index value and interpret it as is, but for an index, it’s reasonable to anticipate a value falling within the range of 0 to 100. We can use <code>rescale</code> to put our values into any specified range.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  score <span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">index =</span> <span class="fu">rescale</span>(index, <span class="at">to =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  score <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">index =</span> <span class="fu">rescale</span>(index, <span class="at">to =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="check-the-result" class="level2">
 <h2 class="anchored" data-anchor-id="check-the-result">Check the result</h2>
 <p>We can make a quick map to examine our results. Although, we don’t want to over-interpret our results because any method to evaluate walkability is a difficult one. OpenStreetMap also exhibits issues such as missing names, data availability bias, and inconsistent categorization, etc. This study chose a more pragmatic method to demostrate the capabilities of R in data management and spatial analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(score) <span class="sc">+</span> </span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> index))<span class="sc">+</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continuous</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(score) <span class="sc">+</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> index))<span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continuous</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab5_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<section id="optional" class="level3">
+<h3 class="anchored" data-anchor-id="optional"><strong>Optional:</strong></h3>
+<p>Here are some other approaches for presenting our results in response to suggestions - for example, a formatted and sortable table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rescore the sub-dimensional indices to 0-100 as well</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  score <span class="sc">|&gt;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(pop_density, sidewalk_coverage, poi_density),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span><span class="fu">rescale</span>(., <span class="at">to =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>score<span class="sc">|&gt;</span> </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="at">columns =</span> nbh_name),</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_interactive</span>(</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_compact_mode =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_text_wrapping =</span> <span class="cn">FALSE</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="ausqkldzyb" class=".gt_table" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ausqkldzyb table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ausqkldzyb thead, #ausqkldzyb tbody, #ausqkldzyb tfoot, #ausqkldzyb tr, #ausqkldzyb td, #ausqkldzyb th {
+  border-style: none;
+}
+
+#ausqkldzyb p {
+  margin: 0;
+  padding: 0;
+}
+
+#ausqkldzyb .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ausqkldzyb .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ausqkldzyb .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ausqkldzyb .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ausqkldzyb .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ausqkldzyb .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ausqkldzyb .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ausqkldzyb .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ausqkldzyb .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ausqkldzyb .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ausqkldzyb .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ausqkldzyb .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ausqkldzyb .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ausqkldzyb .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ausqkldzyb .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ausqkldzyb .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ausqkldzyb .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ausqkldzyb .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ausqkldzyb .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ausqkldzyb .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ausqkldzyb .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ausqkldzyb .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ausqkldzyb .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ausqkldzyb .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ausqkldzyb .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ausqkldzyb .gt_left {
+  text-align: left;
+}
+
+#ausqkldzyb .gt_center {
+  text-align: center;
+}
+
+#ausqkldzyb .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ausqkldzyb .gt_font_normal {
+  font-weight: normal;
+}
+
+#ausqkldzyb .gt_font_bold {
+  font-weight: bold;
+}
+
+#ausqkldzyb .gt_font_italic {
+  font-style: italic;
+}
+
+#ausqkldzyb .gt_super {
+  font-size: 65%;
+}
+
+#ausqkldzyb .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ausqkldzyb .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ausqkldzyb .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ausqkldzyb .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ausqkldzyb .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ausqkldzyb .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ausqkldzyb .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<div id="ausqkldzyb" class="reactable html-widget " style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="ausqkldzyb">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"nbh_name":["Allston","Back Bay","Beacon Hill","Brighton","Charlestown","Chinatown","Dorchester","Downtown","East Boston","Fenway","Harbor Islands","Hyde Park","Jamaica Plain","Longwood","Mattapan","Mission Hill","North End","Roslindale","Roxbury","South Boston","South Boston Waterfront","South End","West End","West Roxbury"],"pop_density":[[33.1370485842503],[61.235623705648],[56.9082007847573],[30.3576055164616],[17.9389766771298],[100],[26.8020476502075],[29.9691780843839],[11.4398181645101],[42.3950124098946],[0],[11.4018474073972],[17.4030117203026],[28.7603116000252],[19.626382299723],[57.2377113856492],[61.3644530145751],[21.0705962275903],[27.3653615256016],[26.5074003201062],[5.63179003896938],[63.0495965311217],[44.2556947058362],[10.4208499276123]],"sidewalk_coverage":[[51.3918891843898],[90.2868703990185],[100],[55.0321400798899],[46.5963390713671],[86.4400368886291],[52.3880519641772],[66.8679488983377],[17.7691241129043],[44.1479202250631],[0],[31.086366449952],[44.378700575718],[72.8273674508633],[44.4267132757315],[82.4143195577023],[62.5778672542436],[49.9636266421362],[62.6023152337533],[51.966733092448],[21.1756972503386],[94.5856960110826],[57.0701468797222],[35.7204951777919]],"poi_density":[[100],[48.1319895734483],[36.0665860174404],[27.8682099779701],[10.5664533595865],[9.42790555953587],[33.3435648240195],[45.0592346075297],[18.7647413955598],[12.4931679400618],["NA"],[28.5621924858283],[13.9573783282942],[16.4412913602941],[7.06380899259091],[0],[49.8610120586874],[27.500250219192],[9.19909790708014],[17.7607746951934],[24.1417922250456],[11.4635089047364],[4.3701187158835],[14.9363044859907]],"index":[94.3592608250088,100,94.4945717342035,42.6109925865936,16.51909477269,95.4000917938342,42.5418876494406,62.2297632436272,0,32.6632100750042,"NA",15.4344187484927,17.2212865921234,44.4665304927166,13.7450754764514,57.5661168563785,83.9181822260375,32.9728406478293,31.8701723852086,30.8070714935648,2.16306867132422,77.3819515058078,36.1489618121493,7.83618434863083]},"columns":[{"id":"nbh_name","name":"nbh_name","type":"character","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'nbh_name' & rowIndex === 1) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 2) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 3) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 4) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 5) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 7) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 8) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 9) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 10) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 11) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 12) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 13) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 14) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 15) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 16) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 17) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 18) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 19) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 20) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 21) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 22) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 23) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 24) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["Allston","Back Bay","Beacon Hill","Brighton","Charlestown","Chinatown","Dorchester","Downtown","East Boston","Fenway","Harbor Islands","Hyde Park","Jamaica Plain","Longwood","Mattapan","Mission Hill","North End","Roslindale","Roxbury","South Boston","South Boston Waterfront","South End","West End","West Roxbury"],"html":true,"align":"left","headerStyle":{"font-weight":"normal"}},{"id":"pop_density","name":"pop_density","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'nbh_name' & rowIndex === 1) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 2) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 3) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 4) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 5) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 7) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 8) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 9) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 10) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 11) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 12) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 13) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 14) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 15) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 16) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 17) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 18) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 19) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 20) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 21) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 22) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 23) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 24) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["33.13705","61.23562","56.90820","30.35761","17.93898","100.00000","26.80205","29.96918","11.43982","42.39501","0.00000","11.40185","17.40301","28.76031","19.62638","57.23771","61.36445","21.07060","27.36536","26.50740","5.63179","63.04960","44.25569","10.42085"],"html":true,"align":"center","headerStyle":{"font-weight":"normal"}},{"id":"sidewalk_coverage","name":"sidewalk_coverage","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'nbh_name' & rowIndex === 1) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 2) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 3) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 4) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 5) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 7) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 8) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 9) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 10) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 11) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 12) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 13) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 14) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 15) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 16) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 17) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 18) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 19) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 20) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 21) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 22) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 23) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 24) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["51.39189","90.28687","100.00000","55.03214","46.59634","86.44004","52.38805","66.86795","17.76912","44.14792","0.00000","31.08637","44.37870","72.82737","44.42671","82.41432","62.57787","49.96363","62.60232","51.96673","21.17570","94.58570","57.07015","35.72050"],"html":true,"align":"center","headerStyle":{"font-weight":"normal"}},{"id":"poi_density","name":"poi_density","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'nbh_name' & rowIndex === 1) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 2) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 3) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 4) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 5) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 7) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 8) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 9) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 10) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 11) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 12) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 13) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 14) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 15) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 16) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 17) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 18) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 19) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 20) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 21) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 22) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 23) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 24) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["100.000000","48.131990","36.066586","27.868210","10.566453","9.427906","33.343565","45.059235","18.764741","12.493168","NA","28.562192","13.957378","16.441291","7.063809","0.000000","49.861012","27.500250","9.199098","17.760775","24.141792","11.463509","4.370119","14.936304"],"html":true,"align":"center","headerStyle":{"font-weight":"normal"}},{"id":"index","name":"index","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'nbh_name' & rowIndex === 1) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 2) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 3) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 4) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 5) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 7) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 8) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 9) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 10) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 11) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 12) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 13) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 14) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 15) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 16) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 17) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 18) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 19) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 20) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 21) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 22) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 23) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'nbh_name' & rowIndex === 24) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["94.359261","100.000000","94.494572","42.610993","16.519095","95.400092","42.541888","62.229763","0.000000","32.663210","NA","15.434419","17.221287","44.466530","13.745075","57.566117","83.918182","32.972841","31.870172","30.807071","2.163069","77.381952","36.148962","7.836184"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}}],"defaultPageSize":10,"showPageSizeOptions":false,"pageSizeOptions":[10,25,50,100],"paginationType":"numbers","showPagination":true,"showPageInfo":true,"minRows":1,"compact":true,"nowrap":true,"showSortable":true,"height":"auto","theme":{"color":"#333333","backgroundColor":"#FFFFFF","stripedColor":"rgba(128,128,128,0.05)","style":{"fontFamily":"system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"},"headerStyle":{"borderTopStyle":"solid","borderTopWidth":"2px","borderTopColor":"#D3D3D3","borderBottomStyle":"solid","borderBottomWidth":"2px","borderBottomColor":"#D3D3D3"}},"elementId":"ausqkldzyb","dataKey":"846c0d81b252d3a4930405517aa732e6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.0.style","tag.attribs.columns.1.style","tag.attribs.columns.2.style","tag.attribs.columns.3.style","tag.attribs.columns.4.style"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<p>Or, we can make some <a href="https://r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html">radar charts</a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>nbh <span class="ot">=</span> <span class="st">"Downtown"</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The radar chart requires only value columns</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> score <span class="sc">|&gt;</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(nbh_name <span class="sc">==</span> nbh)<span class="sc">|&gt;</span> </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pop_density, sidewalk_coverage, poi_density)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co"># I also have to manually add 2 new row: the max and min of each indicator</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">rep</span>(<span class="dv">100</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">3</span>), temp) </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fmsb)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="fu">radarchart</span>(temp, <span class="at">title =</span> nbh)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab5_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 </section>
 <section id="exercise" class="level1">
 <h1>Exercise</h1>
-<p>This exercise will be a self-guided mini research to evaluate the <strong>public transportation service (supply)</strong> of selected Boston neighborhoods. You will define 3-4 indicators that describe existing public transportation service, formulate a calculation process, then focus on two neighborhoods in Boston to compare your results and evaluate the success (or failure) of your study cases.</p>
-<p>You can describe public transportation service by number of bus and rail stops, number of routes, length of bike routes and sidewalks, etc. Note that the primary purpose of this exercise is to practice spatial analysis in R. You should operationalize the metrics in a manageable way and specify indicators that work for you.</p>
+<p>This exercise will be a self-guided mini research to evaluate the <strong>public transportation service (supply)</strong> of selected Boston neighborhoods. You will define 3-4 indicators that describe existing public transportation services, formulate your analysis strategy, calculate the indicators, then focus on two neighborhoods in Boston to compare your results and evaluate the public transportation supply in your study areas.</p>
+<p>You can describe public transportation service by number of bus and rail stops, number of routes, length of bike routes and sidewalks, etc. You can download the datasets you need from Boston websites or OSM. The primary purpose of this exercise is to practice spatial analysis in R. You should operationalize the metrics in a manageable way and specify indicators that work for you.</p>
+</section>
+<section id="work-product" class="level1">
+<h1>Work Product</h1>
 <p>Please document your work process and results in a new Quarto Document, and <strong>upload your .qmd file and rendered HTML file to Canvas</strong> <strong>by the end of day, Tuesday, Dec 5.</strong></p>
 <p>A quick tip: if you include <code>self_contained = TRUE</code> in your YAML header, you won’t lose the pictures of your html file.</p>
 <p><img src="..\img/lab3-html.PNG" class="img-fluid"></p>

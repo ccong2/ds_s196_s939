@@ -10,7 +10,7 @@ editor: visual
 
 Geospatial data analysis figures prominently in cities and urban analytics. In this lab, we will introduce essential tools and processes to facilitate spatial analysis, along with demonstrating how to obtain and integrate data from open data sources.
 
-To put things into context, we are going to describe the walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D's supporting walkability: Density, Diversity, and Design ([Cervero and Kockelman, 1997](https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf), Ewing et al., 2008), and later, five D's that further include Destination accessibility and Diversity (Ewing & Cervero, 2010).
+To put things into context, we are going to describe the walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D's supporting walkability: Density, Diversity, and Design ([Cervero and Kockelman, 1997](https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf), Ewing et al., 2008), and later, five D's that further include Destination accessibility and Diversity ([Ewing & Cervero, 2010](https://www.tandfonline.com/doi/abs/10.1080/01944361003766766)).
 
 ```{r label="load packages", message = FALSE, warning=FALSE}
 library(sf)
@@ -31,7 +31,7 @@ Suppose an advocacy group in the City of Boston wants to assess the walkability 
 These indicators can be operationalized as follows:
 
 | Indicator           | Measure                                                                  | Data Source    |
-|--------------------|---------------------------------|-------------------|
+|---------------------|--------------------------------------------------------------------------|----------------|
 | Population density  | Population per sq.mi.                                                    | Analyze Boston |
 | Business activities | Number of selected POIs in the neighborhood per 1000 residents           | OSM            |
 | Sidewalk coverage   | The total length (ft) of sidewalk per area (sq.ft.) in each neighborhood | OSM            |
@@ -57,7 +57,7 @@ neighborhood <-
 
 ```
 
-```{r message = FALSE, warning=FALSE, echo=FALSE}
+```{r message = FALSE, warning=FALSE, echo=FALSE, results='hide'}
 neighborhood <-
   st_read("../data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") |> 
   select(nbh_name = blockgr202, population = tot_pop_al)
@@ -98,7 +98,7 @@ From the front page of Analyze Boston, search for "sidewalk", you will find the 
 sidewalk <- st_read("data/Sidewalk_Centerline.shp")
 ```
 
-```{r message = FALSE, warning=FALSE, echo=FALSE}
+```{r message = FALSE, warning=FALSE, echo=FALSE, results='hide'}
 sidewalk <- st_read("../data/Sidewalk_Centerline.shp")
 ```
 
@@ -131,7 +131,7 @@ Then we'll calculate sidewalk density using another pipeline:
 ```{r message = FALSE, warning=FALSE}
 sidewalk_data <- 
   sidewalk_data |> 
-  mutate(sidewalk_coverage = round(sidewalk_length/nbh_area, 3)) |> 
+  mutate(sidewalk_coverage = sidewalk_length/nbh_area) |> 
   select(nbh_name, sidewalk_coverage)
 ```
 
@@ -143,7 +143,7 @@ rm(sidewalk)
 
 # Obtain and process OSM data
 
-For the other nutrition-related variables, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free [Overpass API](https://overpass-turbo.eu/#). In this lab, we will use the `osmdata` R package, which simplifies download queries without much understanding of the overpass query syntax.
+For the other nutrition-related variables, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free [Overpass API](https://overpass-turbo.eu/#). In this lab, we will use the [`osmdata` R package](https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html), which simplifies download queries without much understanding of the overpass query syntax.
 
 In order to obtain data from OSM, you will need to specify:
 
@@ -251,7 +251,7 @@ retail <- get_osm("Boston, MA, USA", "building", "retail")
 
 ## Calculate the number of POIs by neighborhood
 
-Once the three OSM variables are generated, we can count the number of points within each neighborhood. `st_intersects` returns a logical value indicating whether the intersection occurs (True - there are points in this polygon, and False - no point is in this polygon). We then apply `lengths` to the result of `st_intersects` to count the number of TRUE values, which is the sum of the points that intersect with the polygon.
+Once the three OSM variables are generated, we can count the number of points within each neighborhood. In the following code, `st_intersects` returns a list of 24 (the number of neighborhoods), in which each element contains IDs of the points falling within this polygon. We then apply `lengths()` to the elements of `st_intersects` to count the number of IDs. (`lengths` is a base R function, it's not calculating spatial lengths, but getting the length of elements of a list).
 
 ```{r message = FALSE, warning=FALSE}
 # The `bind_cols` brings multiple vectors together to make a data frame
@@ -276,7 +276,7 @@ osm_data <- osm_data |>
 
 ## Assemble results
 
-Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute `nbh_name`, so we can perform `left_join()` on two datasets at a time. But an alternative strategy is to use the purrr package's `reduce()` function to combine multiple datasets at one time.
+Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute `nbh_name`, so we can perform `left_join()` on two datasets at a time. But an alternative strategy is to use the `purrr` package's `reduce()` function to combine multiple datasets at one time.
 
 ```{r message = FALSE, warning=FALSE}
 data <- list(neighborhood, sidewalk_data, osm_data) |> 
@@ -292,7 +292,7 @@ rm(list=setdiff(ls(), "data"))
 
 # Create a composite index
 
-There are many, many different methods to combine variables. We are going to create a relatively simple additive index by adding up our three indicators with equal weights. But before that, we need to standardize our variables to make sure they are at a comparable scale.
+There are many different methods to combine variables. We are going to create a relatively simple additive index by adding up our three indicators with equal weights. But before that, we need to standardize our variables to make sure they are at a comparable scale.
 
 ## Standardize indicators
 
@@ -351,11 +351,55 @@ ggplot(score) +
   scale_fill_continuous()
 ```
 
+### **Optional:**
+
+Here are some other approaches for presenting our results in response to suggestions - for example, a formatted and sortable table:
+
+```{r message = FALSE, warning=FALSE}
+# Rescore the sub-dimensional indices to 0-100 as well
+score <-
+  score |>
+  mutate_at(vars(pop_density, sidewalk_coverage, poi_density),
+    ~rescale(., to = c(0, 100))) |> 
+  st_drop_geometry()
+
+library(gt)
+score|> 
+  gt() |> 
+  tab_style(
+    locations = cells_body(columns = nbh_name),
+    style = cell_text(weight = "bold")
+  ) |>
+  opt_interactive(
+    use_compact_mode = TRUE,
+    use_text_wrapping = FALSE
+  )
+```
+
+Or, we can make some [radar charts](https://r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html):
+
+```{r message = FALSE, warning=FALSE}
+nbh = "Downtown"
+# The radar chart requires only value columns
+temp <- score |> 
+  filter(nbh_name == nbh)|> 
+  select(pop_density, sidewalk_coverage, poi_density)
+
+# I also have to manually add 2 new row: the max and min of each indicator
+temp <- rbind(rep(100, 3), rep(0, 3), temp) 
+
+library(fmsb)
+radarchart(temp, title = nbh)
+
+```
+
 # Exercise
 
-This exercise will be a self-guided mini research to evaluate the **public transportation service (supply)** of selected Boston neighborhoods. You will define 3-4 indicators that describe existing public transportation service, formulate a calculation process, then focus on two neighborhoods in Boston to compare your results and evaluate the success (or failure) of your study cases.
+This exercise will be a self-guided mini research to evaluate the **public transportation service (supply)** of selected Boston neighborhoods. You will define 3-4 indicators that describe existing public transportation services, formulate your analysis strategy, calculate the indicators, then focus on two neighborhoods in Boston to compare your results and evaluate the public transportation supply in your study areas.
 
-You can describe public transportation service by number of bus and rail stops, number of routes, length of bike routes and sidewalks, etc. Note that the primary purpose of this exercise is to practice spatial analysis in R. You should operationalize the metrics in a manageable way and specify indicators that work for you.
+You can describe public transportation service by number of bus and rail stops, number of routes, length of bike routes and sidewalks, etc. You can download the datasets you need from Boston websites or OSM. The primary purpose of this exercise is to practice spatial analysis in R. You should operationalize the metrics in a manageable way and specify indicators that work for you.
+
+# Work Product
 
 Please document your work process and results in a new Quarto Document, and **upload your .qmd file and rendered HTML file to Canvas** **by the end of day, Tuesday, Dec 5.**
 

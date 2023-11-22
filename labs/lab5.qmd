@@ -50,20 +50,20 @@ file.remove("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Blo
 
 Now we have these shapefiles, we will use `st_read` in the `sf` package to read them, starting with the neighborhood file:
 
-```{r message = FALSE, warning=FALSE, echo=FALSE}
-neighborhood <-
-  st_read("../data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") |> 
-  select(nbh_name = blockgr202, population = tot_pop_al)
-```
-
-```{r eval=FALSE}
+```{r message = FALSE, warning=FALSE, eval=FALSE}
 neighborhood <-
   st_read("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") |> 
   select(nbh_name = blockgr202, population = tot_pop_al)
 
 ```
 
-Notice that this shapefile has population by neighborhood that is ready to use, which is very nice, otherwise we will have to aggregate the census population ourselves.
+```{r message = FALSE, warning=FALSE, echo=FALSE}
+neighborhood <-
+  st_read("../data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") |> 
+  select(nbh_name = blockgr202, population = tot_pop_al)
+```
+
+Notice that this shapefile has a population by neighborhood that is ready to use, which is very nice, otherwise we will have to aggregate the census population ourselves.
 
 When we work with shapefiles of different sources, the first step is to check the *Coordinate Reference System (CRS)*. Places can appear differently in shape on maps when different CRSs are used due to the inherent distortions introduced during the process of projection.
 
@@ -178,7 +178,9 @@ An overpass query `opq` starts with engaging with the bounding box like this:
 
 `q <- opq(bbox)`
 
-Following the initial `opq(bbox)` call, we will build queries by adding one or more features, which are specified in terms of *key-value pairs*. [Here](https://wiki.openstreetmap.org/wiki/Map_Features) is a complete list of key-value pairs on OSM, in which values can be understood as specific types of places, and keys are their categories.
+Following the initial `opq(bbox)` call, we will build queries by adding one or more features, which are specified in terms of *key-value pairs*.
+
+Here is [a complete list of key-value pairs on OSM](https://wiki.openstreetmap.org/wiki/Map_Features), in which values can be understood as specific types of places, and keys are their categories. These are the keywords you can use when downloading OSM data.
 
 For example, supermarket stores are categorized in OSM under `key=shop`, and `value=supermarket`. So that a query of all supermarkets within the boundary box of Boston can be constructed as follows:
 
@@ -274,7 +276,7 @@ osm_data <- osm_data |>
 
 ## Assemble results
 
-Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute `nbh_name`, so we can perform `left_join()` on two datasets at a time. But an alternative strategy is to use the purrr package's `reduce()` function to combine multiple dataset at one time.
+Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute `nbh_name`, so we can perform `left_join()` on two datasets at a time. But an alternative strategy is to use the purrr package's `reduce()` function to combine multiple datasets at one time.
 
 ```{r message = FALSE, warning=FALSE}
 data <- list(neighborhood, sidewalk_data, osm_data) |> 

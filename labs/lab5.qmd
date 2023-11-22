@@ -10,7 +10,7 @@ editor: visual
 
 Geospatial data analysis figures prominently in cities and urban analytics. In this lab, we will introduce essential tools and processes to facilitate spatial analysis, along with demonstrating how to obtain and integrate data from open data sources.
 
-To put things into context, we are going to describe the walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D's supporting walkability: Density, Diversity, and Design ([Cervero and Kockelman, 1997](https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf), Ewing et al., 2008), and later, five D's that further include Destination accessibility and Diversity ([Ewing & Cervero, 2010](https://www.tandfonline.com/doi/abs/10.1080/01944361003766766)).
+To put things into context, we are going to describe walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D's supporting walkability: Density, Diversity, and Design ([Cervero and Kockelman, 1997](https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf), Ewing et al., 2008), and later, five D's that further include Destination accessibility and Diversity ([Ewing & Cervero, 2010](https://www.tandfonline.com/doi/abs/10.1080/01944361003766766)).
 
 ```{r label="load packages", message = FALSE, warning=FALSE}
 library(sf)
@@ -25,8 +25,8 @@ library(scales)
 Suppose an advocacy group in the City of Boston wants to assess the walkability of neighborhoods in their built environment, and identifies the following indicators to describe the environment:
 
 -   Population density,
--   Business activities---e.g. retail, restaurants, food---are available within an area,
--   Sidewalk coverage (share of block faces with sidewalks)
+-   Business activities---e.g. retail, groceries, food---that are available within an area,
+-   Sidewalk coverage (share of ground area used as sidewalks)
 
 These indicators can be operationalized as follows:
 
@@ -48,7 +48,7 @@ unzip(zipfile = "data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census
 file.remove("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.zip")
 ```
 
-Now we have these shapefiles, we will use `st_read` in the `sf` package to read them, starting with the neighborhood file:
+When we have the shapefile, we will use `st_read` in the `sf` package to read it:
 
 ```{r message = FALSE, warning=FALSE, eval=FALSE}
 neighborhood <-
@@ -65,7 +65,7 @@ neighborhood <-
 
 Notice that this shapefile has a population by neighborhood that is ready to use, which is very nice, otherwise we will have to aggregate the census population ourselves.
 
-When we work with shapefiles of different sources, the first step is to check the *Coordinate Reference System (CRS)*. Places can appear differently in shape on maps when different CRSs are used due to the inherent distortions introduced during the process of projection.
+When we work with shapefiles from different sources, the first step is to check the *Coordinate Reference System (CRS)*. Places can appear differently in shape on maps when different CRSs are used due to the inherent distortions introduced during the process of projection.
 
 ```{r message = FALSE, warning=FALSE}
 st_crs(neighborhood)$epsg
@@ -119,7 +119,7 @@ sidewalk_data <-
   summarise(sidewalk_length = sum(length)) 
 ```
 
-Say we want to attach the total sidewalk length to our `neighborhood` data, we can join this information with `neighborhood`, using their shared attribute `name`. Recall that operations on attributes do not remove their geometry - but we can explicitly drop it using `st_drop_geometry()`
+To calculate sidewalk coverage we need to join `sidewalk_length` with `neighborhood`, using the shared attribute `nbh_name` in these two datasets. Recall that operations on attributes do not remove their geometry - but we can explicitly drop it using `st_drop_geometry()`
 
 ```{r message = FALSE, warning=FALSE}
 sidewalk_data <-  sidewalk_data |> st_drop_geometry() |> 
@@ -152,7 +152,7 @@ In order to obtain data from OSM, you will need to specify:
 
 ### The bounding box
 
-A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two latitude-longitude pairs.
+A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two longitude-latitude pairs.
 
 ```{r message = FALSE, warning=FALSE}
 # (lon, lat) of Lower left and Upper right corners 
@@ -182,7 +182,7 @@ Following the initial `opq(bbox)` call, we will build queries by adding one or m
 
 Here is [a complete list of key-value pairs on OSM](https://wiki.openstreetmap.org/wiki/Map_Features), in which values can be understood as specific types of places, and keys are their categories. These are the keywords you can use when downloading OSM data.
 
-For example, supermarket stores are categorized in OSM under `key=shop`, and `value=supermarket`. So that a query of all supermarkets within the boundary box of Boston can be constructed as follows:
+For example, supermarket stores are categorized in OSM under `key=shop`, and `value=supermarket`. So a query of all supermarkets within the boundary box of Boston can be constructed as follows:
 
 ```{r message = FALSE, warning=FALSE}
 supermarket <- opq(bbox)|>   
@@ -241,7 +241,7 @@ get_osm <- function(place, key, value){
 }
 ```
 
-Let's use our function to download more POIs that could describe business activities. Note that this is not an exhaustive list, there may be further relevant points to consider.
+Let's use our function to download more POIs that could describe business activities. Note that below is not an exhaustive list, there may be further relevant points to consider.
 
 ```{r message = FALSE, warning=FALSE}
 restaurant <- get_osm("Boston, MA, USA", "amenity", "restaurant")
@@ -251,7 +251,7 @@ retail <- get_osm("Boston, MA, USA", "building", "retail")
 
 ## Calculate the number of POIs by neighborhood
 
-Once the three OSM variables are generated, we can count the number of points within each neighborhood. In the following code, `st_intersects` returns a list of 24 (the number of neighborhoods), in which each element contains IDs of the points falling within this polygon. We then apply `lengths()` to the elements of `st_intersects` to count the number of IDs. (`lengths` is a base R function, it's not calculating spatial lengths, but getting the length of elements of a list).
+Once the three OSM variables are generated, we will count the number of points within each neighborhood. In the following code, `st_intersects` returns a list of 24 (the number of neighborhoods), in which each element contains IDs of the points falling within this polygon. We then apply `lengths()` to the elements of `st_intersects` to count the number of IDs. (`lengths` is a base R function, it's not calculating spatial lengths, but getting the length of elements of a list).
 
 ```{r message = FALSE, warning=FALSE}
 # The `bind_cols` brings multiple vectors together to make a data frame
@@ -265,29 +265,31 @@ osm_data <- bind_cols(neighborhood$nbh_name,
 colnames(osm_data) <- c("nbh_name", "restaurant", "fastfood", "retail", "supermarket")
 ```
 
-Then we can simply sum them up to have the total number of business-related POIs in each neighborhood, than factor in the population size to normalize the raw count.
+Then we will sum them up to have the total number of business-related POIs in each neighborhood, then factor in the population size to normalize the raw count.
 
 ```{r message = FALSE, warning=FALSE}
 osm_data <- osm_data |> 
   left_join(neighborhood, by = "nbh_name") |> 
-  mutate(poi_density = ifelse(population>0, (restaurant+fastfood+retail+supermarket)/(population/1000), NA)) |> 
+  mutate(poi_density = ifelse(population>0, 
+                              (restaurant+fastfood+retail+supermarket)/(population/1000), 
+                              NA)) |> 
   select(nbh_name, poi_density)
 ```
 
 ## Assemble results
 
-Now we can put the three parts of our result (population density, sidewalk coverage, and osm data) in one place. The three datasets we have created share the common attribute `nbh_name`, so we can perform `left_join()` on two datasets at a time. But an alternative strategy is to use the `purrr` package's `reduce()` function to combine multiple datasets at one time.
+Now we will put the three parts of our result (population density, sidewalk coverage, and POI data) in one place. The three datasets we have created share the common attribute `nbh_name`. We can perform `left_join()` on two datasets at a time, but an alternative strategy is to use the `purrr` package's `reduce()` function to combine multiple datasets at one time.
 
 ```{r message = FALSE, warning=FALSE}
 data <- list(neighborhood, sidewalk_data, osm_data) |> 
   reduce(left_join, by = "nbh_name")
 ```
 
-We have finally compiled the necessary dataset that incorporates all the indicators we have identified. Now let's remove intermediary variables in the working environment, keeping only the `data` and prepare to create the index.
+We have finally compiled the necessary dataset that incorporates all the indicators we have identified! Now let's remove intermediary variables in the working environment, keeping only the `data` and prepare to create the index.
 
 ```{r message = FALSE, warning=FALSE}
-data <- data |> select(-c(population, nbh_area))
 rm(list=setdiff(ls(), "data"))
+data <- data |> select(-c(population, nbh_area))
 ```
 
 # Create a composite index
@@ -306,22 +308,18 @@ A z-score can be calculated by subtracting from a given observation the mean of 
 score <-
   data |>
   mutate_at(
-    vars(
-      pop_density,
-      sidewalk_coverage,
-      poi_density
-    ),
+    vars(pop_density, sidewalk_coverage, poi_density),
     list(scale)
   )
 ```
 
 ## Specify the directions
 
-High values in indicators may represent beneficial or detrimental conditions - in some cases, higher values are "good", and in some cases, lower values are "good". When we are creating an additive index, we can transform values so that they are moving in the same direction by simply switching the sign on the values that need to be reversed (e.g. multiply by -1). However, we don't need to adjust directions in our case because our indicators move in the same direction (i.e. high value means a more walkable environment).
+High values in indicators may represent beneficial or detrimental conditions - in some cases, higher values are "good", and in some cases, lower values are "good". When we are creating an additive index, we can transform values so that they are moving in the same direction by simply switching the sign on the values that need to be reversed (e.g. multiply by -1). However, we don't need to adjust directions in our case because our indicators move in the same direction (i.e. high values mean a more walkable environment).
 
 ## Aggregate the index
 
-We are finally going to generate our composite index, where standardized values are simply added together. Based upon the table above, Here's what that would look like:
+Now we are going to generate our composite index, where standardized values are simply added together.
 
 ```{r message = FALSE, warning=FALSE}
 score <- score |>
@@ -343,7 +341,7 @@ score <-
 
 ## Check the result
 
-We can make a quick map to examine our results. Although, we don't want to over-interpret our results because any method to evaluate walkability is a difficult one. OpenStreetMap also exhibits issues such as missing names, data availability bias, and inconsistent categorization, etc. This study chose a more pragmatic method to demostrate the capabilities of R in data management and spatial analysis.
+We can make a quick map to examine our results. Although, we don't have to over-interpret our results because any method to evaluate walkability is a difficult one. OpenStreetMap also exhibits issues such as missing names, data availability biases, inconsistent categorization, etc. This study chose a more pragmatic method to demonstrate the capabilities of R in data management and spatial analysis.
 
 ```{r message = FALSE, warning=FALSE}
 ggplot(score) + 
@@ -353,7 +351,7 @@ ggplot(score) +
 
 ### **Optional:**
 
-Here are some other approaches for presenting our results, in response to suggestions - for example, a formatted and sortable table:
+In response to suggestions - here are some other approaches for presenting our results! For example, a formatted and sortable table:
 
 ```{r message = FALSE, warning=FALSE}
 # Rescore the sub-dimensional indices to 0-100 as well
@@ -365,6 +363,7 @@ score <-
 
 library(gt)
 score|> 
+  modify_if(~is.numeric(.), ~round(., 2)) |> 
   gt() |> 
   tab_style(
     locations = cells_body(columns = nbh_name),

@@ -43,7 +43,7 @@ website:
               file: labs/lab4.qmd
             - text: "05 Walkable Environment: sf, osmdata packages"
               file: labs/lab5.qmd
-            - text: "06 Shiny Example"
+            - text: "06 Build ShinyApp with Flexdashboard"
               file: labs/lab6.qmd
 
     

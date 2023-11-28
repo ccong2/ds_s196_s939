@@ -27,12 +27,12 @@ W04 (Nov 13 -- Nov 17):
 W05 (Nov 20 -- Nov 22):
 
 -   Spatial Analysis; Obtain data from multiple sources
--   Lab 5: Walkable Environment: sf, osmdata packages
+-   Lab 5: Walkable Environment: `sf`, `osmdata` packages
 
 W06 (Nov 27 -- Dec 1):
 
 -   Web Storytelling I
--   Shiny apps and examples 
+-   Lab 6: Build ShinyApp with `flexdashboard`
 
 W07 (Dec 4 -- Dec 8):
 

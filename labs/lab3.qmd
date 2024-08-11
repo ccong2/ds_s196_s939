@@ -1,5 +1,5 @@
 ---
-title: "Download and analyze Census data with ![](../img/Rlogo.png){width=60px}"
+title: "Describe neighborhood dynamics with ![](../img/Rlogo.png){width=60px}"
 subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
@@ -8,380 +8,347 @@ editor: visual
 
 # Overview
 
-Today we have a two-part lab, in which we are going to use American Community Survey (ACS) data to approach a classic planning question: what is the racial distribution like in my study area? We will address this question by creating both visual representations and numerical indicators, two potential research directions involving Census data in R.
+In this lab, we will develop a place profile to quantify the physical and environmental characteristics of a given area. Planners are usually interested in understanding and enhance improving urban environments. Our approach will involve utilizing spatial data and conducting spatial analysis.
 
-In the first part, we are going to focus our study on the City of Chicago, which is situated in Cook County, Illinois. The tract-level Census data is available for states and counties but not for individual cities. Therefore, we will need to extract data for Chicago from the broader dataset encompassing Cook County, taking advantage of the spatial data object returned by `tidycensus`.
+![](../img/lab3_quantify_place.gif)
 
-In the second part, we will examine racial segregation in Chicago. Using available Census data, we can apply segregation indicators to assess the degree of racial group segregation within given regions. This involves continuously using and extending the fundamental `dplyr` data wrangling skills.
+To put things into context, we will describe **the built environment conducive to pedestrians** in Boston neighborhoods. Much work in this field focuses on design guidelines that promote pedestrian friendliness. Urban factors such as the presence of walking facilities, the density and variety of businesses, the number of residents and jobs, and streetscape elements like benches, storefronts, and shade all influence the extent and nature of walkable areas (Frank et al., 2006; Owen et al., 2007; Jacobs, 1961; Lynch, 1960).
 
-```{r label="loadpackages", message = FALSE, warning=FALSE}
-
-# You may need to install the packages: tigris, sf and gt
-library(tidyverse)
-library(tidycensus)
-library(tigris)
+```{r label="load packages", message = FALSE, warning=FALSE}
 library(sf)
-library(gt)
+library(tidyverse)
+library(mapview)
+library(osmdata)
+library(scales)
 ```
 
-# A review of `tidycensus` key steps
+For the purpose of demonstrating how to gather, combine and analyze spatial data from different sources, we are going to develop three relatively simple indicators to measure the pedestrian environment in a Boston neighborhoods: **sidewalk density**, **restaurants measured by points of interest (POI), and street trees**.
 
-In order to use `tidycensus` to download data, you'll need the following:
+# Spatial files I/O
 
--   A Census API key (Here is where you can [request one from the census bureau](https://api.census.gov/data/key_signup.html))
+The `sf` package works with spatial data in vector format and read shapefiles as dataframe with a geometry column, containing the spatial vector geometry. This package incorporates a number of tools for spatial operations. Most of the functions in this package starts with prefix st\_. For example,
 
-    Rather than hard-coding the Census API key, we can save it to our [.Renviron](https://support.rstudio.com/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf). If you are working on the same computer, you should only have to install the key once:
+-   `st_read()`
+-   `st_write()`
+-   `st_crs()`
 
-    `Sys.setenv(CENSUS_API_KEY="yourkeyinquotationmarks")`
+Many cities now have data hubs that provide a wealth of geospatial information, such as [Analyze Boston](https://data.boston.gov/). Let's navigate to the [Boston neighborhood boundaries](https://data.boston.gov/dataset/boston-neighborhood-boundaries-approximated-by-2020-census-block-groups1) page. Find the **shapefile** format, click Explore, and Go to resource. Save the zipped file to your data folder and unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.
 
-    To verify that your Census API key is saved to your .Renviron file, simply type the following into the **Console** and press **Enter**:
+> Note: If you are interested, here is how we can unzip a file with R commands.
+>
+> ```{r message = FALSE, warning=FALSE, eval=FALSE}
+> unzip(zipfile = "data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.zip", exdir = "data", overwrite = TRUE)  
+> file.remove("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.zip")
+> ```
 
-    `Sys.getenv("CENSUS_API_KEY")`
+Use `st_read` in the `sf` package to read in the data. You may need to figure out the correct path on your side.
 
--   A desired geography to look up (for example, tract- or block group-level data)
-
--   The variables we want to look up (for example, the [complete variable list](https://api.census.gov/data/2021/acs/acs5/variables.html) for 2021 5-year ACS, you can also retrieve this list by calling `load_variables()`)
-
-Optionally, you will also need to specify:
-
--   The state and county names to define your study region.
--   The census year you want data for (we'll start with 2021)
--   The survey you'd like to use (Decennial Census, ACS 1-, or 5-year data)
-
-As a review, this example below returns the number of non-Hispanic White alone population and the number of total population by tract in Cook County, Illinois. The table we consult is [B03002: Hispanic or Latino Origin by Race](https://data.census.gov/table/ACSDT1Y2022.B03002?q=B03002).
-
-```{r label = "example-1", message = FALSE, results='hide'}
-cook_race <- get_acs(
-  geography = "tract",
-  state = "IL",
-  county = "Cook",
-  variables = c("B03002_002","B03002_001"), 
-  output = "wide",
-  geometry = TRUE) 
+```{verbatim}
+neighborhood <- st_read("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp")
 ```
 
-The two arguments that we added to this download call are essential for integrating Census data into the R data processing pipeline:
-
--   `output = "wide"` downloads data in a format that is easier for column-wise calculation. It does so by creating two columns ("\_E" and "\_M", representing the estimate and margin of error) for each variable.
-
--   `geometry = TRUE` returns a [simple features](https://r-spatial.github.io/sf/articles/sf1.html) (`sf`) object with spatial information saved for each tract. What we need to know for such objects are: 1) they can be handled by the `sf` package, which has been the dominant spatial data library in R for years; and 2) the presence of the `geometry` variable within an `sf` object is pivotal for enabling spatial analysis.
-
-# Part 1 Map racial distribution
-
-## Construct multiple variables
-
-In most cases, our data requirements from the Census won't be limited to just two variables. A common practice is to **save** **a number of variables** (possibly spanning multiple tables) **as a single object** and then insert this object into the download call. See the following code. Notice that we can also **rename the IDs** into something more descriptive during this process.
-
-```{r label = "1-createvariables", message = FALSE, warning=FALSE}
-vars <- c(
-  White = "B03002_003",
-  Black = "B03002_004",
-  AIAN = "B03002_005",
-  Asian = "B03002_006",
-  NHPI = "B03002_007",
-  Hispanic = "B03002_012",
-  Totpop = "B03002_001"
-)
+```{r message = FALSE, warning=FALSE, echo=FALSE, results='hide'}
+neighborhood <- st_read("../data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") 
 ```
 
-Go ahead and perform the `get_acs` with the input `vars`.
+We can make a quick plot using `geom_sf` in `ggplot` to check it out.
 
-```{r label = "2-cookracedata", message = FALSE, warning=FALSE}
-cook_race <- get_acs(
-  geography = "tract",
-  state = "IL",
-  county = "Cook",
-  variables = vars,
-  output = "wide", 
-  geometry = TRUE) 
+```{r message = FALSE, warning=FALSE}
+ggplot(neighborhood)+
+  geom_sf() 
 ```
 
-We can use `dplyr::select` to slim down this dataset by **excluding the margin-of-error columns**, we can select columns whose names have a pattern that `ends_with("E")`.
+Every time we obtain a new shapefile, it's advisable to check its *Coordinate Reference System (CRS)*. Having a consistent CRS across shapefiles ensure they can be accurately integrated.
 
-```{r label="3-remove_moe", message = FALSE, warning=FALSE}
-cook_race <- 
-  cook_race |> 
-  select(GEOID, NAME, ends_with("E"))
+```{r message = FALSE, warning=FALSE}
+st_crs(neighborhood)$input
+st_crs(neighborhood)$epsg
 ```
 
-## Modify Geographies
+This informs us that the neighborhood shapefile is stored in a "State Plane coordinate system Massachusetts Mainland", which has an EPSG code 2249. EPSG code is a standardized shorthand for referencing each CRS. Feel free to navigate to [epsg.io](https://epsg.io/) and look around.
 
-Places like Chicago cannot be directly inserted into the `get_acs` argument as it is not a county. How is Chicago located within Cook County exactly? We can use another census-related package `tigris` for a visual check of the place boundaries. `tigris` fetches census geographics. You can think of it as a programmatic way of downloading TIGER/Line Shapefiles.
+State Plane projections are "projected", meaning that x and y coordinates are measured in linear measurements (feet, in our case). This allows us to directly calculate areas and lengths of the shapes.
 
-The function `place` fetches [census-designated place](https://www.census.gov/programs-surveys/bas/information/cdp.html). The city of Chicago is one of such places in Illinois.
+There are many columns in this dataset, but we can choose the ones we need and assign them identifiable names. Recall that modifying attributes does not affect the geometry, so even after selecting specific columns, you will still see the `geometry` attribute.
 
-```{r label = "4-chicagotigris", message = FALSE, warning=FALSE}
-options(tigris_use_cache=TRUE) # This is to allow tigris to use caching for downloaded data so that we don't need to fetch the same data again every time you need it.
-
-# Download the boundary of Chicago. 
-chi_boundary <- places(state = "IL") |> 
-  filter(NAME == "Chicago")
+```{r}
+neighborhood <- neighborhood |>    
+  select(nbh_name = blockgr202, population = tot_pop_al)
 ```
 
-Now let's plot the two shapefiles together to see the overlay:
+# Area and Length calculation
 
-```{r label = "overlaycheck", message = FALSE, warning=FALSE}
-ggplot()+
-  geom_sf(data = cook_race)+
-  geom_sf(data = chi_boundary, color = "blue", linewidth = 0.5, fill = NA)
+In this part we will use:
+
+-   `st_area()`
+-   `st_length()` and one of the most common geoprocessing functions
+-   `st_intersection()`: find the overlapping areas of two geometries.
+
+The `neighborhood` object is a collection of polygons, with all the polygon details stored in the `geometry` attribute. While these details aren't meant for humans to read directly, machines can interpret it and perform operations. For example, we can calculate the area of each polygon.
+
+```{r message = FALSE, warning=FALSE}
+neighborhood |> mutate(nbh_area = st_area(geometry))
 ```
 
-Both the Census table and geography we have obtained are `sf` objects. An extensive vignette with examples using `sf` may be found [here](https://r-spatial.github.io/sf/). In this lab, we will only use the `st_intersection` function to perform a geometric intersection between two spatial objects.
+The new `nbh_area` column stores neighborhood areas in square feet. The values are "unit" objects. Although we can do basic math operations on unit objects, managing the units incurs memory overhead. It's better to transforming them to simple numeric values, and if needed, convert them to any unit required for your analysis (i.e., sq.mi., km2).
 
-In the following code, we will **extract tract-level racial data that fall within the boundary of the City of Chicago**. The modified result will be saved to a new name `chicago_race`.
-
-```{r label = "5-clipchicagoacs", message = FALSE, warning=FALSE}
-chicago_race <- 
-  st_intersection(cook_race, chi_boundary)
+```{r message = FALSE, warning=FALSE}
+neighborhood <- neighborhood |> 
+  mutate(nbh_area = as.numeric(st_area(geometry))) 
 ```
 
-`st_intersection` returns a result that combines the attributes of both input tables. That is why we have a table that has 26 columns as opposed to 10. Let's do another round of `select` , then this dataset is good to go.
+Similarly, `st_length` calculate the length of linear features. To illustrate that, we will download a line dataset. From the front page of Analyze Boston, search for "sidewalk", you will find the [Sidewalk Centerline](https://data.boston.gov/dataset/sidewalk-centerline) shapefile. Download it to your data folder, unzip it, and then **read it into R with the name "sidewalk"**.
 
-```{r label = "6-removevariables", message = FALSE, warning=FALSE}
-chicago_race <- chicago_race |> select(GEOID:TotpopE)
+What CRS is this shapefile using? Does it have the same unit with the neighborhood boundary?
+
+```{r message = FALSE, warning=FALSE, echo=FALSE, results='hide'}
+sidewalk <- st_read("../data/Sidewalk_Centerline.shp")
 ```
 
-Pause here and use `saveRDS` function to save the `chicago_race` dataset to your data folder. We want to keep an intermediate result so that you can always come back. A quick check - it now has 862 rows and 10 columns.
+`st_intersection` can find the shared part of two spatial objects. For example, you can clip out the sidewalks in Back Bay:
 
-`saveRDS(chicago_race, "data/<your file name>.rds")`
-
-| If you were wondering what the file type `.rds` is, it's a more flexible way to save and load R objects compared to other formats like CSV or plain text files, which may lose some data structure information (such as spatial information).
-| **Note:** At this point, you can also save `chicago_race` as a **shapefile**, which is fully compatible with GIS software. Even if you aren't conducting extensive spatial analysis within R, you can choose to download data in R and then transfer it to your GIS software of choice for further geospatial processing and visualization. The function is `st_write(chicago_race, "data/<your file name>.shp")`
-
-## Join another Census data
-
-Wide format data has unique GEOIDs, and thus can be easily joined with another table. A simple measure of racial wealth disparity is to look at how income levels and racial backgrounds are spread among tracts. We can go back to download median household income data and join it with our existing racial dataset.
-
-```{r label = "income", message = FALSE, warning=FALSE}
-cook_income <- get_acs(
-  geography = "tract",
-  state = "IL",
-  county = "Cook",
-  variables = "B19013_001",
-  output = "wide") 
+```{r}
+st_intersection(sidewalk, neighborhood[2,]) |> 
+  ggplot()+
+  geom_sf()
 ```
 
-We are going to use a new function `left_join` from the `dplyr` package. You can read about [different joining types](https://dplyr.tidyverse.org/reference/mutate-joins.html#inner-join) and [illustrative examples](https://r4ds.hadley.nz/joins.html) here. But simply put, we are trying to combine two datasets (x and y) based on a shared column. A left join keeps all the rows from x. If a value in the key column in x doesn't exist in y, the row will contain NA values for all the y columns.
+The dataset resulting from `st_intersection` will include attributes from both the sidewalks and neighborhoods. This means each segment of the sidewalk will be linked to that specific neighborhood name.
 
-```{r label = "join_income", message = FALSE, warning=FALSE}
-joined_data <- 
-  left_join(chicago_race, cook_income, by="GEOID")
+If we overlay the sidewalks and the entire neighborhoods, the result will be sidewalk lines split at neighborhood boundaries, with each segment labeled with the neighborhood it falls within.
+
+```{r message = FALSE, warning=FALSE}
+sidewalk_data <- 
+  st_intersection(sidewalk, neighborhood)
 ```
 
-```{r label = "plot_income", message = FALSE, warning=FALSE}
-ggplot(joined_data)+
-  geom_point(aes(x=WhiteE/TotpopE, y=B19013_001E), cex = .5, alpha = .2, na.rm = TRUE) +
-  labs(title = "Tract Median Household Income vs White Population", x = "Percent White", y = "Median Household Income") +
-  scale_x_continuous(labels = scales::percent)+
-  scale_y_continuous(labels = scales::comma)+
-  theme_minimal()
+Check the results by clicking the `sidewalk_data` in the Environment panel, or equivalently, using `View(sidewalk_data)` .
+
+Once you have the intersected dataset, use `st_length` to calculate the length of each sidewalk segment.
+
+```{r message = FALSE, warning=FALSE}
+sidewalk_data <- sidewalk_data |> 
+  mutate(length = as.numeric(st_length(geometry))) 
 ```
 
-If you are curious, you can modify the plot to show the relationship between income and the percentage of other racial groups.
+Then, you can use `group_by` and `summarize` to calculate the total sidewalk length within each neighborhood:
 
-## Reshape data from wide to long format
-
-We now have estimates of each group captured in separate columns, along with a total population column. We could make six new columns to calculate and store the percentages for racial groups, but it would make the dataset a bit cumbersome.
-
-We have two functions in `tidyr` to help us transform the dataset structure: `pivot_wider` and `pivot_longer`. For example, using `pivot_longer`, we can stack the six variables and make multiple rows for each unique identifier.
-
-The essential arguments of `pivot_longer` are:
-
--   `cols`: the portion of the dataset you want to modify. For instance, here we will leave the `TotpopE` as its own column and only modify the racial group columns.
--   `names_to` and `values_to`: conceptually we need two new columns, one for stacking the racial group names and another for the corresponding values. Here we are giving the former a name called "racial_groups", and the latter a name called "estimate". The names are totally your choice.
-
-```{r label="data-wrangling-1", message = FALSE, warning=FALSE}
-chi_race_long <- chicago_race |> 
-  pivot_longer(
-    cols = c(WhiteE:HispanicE),
-    names_to = "racial_groups",
-    values_to = "estimate"
-  )
+```{r}
+sidewalk_data <- sidewalk_data |> 
+  group_by(nbh_name) |> 
+  summarise(sidewalk_length = sum(length)) 
 ```
 
-From here, calculating the population rate will be much easier. What we will do in the following code are:
+Check our result by clicking the `sidewalk_data` in your Environment panel. You should now see the total sidewalk length for each neighborhood.
 
-1.  use `mutate` to calculate the race-specific population rate (divide the racial group population column by the total population column),
-2.  use `select` to select the variables we need and remove the others
+# Obtain and process OSM data
 
-Make sure to examine each row and figure out how they impact the results.
+To measure amenities, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free [Overpass API](https://overpass-turbo.eu/#). In this lab, we will use the [`osmdata` R package](https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html), which simplifies download queries without much understanding of the overpass query syntax.
 
-```{r label="data-wrangling-2", message = FALSE, warning=FALSE}
-chi_race_long <- 
-  chi_race_long |> 
-  mutate(percent = round((estimate/TotpopE)*100, 2)) |> 
-  select(GEOID, NAME, racial_groups, TotpopE, estimate, percent) 
+In order to obtain data from OSM, you will need to specify:
+
+-   a bounding box
+-   key-value pairs
+
+### The bounding box
+
+A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two longitude-latitude pairs.
+
+```{r message = FALSE, warning=FALSE}
+# (lon, lat) of Lower left and Upper right corners  
+bbox = c(-71.188, 42.238, -70.924, 42.393)
 ```
 
-The `racial_groups` column has a character "E" at the end of each racial group name, carried over from the original Census data. This is something we can fix using a string modification function `str_sub`. We will keep all characters from the beginning (the start of the string) up to the second-to-last character. So, it essentially removes the last character from each string.
+### The key-value pairs
 
-```{r label="data-wrangling-3"}
-chi_race_long <- chi_race_long |> 
-  mutate(racial_groups = str_sub(racial_groups, end = -2))
+An overpass query `opq` starts with engaging with the bounding box like this:
+
+`q <- opq(bbox)`
+
+Following the initial `opq(bbox)` call, we will build queries by adding one or more features, which are specified in terms of *key-value pairs*.
+
+Here is [a complete list of key-value pairs on OSM](https://wiki.openstreetmap.org/wiki/Map_Features), in which values can be understood as specific types of places, and keys are their categories. These are the keywords you can use when downloading OSM data.
+
+For example, restaurants are categorized in OSM under `key=amenity`, and `value=restaurant`. So a query of all restaurants within the boundary box of Boston can be constructed as follows:
+
+```{r message = FALSE, warning=FALSE}
+restaurant <- opq(bbox)|>   
+  add_osm_feature(key = "amenity", value = "restaurant") |>  
+  osmdata_sf() 
 ```
 
-A quick check of what your dataset `chi_race_long` should look like at this step. If you are unsure about your result, you can read your stored RDS data again, then run the code chunks labeled "data-wrangling-1" through "data-wrangling-3".
+The retrieved OSM object is a huge list that includes numerous attributes; What we need is an `sf` object named `osm_points` nested in this list. Let's extract `osm_ponits`, then select only the name (and the attached geometry) of this object:
 
-```{r label="chiracelong", message = FALSE, warning=FALSE}
-chi_race_long |> head(3) |> gt()
+```{r message = FALSE, warning=FALSE}
+restaurant <- restaurant$osm_points |> select(name)
 ```
 
-## Create a faceted map
+Let's make a quick plot using `mapview`. Once you have the following map, you can click the Zoom button and select OpenStreetMap, so that you can zoom in to your familiar places for a detailed view. Most of the restaurants seem to be there.
 
-In our long-format data table, racial group names are consolidated within a single column. We can create a map that visualizes the distribution of the `percent` attribute while categorizing it based on the `racial_groups` attribute.
-
-```{r label="factedmap", message = FALSE, warning=FALSE}
-chi_race_long |>
-  ggplot() +
-    geom_sf(aes(fill = percent, color = percent)) +
-    facet_wrap( ~ racial_groups) +
-    coord_sf(datum = NA) + 
-    theme_minimal()
+```{r message = FALSE, warning=FALSE}
+mapview(restaurant,
+        legend = FALSE)
 ```
 
-The `facet_wrap` in the code takes one categorical variable as its input (`racial_groups`) and breaks the data into subsets accordingly. The `~` here is a shorthand for "relative to", meaning I'm gonna split the whole data based on their relationship to `racial_groups`.
+Check its CRS. If we want to associate the downloaded OSM file with the neighborhood shapefile, they need to have the same CRS. If not, use `st_transform()`.
 
-## Exercise 1
-
-Now that you have some new tools that you are familiar with, please **start a new .qmd or .Rmd Document**, and try your hand at the following:
-
-1\) Create a dataset for the City of Chicago that shows the percentage of households that are experiencing housing cost burden (i.e. spending 30 percent or more of income on housing costs), grouped by housing ownership (owner-occupied or renter-occupied).
-
--   The universe of this characteristic is reflected in the [B25106 table](https://api.census.gov/data/2019/acs/acs5/groups/B25106.html).
-
--   If we want a count of all owner-occupied households experiencing cost burden, we need to sum these variables: B25106_006, B25106_010, B25106_014, B25106_018, B25106_022. If we want a count of all renter-occupied households experiencing cost burden, we need to sum up B25106_028, B25106_032, B25106_036, B25106_040, B25106_044.
-
--   The total number of owner-occupied households is B25106_002; The total number of renter-occupied households is B25106_024.
-
-**2) Create maps depicting the percentages of households experiencing housing cost burdens in both owner-occupied and renter-occupied housing.**
-
--   You can choose to create two individual maps, or one faceted map. But in either case, your calculated percentage values should go to the `geom_sf(fill = )` argument.
--   Visually compare the housing cost burden maps and the racial distribution maps, and briefly provide your interpretations.
-
-# Part 2 Measure Racial Segregation
-
-In the second part of the lab, we will start to think about summary measures of the extent to which these groups are segregated within the city. We will use census tracts as a unit of analysis to help us describe racial segregation.
-
-There are, of course, [many ways to measure segregation](https://www.urban.org/research/data-methods/data-analysis/quantitative-data-analysis/segregation-measures), from more traditional methods that rely on ACS data and residential context, to more spatial and temporal dynamic methods that take advantage of human behavior data and mobile tracking data. In this analysis, we will look at the "evenness" and "exposure" indices summarized by [Massey and Denton (1988)](https://www.jstor.org/stable/2579183), and primarily refer to [this document](https://www.dartmouth.edu/~segregation/IndicesofSegregation.pdf) to create two relatively straightforward indicators of segregation measurement.
-
-For local administrative, planning, and data collection purposes, Chicago is divided into 77 community areas, and these areas are further grouped into 7 administrative regions.
-
-![](../img/lab3_chi_region.jpg){width="534"}
-
-To save the in-class data processing time, we will read in a prepared dataset, which is built on the racial distribution of all tracts within Chicago, but **each tract is assigned to its respective region, indicated in the `Region` column.** The dataset also includes the total population sum for all tracts within each specific region, presented in columns labeled as `sum_xxx`.
-
-Please download `chi_race_region.rds` and put it in your data folder. This data was produced using this code `lab3_acs.R`.
-
-```{r label="readchiregions", message = FALSE, warning=FALSE, echo=FALSE}
-chi_race_region <- readRDS("../data/chi_race_region.rds")
+```{r}
+restaurant <- restaurant |> 
+  st_transform(2249)
 ```
 
-```{r label="notrun", eval=FALSE}
-chi_race_region <- readRDS("data/chi_race_region.rds")
+You could repeat this download - extract - transform process to obtain more OSM data such as grocery stores, fast food places, etc. to make a more comprehensive amenity. Now for time purspose we are only doing restaurants.
+
+## Calculate the number of POIs by neighborhood
+
+We have a point shapefile and a polygon shapefile, and now we want to count the number of points in each neighborhood. As you might have guessed, we'll use `st_intersection` again.
+
+```{r}
+count_restaurants <- 
+  st_intersection(restaurant, neighborhood) |> 
+  group_by(nbh_name) |> 
+  summarise(restaurant = n())
 ```
 
-## Indicators for measuring segregation
+# Calculate buffers
 
-### Dissimilarity
+For our last variable of street trees, we can use the tree canopy data available in Boston. We have a visualization which is this. The data is [Treekeeper Street Trees](https://data.boston.gov/dataset/treekeeper-street-trees) on Analyze Boston. Download, read the shapefile.
 
-*Dissimilarity* is a measure of *evenness* between two populations. Conceptually, dissimilarity represents the proportion of a group that would need to move in order to create a uniform distribution of population.
+You know what to do. Check its CRS, browse the attributes, is this points or polygon? Again, how many street trees in each neighborhood. what do you do? Write a data, store the count of trees in each neighborhood in a variable called `count_trees`.
 
-A dissimilarity score of 0 would mean a completely even distribution of two populations (no segregation). A dissimilarity score of 1 would mean a completely segregated minority population (100% of the minority population would need to move to achieve an even distribution among the population. Dissimilarity is calculated as follows:
-
-$$ D = 0.5\Sigma_{i=1}^{n}|\frac{w_{i}}{W}-\frac{b_{i}}{B}| $$
-
-If we are interested in measuring non-Hispanic Black-White Dissimilarity, then:
-
--   $w_{i}$ is the White population of tract i
--   $W$ is the total number of White population in the region;
--   $b{i}$ is the Black population in tract i;
--   $B$ is the total number of Black population in the region;
-
-With the dataset structure we have constructed, calculating D can be broken down into a series of codable parts: 1) Calculate fractions inside the absolute value for each row; 2) use `abs()` to find the absolute value; 3) use `group_by()` to sum up the data for each region; 4) multiply the numbers by 0.5.
-
-```{r label="calculate_dissimilarity", message = FALSE, warning=FALSE}
-dissimilarity <- chi_race_region |> 
-  mutate(Dissimilarity = abs(Black / sum_Black - White / sum_White)) |> 
-  group_by(Region) |> 
-  summarise(Dissimilarity = round(0.5 * sum(Dissimilarity), 3))
+```{r echo=FALSE, results='hide'}
+tree <- st_read("../data/Treekeeper_Street_Trees.shp") |> 
+  st_transform(2249)
 ```
 
-Create a more presentable table:
-
-```{r label="disimilarity_table1", message = FALSE, warning=FALSE}
-dissimilarity |>  gt()
+```{r}
+tree_data <- st_buffer(tree, dist = tree$dbh/2)
 ```
 
-`gt` is powerful tool for creating elegant and customizable tables with ease. For instance, we can add a few more lines to enhance this table by adding colorization based on the values.
+Then calculate the total area of canopy
 
-```{r label="dissimilarity_table2", message = FALSE, warning=FALSE}
-dissimilarity |>
-  gt() |>
-  tab_header("Black-White Dissimilarity in Chicago Regions") |>
-  data_color(
-    columns = `Dissimilarity`,
-    colors = scales::col_numeric(
-    palette = c("white", "darkred"),
-    domain  = c(0, 1)
-    )
-  )
+```{r}
+tree_data <- st_intersection(tree_data, neighborhood) |> 
+  mutate(area = as.numeric(st_area(geometry))) |> 
+  group_by(nbh_name) |> 
+  summarize(canopy_area = sum(area))
 ```
 
-### Interaction
+# Assemble results
 
-A second common measure of segregation is interaction, which assesses *isolation* levels rather than spatial distribution directly. Such indices typically estimate the likelihood of individuals from one group encountering or interacting with members of another group, based upon their distribution within areal subunits (tracts). For instance, non-Hispanic Black-White interaction is calculated as follows:
+`left_join`
 
-$$
-I=\Sigma_{i=1}^{n}(\frac{b_{i}}{B})(\frac{w_{i}}{t_{i}})
-$$
+After working on the three dimensions, for each neighborhood, we now have:
 
-where:
+-   Total sidewalk length in feet
+-   Number of POIs for restaurants
+-   Total area of street tree canopy in square feet
 
--   $b_{i}$ is the Black population of tract i;
--   B is the Black population of the region;
--   $w_{i}$ is the White population of tract i;
--   $t_{i}$ is the total population of tract i.
+To make comparible metrics, we will "normalize" the raw data by calculating:
 
-```{r label="interaction_table1", message = FALSE, warning=FALSE}
-interaction <- chi_race_region |> 
-  mutate(Interaction = (Black/sum_Black) * (White/Totpop)) |> 
-  group_by(Region) |> 
-  summarise(Interaction = sum(Interaction, na.rm = TRUE) |> round(3))
+-   Sidewalk density: total sidewalk length divided by neighborhood area (ft/sq.ft)
+-   POI per capita: total restaurant POIs divided by neighborhood population
+-   Street tree coverage: total tree canopy area divided by neighborhood area (sq.ft/sq.ft)
+
+To implement that, we will first combine our result with the orginal neighborhood dataset to get access to the total area and population.
+
+This is not spatial join, this is just join datasets for numerical calculation, we want to only have the neighborhood boundary. so for the sidewalks, points, canopies, we need to drop the geometry and only contain attributes, but this has to be done explicitly by
+
+```{r}
+# Perform a left join to merge neighborhood data with sidewalk attributes after dropping the geometry column
+result <- left_join(neighborhood, 
+                    st_drop_geometry(sidewalk_data), 
+                    by = "nbh_name")
 ```
 
-The maximum value of I depends both on the distribution of ethnic groups AND on the proportion of minorities in the city. But generally speaking, higher values mean two groups are more likely to be evenly distributed, and lower values mean a more segregated minority population.
+<!-- Repeat -->
 
-Create a similar table for the non-Hispanic Black-White interaction index:
+<!-- ```{r} -->
+<!-- result <- -->
+<!--   left_join(result, -->
+<!--             st_drop_geometry(count_restaurants), by = "nbh_name")  -->
 
-```{r label="interaction_table2", message = FALSE, warning=FALSE}
-interaction |>
-  gt() |>
-  tab_header("Black-White Interaction in Chicago Regions") |>
-  data_color(
-    columns = `Interaction`,
-    colors = scales::col_numeric(
-    palette = c("darkred", "white"),
-    domain  = c(0, 1)
-    )
-  )
-```
+<!-- result <- -->
+<!--   left_join(result, -->
+<!--             st_drop_geometry(tree_data), by = "nbh_name") -->
+<!-- ``` -->
 
-## Exercise 2
+<!-- Check the "result" variable, we now have one dataset that contains everything! -->
 
-```{r include=FALSE}
-devtools::install_github("hadley/emo")
-```
+<!-- By observing it you'll notice: the tree coverage data for Harbor Island is not recorded. the population for Harbor Island is also not recorded. As we can't find them in the dataset we downloaded, we can choose to remove it and focus only on the geography cropped to the coastline. -->
 
-How would you interpret these dissimilarity and interaction values? Where are the indices the highest within the region, and where are they the lowest? Does the result seem to confirm the racial distribution map we produced in the first part?
+<!-- ```{r} -->
+<!-- result <- result |> filter(nbh_name != "Harbor Islands") -->
+<!-- ``` -->
 
-The same methods can be used for any other two groups, such as Nonwhite-White, or Latino-White. You have the option to experiment with these values, but for this lab, I only request interpretation/diagnosis using the measure of segregation `r emo::ji("smile")`.
+<!-- Then the normalization process can be done with a series of `mutate` functions. -->
 
-# Work products
+<!-- ```{r} -->
+<!-- result <- result |>  -->
+<!--   mutate(sidewalk_density = sidewalk_length/nbh_area, -->
+<!--          poi_density = (restaurant+fastfood+grocery)/population, -->
+<!--          tree_coverage = canopy_area/nbh_area) -->
+<!-- ``` -->
 
-Please submit **a .qmd (or .Rmd) file** and **a** **rendered HTML file** that shows your work and responses for each of the **Exercises** included in this lab.
+<!-- Finally, Remove intermediary variables in the working environment: -->
 
-A quick tip: if you include `self_contained = TRUE` in your YAML header, you won't lose the pictures of your html file.
+<!-- ```{r message = FALSE, warning=FALSE} -->
+<!-- rm(list=setdiff(ls(), "result")) -->
+<!-- ``` -->
 
-![](/img/lab3-html.PNG)
+<!-- # Present our result -->
 
-Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 14.**
+<!-- use gt to make a nice table -->
+
+<!-- ```{r message = FALSE, warning=FALSE} -->
+<!-- # Rescore the sub-dimensional indices to 0-100 as well -->
+<!-- score <- -->
+<!--   score |> -->
+<!--   mutate_at(vars(pop_density, sidewalk_coverage, poi_density), -->
+<!--     ~rescale(., to = c(0, 100))) |>  -->
+<!--   st_drop_geometry() -->
+
+<!-- library(gt) -->
+<!-- score|>  -->
+<!--   modify_if(~is.numeric(.), ~round(., 2)) |>  -->
+<!--   gt() |>  -->
+<!--   tab_style( -->
+<!--     locations = cells_body(columns = nbh_name), -->
+<!--     style = cell_text(weight = "bold") -->
+<!--   ) |> -->
+<!--   opt_interactive( -->
+<!--     use_compact_mode = TRUE, -->
+<!--     use_text_wrapping = FALSE -->
+<!--   ) -->
+<!-- ``` -->
+
+<!-- Or, we can make some [radar charts](https://r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html): -->
+
+<!-- ```{r message = FALSE, warning=FALSE} -->
+<!-- nbh = "Downtown" -->
+<!-- # The radar chart requires only value columns -->
+<!-- temp <- score |>  -->
+<!--   filter(nbh_name == nbh)|>  -->
+<!--   select(pop_density, sidewalk_coverage, poi_density) -->
+
+<!-- # I also have to manually add 2 new row: the max and min of each indicator -->
+<!-- temp <- rbind(rep(100, 3), rep(0, 3), temp)  -->
+
+<!-- library(fmsb) -->
+<!-- radarchart(temp, title = nbh) -->
+
+<!-- ``` -->
+
+<!-- # Exercise -->
+
+<!-- This exercise will be a self-guided mini research to evaluate the **public transportation service (supply)** of selected Boston neighborhoods. You will define 3-4 indicators that describe existing public transportation services, formulate your analysis strategy, calculate the indicators, then focus on two neighborhoods in Boston to compare your results and evaluate the public transportation supply in your study areas. -->
+
+<!-- You can describe public transportation service by number of bus and rail stops, number of routes, length of bike routes and sidewalks, etc. You can download the datasets you need from Boston websites or OSM. The primary purpose of this exercise is to practice spatial analysis in R. You should operationalize the metrics in a manageable way and specify indicators that work for you. -->
+
+<!-- # Work Product -->
+
+<!-- Please document your work process and results in a new Quarto Document, and **upload your .qmd file and rendered HTML file to Canvas** **by the end of day, Tuesday, Dec 5.** -->
+
+<!-- A quick tip: if you include `self_contained = TRUE` in your YAML header, you won't lose the pictures of your html file. -->
+
+<!-- ![](/img/lab3-html.PNG) -->

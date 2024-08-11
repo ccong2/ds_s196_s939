@@ -6,48 +6,79 @@ format: html
 editor: visual
 ---
 
-This practice exercise provides some more structured exploration and practice with Quarto Document (R Markdown format). We will mix Markdown sections with code chunks, build familiarity with basic data types, and experiment with importing a tabular dataset. Because this is an in-class exercise, there is nothing you need to submit---the goal is to apply what we have read and seen in the lectures.
+This practice exercise provides some more structured exploration and practice with **Quarto Document** (in R Markdown format). We will mix Markdown sections with code chunks, build familiarity with basic data types, and experiment with importing a tabular dataset. Because this is an in-class exercise, there is nothing you need to submit---the goal is to apply what we have read and seen in the lectures.
 
 ```{r include=FALSE}
 library(tidyverse)
 ```
 
-# Practice formatting text with Quarto
+# Work with Quarto Documents
 
-After you download today's lab folder, launch RStudio by double clicking the "lab1.Rproj" file. Go to **File - New File - Quarto Document** to create a new Quarto document. The prompt shown below will appear. Type in a document title and your name.
+## Set up a New Project
+
+We have talked about files paths in class, and the importance of explicitly setting a directory to work out of. Most of the time we can use `setwd()`, this works fine until when you want to move your working folder to another computer or share your work. If you explicitly set your working directory in the code, it won't be able to access the directory that doesn't exist on another computer.
+
+In our labs, we are going to use **R Projects** to organize our works and make sure we don't lose files during transfers. R projects organize all files related to a project in one place and setting up relative file paths. Let's start by setting up a project for our exercise.
+
+Launch RStudio, then click **File - New Project\...** A dialog box will open up. Select **New Directory**, then **New Project.** Here, you can create a new folder to save everything related to this project. For example, I navigated to my D:/Fall24 folder and created a new folder there called Lab 1:
+
+![](../img/lab1_project.PNG){width="450"}
+
+Click the button "Create Project". R will take a second to refresh. Then you will see in your **Files** tab that you have been directed to your current working directory: D:/Fall24/Lab 1. You will also see a **.Rproj** file in that folder.
+
+![](../img/lab1_files_tab.PNG){width="450"}
+
+The .Rproj file is the "key" that R references all project-related files. If you save all files related to Lab 1 in this folder, all relative paths remain intact and consistently applied.
+
+*Note: In future labs, I may provide you with a project folder containing data. As long as you launch RStudio by double-clicking the .Rproj file, you will be taken directly to the project's home directory.*
+
+## Practice formatting text with Quarto
+
+Now go to **File - New File - Quarto Document** to create a new Quarto document. The prompt shown below will appear. Type in a document title (e.g. Lab 1) and your name. Keep the radio button for HTML selected.
 
 ![](../img/lab1_quarto.PNG){width="450"}
 
-You will see a template file. At the very top of the notebook we have the [YAML](https://en.wikipedia.org/wiki/YAML) or "Yet Another Markdown Language" header which begins and ends with three dashes `---`. At the very least, it specifies the title, author and output format when the document is rendered. There can be other options specified in the YAML, particularly if you are rendering to a format other than HTML (see [the reading](https://r4ds.had.co.nz/r-markdown-formats.html) from this week).
+You will then see a template file. At the very top you will see the [YAML](https://en.wikipedia.org/wiki/YAML) (or "Yet Another Markdown Language") header which begins and ends with three dashes `---`. The YAML header determines how your document will be rendered to your desired output format. Now it specifies the title, author, output format and text editor.
 
-Let's add another line to the YAML header:
+To get an idea of how everything works, let's click the **"Render"** button on top of your toolbar.
+
+When prompted, give this file a name, it will be saved in the folder where your ".Rproj" file is.
+
+You will see a formatted document in a web browser. Switch between them back and forth to see where each part of the code is placed in the rendered HTML file.
+
+Now we can add a new line to the YAML header:
 
 > date: \<insert the date that the file is created\>.
 
-Below the YAML is where the Markdown sections typically begin. The interface looks pretty much like a Word document. There is a toolbar that allows you to make bold or italic text, create a bullet list, insert a link or an image, insert a code block, etc.
+Render it again and see where the difference is.
 
-On the very left of this toolbar, click the **"Source"** button to switch Markdown editing mode. These are sections of text that usually explain or contextualize the code and graphics and are formatted using [Markdown syntax](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf). For example:
+There can be other options specified in the YAML, particularly if you are rendering to a format other than HTML (see [the reading](https://r4ds.had.co.nz/r-markdown-formats.html) from this week).
+
+On the very left of this toolbar, click the **"Source"** button to switch Markdown editing mode. These sections of text typically explain or provide context for the code and graphics, and they are formatted using [Markdown syntax](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf). For example:
 
 -   #: a header element.
 -   \*\*: bold text.
 -   \*: italic text.
 -   \` : code blocks.
 
+Overall, the **Visual** interface looks pretty much like a Word document. There is a toolbar that allows you to make bold or italic text, create a bullet list, insert a link or an image, insert a code block, etc.
+
+Now let's delete everything below the YAML header in the template file, so that we will start creating our own formatted report.
+
 ### Your practice
 
-In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, add 3-5 sentences below your YAML section that explain---in your own words---the following:
+In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, add 2-3 sentences below your YAML section that explain the following:
 
--   What Building Energy Use Disclosure Ordinance is about?
--   What does the ordinance require?
--   Why do advocates argue that building energy use disclosure is desirable?
+-   What does the Building Energy Use Disclosure Ordinance require?
+-   What kind of data have been compiled and where to find them?
 
-You may edit your text either in the **"Source"** or **"Visual"** panel, or switch them back and forth to get familiar with both. Make sure to make gratuitous use of bold, italics, etc. in your text. You have access to the "Markdown Quick Reference" directly from RStudio (**Help - Markdown Quick Reference**).
+You may edit your text either in the **"Source"** or **"Visual"** panel, or toggle between them to get familiar with both. Make sure to make gratuitous use of bold, italics, bullet points, etc. in your text. You have access to the "Markdown Quick Reference" directly from RStudio (**Help - Markdown Quick Reference**).
 
-Now you should **Save**. RStudio will guide you to save the file in the folder where your "Rproj" file is. Then click the **"Render"** button on top of your toolbar (or click Ctrl+Shift+K) to render the current document. The document is rendered by the [`knitr` package](https://yihui.org/knitr/). You can immediately see your nicely formatted document in a web browser.
+When you finished, save your file and click Render again. You can immediately see your nicely formatted document in a web browser.
 
 # Insert a video
 
-You've probably noticed there is a video on the Cambridge webpage. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy the embed code), then copy-and-paste it into your Markdown section in the **"Source"** panel.
+You've probably noticed there is a video on the Cambridge webpage. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy embed code), then copy-and-paste it into your Markdown section **in the** **"Source"** **panel**.
 
 ![](../img/lab1_youtube.PNG)
 
@@ -61,19 +92,22 @@ For our purposes, the most important of these attributes is **data-external="1"*
 
 ### Your practice
 
-Embed this video in your Markdown section after the introductory sentences you have written. Knit your notebook again and inspect your work.
+Embed this video in your Markdown section after the introductory sentences you have written. Render your document again and inspect your work.
 
 # Download and read data
 
-As you know, the other component of a Quarto Document is code chunks. Recall that code chunks are where the R code lives in a notebook. These are easy to spot as shaded blocks leading by {r} as shown below. (In the Source panel, they always have three backticks followed by {r}).
+As you know, Quarto Document integrates both texts and code chunks. Recall that code chunks are where the R code lives in a document. These are easy to spot as shaded blocks leading by {r}. (In the Source panel, they always have three backticks followed by {r}).
 
-```{r}
+```{verbatim}
+{r}
 1 + 1
 ```
 
-In accordance with the ordinance, the City maintains BEUDO data for individual properties from 2015-2021. You can view the data on the [Cambridge Open Data Portal](https://data.cambridgema.gov/Energy-and-the-Environment/Cambridge-Building-Energy-and-Water-Use-Data-Discl/72g6-j7aq/). Take a few moments to explore the dataset by scrolling down the page and viewing the "Columns in this Dataset" and "Table Preview" sections in particular. Now **download this dataset in CSV format and save it in your "data" folder**, which is already created within your project folder.
+In accordance with the ordinance, the City maintains BEUDO data for individual properties from 2015-2022. You can view this data on the [Cambridge Open Data Portal](https://data.cambridgema.gov/Energy-and-the-Environment/Cambridge-Building-Energy-and-Water-Use-Data-Discl/72g6-j7aq/). Take a few moments to explore the dataset by scrolling down the page and viewing the "What's in the Dataset" sections in particular. Now **download this dataset in CSV format.** You can create a new "data" folder in your project folder and save the table there.
 
-Insert a code chunk in your Quarto document by going to **Code - Insert Chunk**. I usually use the shortcut key RStudio provides (Alt+Ctrl+I). Type a few things in the chunk and make it look like the following:
+Check if you have installed the `tidyverse` package: Click the **Packages** tab in your lower-right panel in RStudio. Type tidyverse in the search box. If it's NOT shown in the list, go to your **Console** panel and run `install.packages("tidyverse")`
+
+Insert a code chunk in your Quarto document by going to **Code - Insert Chunk**. I usually use the shortcut key RStudio provides (Alt+Ctrl/Cmd+I). Type a few things in the chunk and make it look like the following:
 
 ```{verbatim}
 {r label="loadtidyverse", message=FALSE, warning=FALSE}
@@ -82,25 +116,29 @@ library(tidyverse)
 
 The `label` option is not required, but can be helpful when you render the notebook (otherwise you will see "unnamed-chunk" in the Render tab next to the Console tab). The other options (described [in greater detail here](https://rmarkdown.rstudio.com/lesson-3.html)) suppress all warnings and messages that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.
 
-Run this code chunk to load `tidyverse` package. You can either click the green triangle on the top-right of this chunk, or use Ctrl+Enter.
+Run this code chunk to load `tidyverse` package. You can either click the green triangle on the top-right of this chunk, or use Ctrl/Cmd+Enter.
+
+**Note:** Why I said running `install.packages("tidyverse")` in the console but `library(tidyverse)` in the code chunk? You only need to "install" a package once, so there is no need to keep it in the script and run it every time you render the document. However, you must "library" (aka: activate) the package each time to use its functions.
 
 ### Your practice
 
-In your Console, type in `?readr::read_csv` and hit Enter. Review the documentation for `read_csv` paying special attention to the "Arguments" and "Examples" sections of the help page. Note that the double colon above tells us that the function `read_csv` is located within the `readr` package, which happens to be part of the `tidyverse` suite of R packages.
+Take a moment to study [the `read_csv()` function](https://r4ds.had.co.nz/data-import.html). As its name suggests, it will read our .csv file into R. Note that `read_csv` is located within the `readr` package, which is part of the `tidyverse` suite of R packages.
 
-1.  **Insert a new code chunk and write a line of code that imports your data stored in the .csv file and assigns it to an object called `energy`.**
+1.  **Insert a new code chunk, write a line of code that imports your .csv file and assigns it to an object called `energy`.**
 
-2.  **Use the `colnames()` function to get a quick sense of the column names of this dataset.**
+    Run your code chunk. You will be able to see the "energy" variable in your Environment tab.
+
+2.  **Use the functions `colnames()` and `str()` to get some essential information about this dataset.**
+
+    `colnames()` display the names of all columns, and `str()` provides a quick review of the data frame, including the data type of each column (e.g., integer, numeric, factor, character).
 
 ```{r include=FALSE}
-energy <- read_csv("../data/Cambridge_Building_Energy_and_Water_Use_Data_Disclosure_2015-2021.csv")
+energy <- read_csv("../data/Cambridge_Building_Energy_Use_Disclosure_Ordinance__BEUDO__Data_2015-2022_20240721.csv")
 ```
-
-Run your code chunks. You will be able to see in the rendered output the dimensions of the dataset (always written as rows x columns), the names of the columns, and the data type of each column.
 
 # Key `dplyr` functions
 
-`dplyr` is a popular R package for data manipulation and transformation. It provides a set of functions that make it easier to work with data frames and data tables in R. Explore more of `dplyr` functionality described [here](https://dplyr.tidyverse.org/) and [here](https://info201.github.io/dplyr.html). We are going to practice some essentials:
+`dplyr` is another package within `tidyverse`, specializing in data manipulation and transformation. It provides a set of functions that work with data frames in a clean and consistent way. Explore more of `dplyr` functionality described [here](https://dplyr.tidyverse.org/) and [here](https://info201.github.io/dplyr.html). We are going to walk through four "verbs" of `dplyr`.
 
 ## `Select`: selects a subset of **columns.**
 
@@ -114,7 +152,9 @@ In `dplyr`, we do:
 
 In other words, we can simply insert the column names into the `select` function, without worrying about syntax like indexing, concatenation (`c()`), and the quotation marks.
 
-In the `energy` dataset, we probably don't need all of the 46 columns. So we can make it a smaller dataset by specifying a few columns to keep. **Insert a new code chunk in your document like this one below.** Here we are using the pipe `|>` operator to "chain together" lines of code. You can type this symbol in using Shift+Ctrl/Command+M.
+In the `energy` dataset, we probably don't need all of the 46 columns. So we can make it a smaller dataset by specifying a few columns to keep. **Insert a new code chunk in your document like this one below.** We will only keep 9 columns in the new dataset.
+
+You can type the pipe `|>` operator in using Shift+Ctrl/Cmd+M.
 
 ```{r label="select", message=FALSE, warning=FALSE}
 energy <- energy |>
@@ -155,19 +195,24 @@ mit_energy <- energy |>
 
 ## `mutate`: create or modify columns
 
-We can change the values in a column either based on specified values or certain transformations. For example, below we are showing how to replace the full name of the institute with "MIT".
+`mutate` allows you to modify your dataset by 1) add new columns to a data frame, or 2) modify values in existing columns. It's commonly used to calculate or transform data by applying functions, helping you derive new values from your existing data.
+
+For example, in the Owner column of our dataset, we have the full name of the institute. We can replace these long names with "MIT".
 
 ```{r label="mutate_1", message=FALSE, warning=FALSE}
 mit_energy |> mutate(Owner = "MIT")
 ```
 
-You can also use `mutate` to add new columns to your data frame that are calculated from existing columns. Here we are showing how to create a new column for building ages.
+You can also use `mutate` to add new columns to your data that are calculated from existing columns. Here we are showing how to create a new column for building ages.
 
 ```{r label="mutate_2", message=FALSE, warning=FALSE}
 mit_energy |> mutate(Building_Age = 2023 - `Year Built`)
 ```
 
-**There is** **no `<-` operator** in these two code chunks. We are observing the results but the resulting tables **are not saved** in an object.
+**Note:** A common point of confusion is the similarity between `<-` (assign to) and `|>`(pipe). In the two code chunks above, we are only displaying the results, not saving them to an object. The `mit_energy` data thus remains unchanged. To put it briefly:
+
+-   **When to Use `<-`:** Use `<-` to save or update an object with new values.
+-   **When Not to Use `<-`:** If you only want to test and view results without modifying the object, do not use `<-`.
 
 ## Group_by + Summarise
 
@@ -181,7 +226,7 @@ mit_energy |>
 
 We use `group_by` such that observations (i.e., rows) are grouped according to `Data Year`, which is the year when the energy record was taken. The result is then passed to `summarise` to generate a **total number of records** per year. By default, the `n()` function creates a new attribute (i.e., column), which we here name as "count".  
 
-Below we are using the same `group_by` + `summarise` chain to calculate the average GHG emissions of all buildings, and the average GHG emission intensity (use the column `Total GHG Emissions Intensity (kgCO2e/ft2)`). Note that we are now giving new names to each of the new columns.
+Below we are using the same `group_by` + `summarise` chain to calculate the average GHG emissions of all buildings, and the average GHG emission intensity (use the column `Total GHG Emissions Intensity (kgCO2e/ft2)`). Pay attention to how we are giving new names to each of the new columns.
 
 ```{r label=annual_mean, message=FALSE, warning=FALSE}
 mit_energy |> 
@@ -201,14 +246,14 @@ mit_energy |>
 
     ![](../img/lab1_table.PNG){width="600"}
 
-You can create this table mostly by modifying the last code chunk (labeled "annual_mean"), however, there are a few small things you can experiment on:
+You can create this table mostly by modifying the last code chunk, however, there are a few small things you can experiment on:
 
 -   The calculated average numbers in this table are rounded to 2 decimals, how to achieve that?
 -   The table is arranged in descending order based on the "avg_emission" column, how to do that? ([Hint](https://dplyr.tidyverse.org/reference/arrange.html))
 
 We are already trying to ask questions and find hints of interesting stories from the dataset, which is what Exploratory Data Analysis (EDA) is all about. If the results so far look interesting/surprising/expected to you, write a few sentences describing what you see from the analysis.
 
-3.  Lastly, we will insert a map to complete your working document! This dataset includes "Longitude" and "Latitude" columns, which I like because it indicates that location information is available and can be visualized.
+3.  Lastly, we will insert a map to complete your working document! This dataset includes "Longitude" and "Latitude" columns, which I love, because it indicates that location information is readily available and can be visualized.
 
     Add the following code to your document, and you should be able to run it and see a map. (If your R says it can't find `mapview`, run the line `install.packages("mapview")`)
 

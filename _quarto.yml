@@ -19,8 +19,8 @@ website:
         text: "Labs"
       - href: howto/index.qmd
         text: "How To"
-      - href: resources/index.qmd
-        text: "Resources"
+      # - href: resources/index.qmd
+      #   text: "Resources"
     search: true
   favicon: favicon.png
   page-footer:
@@ -37,11 +37,11 @@ website:
               file: labs/lab1.qmd
             - text: "02 Opportunity Zones: tidyverse, ggplot2 packages"
               file: labs/lab2.qmd
-            - text: "03 Racial Distribution: tidycensus, tidyr packages"
+            - text: "03 Walkable Environment: sf, osmdata packages"
               file: labs/lab3.qmd
             - text: "04 Airbnb in Chicago: plotly and leaflet packages"
               file: labs/lab4.qmd
-            - text: "05 Walkable Environment: sf, osmdata packages"
+            - text: "05 Neighborhood Change: tidycensus, tidyr packages"
               file: labs/lab5.qmd
             - text: "06 Build ShinyApp with Flexdashboard"
               file: labs/lab6.qmd
@@ -49,30 +49,33 @@ website:
     
     - title: "How To"
       contents:
-        - section: "Get Started"
+        - section: "How To"
           contents:
-            - text: "Introduction"
-              file: howto/index.qmd
             - text: "Set Up R and RStudio"
               file: howto/setupr.qmd
-        - section: "Share Your Work"
-      
+            - text: "Quick Code Guides"
+              file: howto/setupr.qmd
+            - text: "Start with GIT"
+              file: howto/setupr.qmd
+            - text: "Publish a Quarto Website"
+              file: howto/setupr.qmd
 
-    - title: "Resources"
-      contents:
-        - section: "Overview"
-          contents:
-            - resources/index.qmd
-        - section: "Resources"
-          contents:
-            - text: "Textbooks"
-              file: resources/textbook.qmd
-            - text: "Urban Data Analysis"
-              file: resources/analysis.qmd
-            - text: "Data Sources"
-              file: resources/data.qmd
-            - text: "Inspiration"
-              file: resources/inspiration.qmd
+# 
+#     - title: "Resources"
+#       contents:
+#         - section: "Overview"
+#           contents:
+#             - resources/index.qmd
+#         - section: "Resources"
+#           contents:
+#             - text: "Textbooks"
+#               file: resources/textbook.qmd
+#             - text: "Urban Data Analysis"
+#               file: resources/analysis.qmd
+#             - text: "Data Sources"
+#               file: resources/data.qmd
+#             - text: "Inspiration"
+#               file: resources/inspiration.qmd
 
 format:
   html:

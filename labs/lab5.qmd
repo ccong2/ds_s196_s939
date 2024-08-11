@@ -1,5 +1,5 @@
 ---
-title: "Describe neighborhood dynamics with ![](../img/Rlogo.png){width=60px}"
+title: "Download and analyze Census data with ![](../img/Rlogo.png){width=60px}"
 subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
@@ -8,400 +8,324 @@ editor: visual
 
 # Overview
 
-Geospatial data analysis figures prominently in cities and urban analytics. In this lab, we will introduce essential tools and processes to facilitate spatial analysis, along with demonstrating how to obtain and integrate data from open data sources.
+In this lab, we will use decennial census data and American Community Survey (ACS) data to examine long-term population trends in neighborhoods. These are common sources of historic sociodemographic information, including those that have been pre-processed by sources other than the Census Bureau.
 
-To put things into context, we are going to describe walkable environment in Boston neighborhoods. Walkability is regarded as whether characteristics of the built environment may or may not support residents to walk for either leisure or access destinations (Leslie et al., 2007). Some studies have further pinpointed several variables within a framework of three D's supporting walkability: Density, Diversity, and Design ([Cervero and Kockelman, 1997](https://web.mit.edu/11.s946/www/readings/Cervero_1997.pdf), Ewing et al., 2008), and later, five D's that further include Destination accessibility and Diversity ([Ewing & Cervero, 2010](https://www.tandfonline.com/doi/abs/10.1080/01944361003766766)).
+The [Nathalie P. Voorhees Center](https://voorheescenter.uic.edu/) has conducted research on neighborhood and community improvement in the City of Chicago. In [this example](https://voorheescenter.uic.edu/chicago_communities/) below, they calculate the average per capita income for each census tract in Chicago for the years 1970, 1980, 1990, 2000, 2010, and 2017, and then compare it to the regional weighted average income. They have found Chicago has become more segregated by income over time and is losing its middle class.
 
-```{r label="load packages", message = FALSE, warning=FALSE}
-library(sf)
+The study also overlays recent demographic characteristics based on these changes. In the following image, the census tracts are classified into "three cities": those that have increased their share of regional income by 20% or more, those that have changed by less than 20%, and those that have decreased by 20% or more.
+
+![](../img/lab3_chicago_three_cities.PNG)
+
+We will take the idea of the Voorhees Center's study to examine population change patterns in Chicago. Chicago has experienced population decline since its peak in the mid-20th century, attributed to factors including the decline of manufacturing, suburban expansion, and demographic shifts - a phenomenon identified by urban scholars as "Shrinking Cities". We will use historic population census data to show how the trend manifests in Chicago and how it affects across different areas of the city.
+
+Go ahead and start a new .qmd file and remove the template texts, as we always do. These are the packages we are going to use today.
+
+```{verbatim}
+# You may need to install the packages: tigris, sf and gt
 library(tidyverse)
-library(leaflet)
-library(osmdata)
-library(scales)
+library(tidycensus)
+library(tigris)
+library(sf)
+library(gt)
 ```
 
-# Components included in the index
-
-Suppose an advocacy group in the City of Boston wants to assess the walkability of neighborhoods in their built environment, and identifies the following indicators to describe the environment:
-
--   Population density,
--   Business activities---e.g. retail, groceries, food---that are available within an area,
--   Sidewalk coverage (share of ground area used as sidewalks)
-
-These indicators can be operationalized as follows:
-
-| Indicator           | Measure                                                                  | Data Source    |
-|---------------------|--------------------------------------------------------------------------|----------------|
-| Population density  | Population per sq.mi.                                                    | Analyze Boston |
-| Business activities | Number of selected POIs in the neighborhood per 1000 residents           | OSM            |
-| Sidewalk coverage   | The total length (ft) of sidewalk per area (sq.ft.) in each neighborhood | OSM            |
-
-# Calculate areas and lengths
-
-Let's gather, process data, and calculate these indicators one by one. First, we will need neighborhood boundaries, available on the Boston open data portal [Analyze Boston](https://data.boston.gov/). Let's navigate to the [Boston neighborhood boundaries approximated by 2020 census block groups](https://data.boston.gov/dataset/boston-neighborhood-boundaries-approximated-by-2020-census-block-groups) page. Find the shapefile format and click download to bring the zipped file to your data folder.
-
-Although we can directly click to unzip it, let's try to do it with R commands.
-
-```{r message = FALSE, warning=FALSE, eval=FALSE}
-unzip(zipfile = "data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.zip", exdir = "data", overwrite = TRUE)
-
-file.remove("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.zip")
+```{r label="loadpackages", message = FALSE, warning=FALSE}
+library(tidyverse)
+library(tidycensus)
+library(tigris)
+library(sf)
+library(gt)
 ```
 
-When we have the shapefile, we will use `st_read` in the `sf` package to read it:
+# Step 1 Collect Population Data
 
-```{r message = FALSE, warning=FALSE, eval=FALSE}
-neighborhood <-
-  st_read("data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") |> 
-  select(nbh_name = blockgr202, population = tot_pop_al)
+To analyze tract-level population change, we need to gather population data for Chicago across multiple years and make comparisons. Let's first strategize our task: if we can create a dataset like below, with rows being the tracts and columns being the years, we can easily calculate the percentage change in population from 1970 to 2022 for each tract. This percentage change will enable us to categorize areas based on population increases or decreases, similar to the "three cities" methodology used by the Voorhees Center.
 
+| Census Tract | 2022 | 2010 | 1990 | 1970 |
+|--------------|:----:|:----:|:----:|:----:|
+| 17031822400  | 6012 | 6226 | 5956 | 4336 |
+| 17031740100  | 3075 | 3048 | 3297 | 4060 |
+| 17031828100  | 5388 | 4844 | 4804 | 5599 |
+| 17031826600  | 4872 | 5540 | 5168 | 6290 |
+
+## ACS data in 2022
+
+We will first use `tidycensus` to download data for 2022, you'll need a Census API key (Here is where you can [request one from the census bureau](https://api.census.gov/data/key_signup.html)). After you've signed up for an API key, be sure to activate the key from the email you receive from the Census Bureau so it works correctly.
+
+Declaring `install = TRUE` when calling `census_api_key()` will install the key for use in future R sessions, which may be convenient for many users.
+
+```{verbatim}
+census_api_key("yourkeyinquotationmarks", install = TRUE)
 ```
 
-```{r message = FALSE, warning=FALSE, echo=FALSE, results='hide'}
-neighborhood <-
-  st_read("../data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp") |> 
-  select(nbh_name = blockgr202, population = tot_pop_al)
+To complete the API call for ACS data, you will typically need to specify:
+
+-   A desired geography to look up (for example, tract- or block group-level data)
+-   The variables we want to look up (we have the [complete variable list](https://api.census.gov/data/2021/acs/acs5/variables.html) for 2022 5-year ACS, you can also retrieve this list by calling `load_variables()`)
+-   The state and county names to define your study region.
+-   The census year you want data for.
+-   The survey you'd like to use (such as ACS 1-, or 5-year data)
+
+The following code returns the number of total population by tract in Cook County, Illinois in 2022. The table we consult is [B01001: Sex by Age](https://data.census.gov/table/ACSDT5Y2020.B01001?q=B01001).
+
+```{r label="2022", message = FALSE, warning=FALSE}
+F_2022 <- get_acs(
+  geography = "tract",
+  state = "IL",
+  county = "Cook",
+  variables = "B01001_001",
+  geometry = TRUE,
+  year = 2022)
 ```
 
-Notice that this shapefile has a population by neighborhood that is ready to use, which is very nice, otherwise we will have to aggregate the census population ourselves.
+Now you might have seen our first problem: we don't have the option for getting tract-level data for **cities**. We can only obtained data for Cook County, where Chicago is located, but not for the City of Chicago directly. We will come back to it later in our exercise to cut out tracts within Chicago's spatial boundary. That's why we've included the argument `geometry = TRUE`, which will be needed for our spatial processing.
 
-When we work with shapefiles from different sources, the first step is to check the *Coordinate Reference System (CRS)*. Places can appear differently in shape on maps when different CRSs are used due to the inherent distortions introduced during the process of projection.
+-   `geometry = TRUE` returns a [simple features](https://r-spatial.github.io/sf/articles/sf1.html) (`sf`) object with spatial information saved for each tract. The returned table will include a `geometry` variable that enables spatial analysis.
+
+## Decennial data in 2010
+
+In addition to `get_acs()`, `tidycensus` also provides `get_decennial()` for retrieving data from the US Decennial Census for the years 2000, 2010, and 2020. The function uses similar arguments, as shown below:
+
+```{r label="2010", message = FALSE, warning=FALSE}
+F_2010 <- get_decennial(
+  geography = "tract", 
+  state = "IL",
+  county = "Cook",
+  variables = "P001001",
+  geometry = TRUE,
+  year = 2010)
+```
+
+## Historic Data in 1990 and 1970
+
+Unfortunately we cannot continue to use `get_decennial()` for the 1990 and 1970 data. The primary reason is the removal of these API endpoints by the Census Bureau. However, there are other factors at play.
+
+1.  **Survey Changes**: After the 2000 Census, the long form decennial survey transitioned into the American Community Survey (ACS).
+
+2.  **Changing Geographies**: Census geographies, which approximate neighborhoods based on population, can change over time. While some tracts remain the same, others may be split if the population increases, or merged if the population decreases.
+
+Analysts often face the challenge of geographic inconsistencies when working with longitudinal data. The Census Bureau's [geographic relationship files](https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2020.html) can help show the relationships between geographies over time. To make it easier for researchers, Brown University's [Longitudinal Tract Database](https://s4.ad.brown.edu/projects/diversity/Researcher/Bridging.htm) offers demographic estimates for previous decennial census years---1970, 1980, 1990, and 2000---adjusted to match the 2010 boundaries. This means the tract areas and IDs match the 2010 data, with attribute values adjusted based on area or population share to reflect boundary changes over the years.
+
+Let's get familiar with LTDB data and how to use them. Go to the [data download](https://s4.ad.brown.edu/projects/diversity/researcher/LTBDDload/Default.aspx) page. You will need to enter your email address and certify that you will follow terms of use for the data.
+
+Review the data standard descriptions a bit to see what datasets are available. In our analysis, we will only use the full standard data files for population counts.
+
+![](../img/lab3_ltdb.PNG)
+
+In "**Download Standard Full Data Files**", select the year **1990**, click the download button. Then do the same for **1970**. **It's recommended to download them into a "data" folder in your project directory**.
+
+Now we can import these two datasets using `read_csv`. Simultaneously, we'll use `filter()` to extract only the portion for Cook County.
 
 ```{r message = FALSE, warning=FALSE}
-st_crs(neighborhood)$epsg
+F_1990 <- 
+  read_csv("../data/LTDB_Std_1990_fullcount.csv") |>
+  filter(county == "Cook County" & state == "IL")
+
+F_1970 <- read_csv("../data/LTDB_Std_1970_fullcount.csv")|>
+  filter(county == "Cook County" & state == "IL")
 ```
 
-This informs us that the neighborhood shapefile is stored in a State Plane coordinate system Massachusetts Mainland, which has an EPSG code 2249. State Plane projections are 1) "projected", meaning that x and y coordinates are in linear measurements, as opposed to degrees; and 2) are regional datums designed to provide accurate positioning data for North America specifically, as opposed to WGS84, which is a global datum. EPSG code is a standardized shorthand for referencing each CRS. Feel free to navigate to [epsg.io](https://epsg.io/) and look around.
+# Step 2 Compile Datasets
 
-We can calculate polygon areas using `st_area()`:
+Now we have download four datasets we need, we can start planning how to join them for mapping and further analysis. Joins allow us to merge two datasets based on common attributes, such as GEOID in our case. However, after a quick look at these datasets, there are a few things we may immediately notice:
 
-```{r message = FALSE, warning=FALSE}
-neighborhood |> 
-  mutate(nbh_area = st_area(geometry))
+1\) They have different number of observations. For example, F_2022 (census tracts for the year 2020) contain 1332 observations, F_1970 contains 1317.
+
+> Some census tracts may not have existed in previous years. Our join strategy should prioritize retaining all records from the dataset with more observations. Regarding [types of joins](https://mikoontz.github.io/data-carpentry-week/lesson_joins.html), a `left_join` ensures that all rows from the dataset on the left are preserved in the merged dataset, even if there are no corresponding matches in the dataset on the right.
+
+2\) They have different number of columns, and the column names are not the same across years. For example, the attribute `GEOID` is named as `TRTID10` in the F_1970 and F_1990 datasets.
+
+> We can retain the columns we need by using `select()` , and standardize column names by specifying \[new name\] = \[column name\] in our select calls.
+
+3\) If we do a test `left_join`, we will notice another issue from its error message:
+
+```{verbatim}
+left_join(F_2022, F_1990, by = c("GEOID" = "TRTID10"))
 ```
 
-The new `nbh_area` column returns a unit object in square feet, which is consistent with the dataset's projection. Although we can do basic math operations on unit objects, managing the units incurs memory overhead. Transforming them to simple numeric values is advisable if this information is not necessary to be carried along for the entire analysis.
+![](../img/lab3_error_in_join.PNG)
 
-Using the population information, we can proceed to compute the population per square mile and add this column to the dataset.
+> Some of our GEOID columns are defined as characters while others are numeric, preventing them from directly joining. To resolve this, we can use `mutate()` to convert the column type.
 
-```{r message = FALSE, warning=FALSE}
-neighborhood <- neighborhood |> 
-  mutate(nbh_area = as.numeric(st_area(geometry))) |> 
-  mutate(pop_density = population/(nbh_area/27878400)) 
-```
+> Alternatively, we can specify the column types when reading the data. When `read_csv()` reads data, it initially examines several rows to infer the format for each column. To override this and explicitly define column formats, we use the `col_types` option in `read_csv()`. For example, `col_types = cols(TRTID10 = col_character())` explicitly defines the column `TRTID10` as character type during data reading.
 
-## Density of sidewalks
+With all these in mind, let's clean up the datasets for joining. In the following code, I have saved them as new datasets (starting naming with S\_ so that we can keep our original data and come back if we need to)
 
-From the front page of Analyze Boston, search for "sidewalk", you will find the [Sidewalk Centerline](https://data.boston.gov/dataset/sidewalk-centerline) shapefile. Download it to your data folder, unzip it and read it in R. What CRS is this shapefile using?
+```{r label="simplify_datasets", message = FALSE, warning=FALSE}
+S_1970 <- F_1970 |> 
+  # select and rename the columns we need
+  select(GEOID = TRTID10, POP70)|> 
+  # convert the data type to character
+  mutate(GEOID = as.character(GEOID))
 
-```{r message = FALSE, warning=FALSE, eval=FALSE}
-sidewalk <- st_read("data/Sidewalk_Centerline.shp")
-```
+S_1990 <- F_1990 |> 
+  select(GEOID = TRTID10, POP90) |> 
+  mutate(GEOID = as.character(GEOID))
 
-```{r message = FALSE, warning=FALSE, echo=FALSE, results='hide'}
-sidewalk <- st_read("../data/Sidewalk_Centerline.shp")
-```
-
-If we intersect the sidewalk and neighborhood shapefiles, we should be able to calculate the total length of sidewalk segments in each neighborhood. Similar to `st_area`, `st_length` is another geometry measurement function and calculates segment length.
-
-In the following code, we are going to:
-
-1.  intersect the sidewalk and neighborhood spatial objects, i.e. break up line segments at neighborhood boundaries;
-2.  calculate the lengths of sidewalk segments after the intersection;
-3.  convert the units to numeric values;
-4.  group the line segments by neighborhood, summing up the sidewalk lengths within each neighborhood.
-
-```{r message = FALSE, warning=FALSE}
-sidewalk_data <- 
-  st_intersection(sidewalk, neighborhood) |> 
-  mutate(length = as.numeric(st_length(geometry))) |> 
-  group_by(nbh_name) |> 
-  summarise(sidewalk_length = sum(length)) 
-```
-
-To calculate sidewalk coverage we need to join `sidewalk_length` with `neighborhood`, using the shared attribute `nbh_name` in these two datasets. Recall that operations on attributes do not remove their geometry - but we can explicitly drop it using `st_drop_geometry()`
-
-```{r message = FALSE, warning=FALSE}
-sidewalk_data <-  sidewalk_data |> st_drop_geometry() |> 
-  left_join(neighborhood, by = "nbh_name") 
-```
-
-Then we'll calculate sidewalk density using another pipeline:
-
-```{r message = FALSE, warning=FALSE}
-sidewalk_data <- 
-  sidewalk_data |> 
-  mutate(sidewalk_coverage = sidewalk_length/nbh_area) |> 
-  select(nbh_name, sidewalk_coverage)
-```
-
-At this point, you can remove some datasets that you don't anticipate using again.
-
-```{r message = FALSE, warning=FALSE}
-rm(sidewalk)
-```
-
-# Obtain and process OSM data
-
-For the other nutrition-related variables, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free [Overpass API](https://overpass-turbo.eu/#). In this lab, we will use the [`osmdata` R package](https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html), which simplifies download queries without much understanding of the overpass query syntax.
-
-In order to obtain data from OSM, you will need to specify:
-
--   a bounding box
--   key-value pairs
-
-### The bounding box
-
-A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two longitude-latitude pairs.
-
-```{r message = FALSE, warning=FALSE}
-# (lon, lat) of Lower left and Upper right corners 
-bbox = c(-71.188, 42.238, -70.924, 42.393)
-```
-
-In most cases, they can be directly identified by character strings.
-
-`bbox = 'Boston, MA, USA'`
-
-However, recently there seem to be some issues with `bbox` direct address query. I implemented [a workaround here](https://stackoverflow.com/questions/76835293/error-when-querying-osmdata-package-http-405-method-not-allowed) so that we can still obtain a bounding box by entering a place name.
-
-```{r message = FALSE, warning=FALSE}
-# This may need you to `install.packages("nominatimlite")`
-bbox <- sf::st_bbox(nominatimlite::geo_lite_sf(
-  address = "Boston, MA, USA", 
-  points_only = FALSE))   
-```
-
-### The key-value pairs
-
-An overpass query `opq` starts with engaging with the bounding box like this:
-
-`q <- opq(bbox)`
-
-Following the initial `opq(bbox)` call, we will build queries by adding one or more features, which are specified in terms of *key-value pairs*.
-
-Here is [a complete list of key-value pairs on OSM](https://wiki.openstreetmap.org/wiki/Map_Features), in which values can be understood as specific types of places, and keys are their categories. These are the keywords you can use when downloading OSM data.
-
-For example, supermarket stores are categorized in OSM under `key=shop`, and `value=supermarket`. So a query of all supermarkets within the boundary box of Boston can be constructed as follows:
-
-```{r message = FALSE, warning=FALSE}
-supermarket <- opq(bbox)|>   
-  add_osm_feature(key = "shop", value = "supermarket") |>  
-  osmdata_sf() 
-```
-
-The retrieved OSM object is a huge list that includes numerous attributes; What we need is an `sf` object named `osm_polygons` nested in this list. Let's extract `osm_polygons`, then select only the name (and the attached geometry) of this object:
-
-```{r message = FALSE, warning=FALSE}
-supermarket <- supermarket$osm_polygons |> select(name)
-```
-
-We can make a quick plot, zoom in, and check the result.
-
-```{r message = FALSE, warning=FALSE}
-leaflet() |> 
-  addTiles() |> 
-  addPolygons(data = supermarket)
-```
-
-Most of the supermarket locations are there. To prepare for our next step - joining them with our neighborhood dataset, we will do two additional things:
-
-1.  find the centroids for these supermarket polygons;
-2.  transform its CRS to be consistent with our neighborhood data.
-
-```{r message = FALSE, warning=FALSE}
-supermarket <- 
-  supermarket |> 
-  st_centroid(geometry) |> 
-  st_transform(2249)
-```
-
-### Write a function
-
-To streamline this "download - extract - transform" process, we can create a function to extract the specific elements required.
-
-```{r message = FALSE, warning=FALSE}
-# I name the function "get_osm". 
-# The inputs are place name and the key-value pair
-# The output is a spatial point sf object that stores the centroid of POIs.
-get_osm <- function(place, key, value){
-  bbox <- sf::st_bbox(nominatimlite::geo_lite_sf(
-    address = place,
-    points_only = FALSE))
-  
-  temp <- opq(bbox) |>
-    add_osm_feature(key = key, value = value) |>
-    osmdata_sf()
-  
-  df <- temp$osm_polygons |> 
-    select(name) |>
-    st_centroid(geometry) |> 
-    st_transform(2249)
-  return(df)
-}
-```
-
-Let's use our function to download more POIs that could describe business activities. Note that below is not an exhaustive list, there may be further relevant points to consider.
-
-```{r message = FALSE, warning=FALSE}
-restaurant <- get_osm("Boston, MA, USA", "amenity", "restaurant")
-fastfood <- get_osm("Boston, MA, USA", "amenity", "fast_food")
-retail <- get_osm("Boston, MA, USA", "building", "retail")
-```
-
-## Calculate the number of POIs by neighborhood
-
-Once the three OSM variables are generated, we will count the number of points within each neighborhood. In the following code, `st_intersects` returns a list of 24 (the number of neighborhoods), in which each element contains IDs of the points falling within this polygon. We then apply `lengths()` to the elements of `st_intersects` to count the number of IDs. (`lengths` is a base R function, it's not calculating spatial lengths, but getting the length of elements of a list).
-
-```{r message = FALSE, warning=FALSE}
-# The `bind_cols` brings multiple vectors together to make a data frame
-osm_data <- bind_cols(neighborhood$nbh_name,
-  lengths(st_intersects(neighborhood, restaurant)),
-  lengths(st_intersects(neighborhood, fastfood)),
-  lengths(st_intersects(neighborhood, retail)),
-  lengths(st_intersects(neighborhood, supermarket))
-)
-
-colnames(osm_data) <- c("nbh_name", "restaurant", "fastfood", "retail", "supermarket")
-```
-
-Then we will sum them up to have the total number of business-related POIs in each neighborhood, then factor in the population size to normalize the raw count.
-
-```{r message = FALSE, warning=FALSE}
-osm_data <- osm_data |> 
-  left_join(neighborhood, by = "nbh_name") |> 
-  mutate(poi_density = ifelse(population>0, 
-                              (restaurant+fastfood+retail+supermarket)/(population/1000), 
-                              NA)) |> 
-  select(nbh_name, poi_density)
-```
-
-## Assemble results
-
-Now we will put the three parts of our result (population density, sidewalk coverage, and POI data) in one place. The three datasets we have created share the common attribute `nbh_name`. We can perform `left_join()` on two datasets at a time, but an alternative strategy is to use the `purrr` package's `reduce()` function to combine multiple datasets at one time.
-
-```{r message = FALSE, warning=FALSE}
-data <- list(neighborhood, sidewalk_data, osm_data) |> 
-  reduce(left_join, by = "nbh_name")
-```
-
-We have finally compiled the necessary dataset that incorporates all the indicators we have identified! Now let's remove intermediary variables in the working environment, keeping only the `data` and prepare to create the index.
-
-```{r message = FALSE, warning=FALSE}
-rm(list=setdiff(ls(), "data"))
-data <- data |> select(-c(population, nbh_area))
-```
-
-# Create a composite index
-
-There are many different methods to combine variables. We are going to create a relatively simple additive index by adding up our three indicators with equal weights. But before that, we need to standardize our variables to make sure they are at a comparable scale.
-
-## Standardize indicators
-
-Since our indicators end up having very different scales, we can't interpret anything about the magnitude by comparing these values to each other. In many statistical analyses, such as multivariate linear regression, standardizing your data is usually an essential first step to prevent certain variables from dominating the analysis due to their larger numerical values.
-
-Z-score standardization converts data from various distributions into a common *unit* of measurement, which is the number of standard deviations from the mean. This conversion enables data points, regardless of their original spread, to be expressed in the same way.
-
-A z-score can be calculated by subtracting from a given observation the mean of all observations and then dividing by the standard deviation of all observations. R has us covered here - the `scale` function does exactly the same thing. Here we use a `mutate_at` function to perform the same alteration upon multiple variables we select. Take a look at the documentation for `mutate_at`, the `list` argument allows you to modify existing columns in place.
-
-```{r message = FALSE, warning=FALSE}
-score <-
-  data |>
-  mutate_at(
-    vars(pop_density, sidewalk_coverage, poi_density),
-    list(scale)
-  )
-```
-
-## Specify the directions
-
-High values in indicators may represent beneficial or detrimental conditions - in some cases, higher values are "good", and in some cases, lower values are "good". When we are creating an additive index, we can transform values so that they are moving in the same direction by simply switching the sign on the values that need to be reversed (e.g. multiply by -1). However, we don't need to adjust directions in our case because our indicators move in the same direction (i.e. high values mean a more walkable environment).
-
-## Aggregate the index
-
-Now we are going to generate our composite index, where standardized values are simply added together.
-
-```{r message = FALSE, warning=FALSE}
-score <- score |>
-  rowwise() |>
-  mutate(
-    index = sum(pop_density, sidewalk_coverage, poi_density))|> 
-  ungroup()
-```
-
-You may have noticed `rowwise()`. Typically, if we were to ask `dplyr` to mutate by providing a sum, it would do so by column. `rowwise()` modifies this and asks for something to happen across a data observation (row) instead of by column.
-
-We could analyze the index value and interpret it as is, but for an index, it's reasonable to anticipate a value falling within the range of 0 to 100. We can use `rescale` to put our values into any specified range.
-
-```{r message = FALSE, warning=FALSE}
-score <-
-  score |>
-  mutate(index = rescale(index, to = c(0, 100)))
-```
-
-## Check the result
-
-We can make a quick map to examine our results. Although, we don't have to over-interpret our results because any method to evaluate walkability is a difficult one. OpenStreetMap also exhibits issues such as missing names, data availability biases, inconsistent categorization, etc. This study chose a more pragmatic method to demonstrate the capabilities of R in data management and spatial analysis.
-
-```{r message = FALSE, warning=FALSE}
-ggplot(score) + 
-  geom_sf(aes(fill = index))+
-  scale_fill_continuous()
-```
-
-### **Optional:**
-
-In response to suggestions - here are some other approaches for presenting our results! For example, a formatted and sortable table:
-
-```{r message = FALSE, warning=FALSE}
-# Rescore the sub-dimensional indices to 0-100 as well
-score <-
-  score |>
-  mutate_at(vars(pop_density, sidewalk_coverage, poi_density),
-    ~rescale(., to = c(0, 100))) |> 
+S_2010 <- F_2010 |> 
+  select(GEOID, POP10 = value) |> 
+  # We are preparing data for non-spatial operations, so I'm using st_drop_geometry to exclude the spatial information here. More about `sf` operations next week.
   st_drop_geometry()
 
-library(gt)
-score|> 
-  modify_if(~is.numeric(.), ~round(., 2)) |> 
-  gt() |> 
-  tab_style(
-    locations = cells_body(columns = nbh_name),
-    style = cell_text(weight = "bold")
-  ) |>
-  opt_interactive(
-    use_compact_mode = TRUE,
-    use_text_wrapping = FALSE
-  )
+S_2022 <- F_2022 |> 
+  select(GEOID, POP22 = estimate) |> 
+  st_drop_geometry()
 ```
 
-Or, we can make some [radar charts](https://r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html):
+Now we are ready to join! An additional trick: a typical `left_join` only works with two datasets at a time. If we want to join four or more datasets, we have to:
+
+```{verbatim}
+pop_data <- left_join(S_1990, S_1970, by="GEOID")
+pop_data <- left_join(S_2010, pop_data, by="GEOID")
+pop_data <- left_join(S_2022, pop_data, by="GEOID")
+```
+
+However, we can do this with less code and repetition using the `reduce()` function from the `purrr` package in combination with `left_join()`. Although we haven't introduced it yet, [the `purrr` package](https://purrr.tidyverse.org/) is designed for working with functional programming concepts like loops and recurrence.
 
 ```{r message = FALSE, warning=FALSE}
-nbh = "Downtown"
-# The radar chart requires only value columns
-temp <- score |> 
-  filter(nbh_name == nbh)|> 
-  select(pop_density, sidewalk_coverage, poi_density)
+pop_data <-
+  reduce(list(S_2022, S_2010, S_1990, S_1970), 
+         left_join, by = "GEOID")
+```
 
-# I also have to manually add 2 new row: the max and min of each indicator
-temp <- rbind(rep(100, 3), rep(0, 3), temp) 
+Our joined result `pop_data` now has the same number of observations as the 2022 dataset - because we placed it on the left side of the `reduce()` function, allowing `left_join()` to apply sequentially from left to right. Now we have a final result structured as intended from the beginning.
 
-library(fmsb)
-radarchart(temp, title = nbh)
+![](../img/lab3_example_dataset.PNG)
+
+# Step 3 Calculate and summarize changes
+
+## Compare population changes
+
+### Exercise 1
+
+We have compiled population data in one table. To make this table more informative, let's calculate the percentage change in population for each tract, and classify tracts based on whether their population has significantly decreased, increased, or remained largely unchanged, following the Voohver Center's approach.
+
+![](../img/lab3_example_result.PNG)
+
+Please insert your own code into the document to achieve the following:
+
+1.  Calculate the population change from 1970 to 2022 by computing the percentage increase (POP22 - POP70) / POP70. Use `mutate()` for this and create a new column called "change".
+
+2.  Create another column called "status" to classify the changes. Label changes less than 10% as "Low Change". Label changes greater than 10% as "Growing", and less than -10% as "Declining".
+
+    Note that we also have missing values (NAs) in `change` due to differences in census tracts, where some tracts in 2020 did not exist in earlier years. To account for that I included a fourth category in `status` named "Uncategorized".
+
+**Hint:** How to populate values based on multiple conditions? The traditional and more straightforward approach is using the `if_else()` statement. Combining it with `mutate`, it looks something like this:
+
+```{verbatim}
+pop_data |> 
+  mutate(status = ifelse(change < -0.1, "declining",
+                ifelse(change > 0.1, "growing",
+                ifelse(is.na(change), "uncategorized", "low change"))))
+```
+
+However, `dplyr` offers a more concise solution. [Check out `case_when`](https://dplyr.tidyverse.org/reference/case_when.html), which simplifies handling multiple conditions by eliminating the need for nested if else statements within multiple parentheses.
+
+```{r echo=FALSE}
+pop_data <- pop_data |> 
+  mutate(change = (POP22 - POP70)/POP70)|> 
+  mutate(Status = case_when(
+    is.na(change) ~ "Uncategorized",
+    change > 0.10 ~ "Group 1 - Growing",
+    change < -0.10 ~ "Group 2 - Declining",
+    TRUE ~ "Group 3 - Low Change"
+  ))
+```
+
+## Create summary tables
+
+When you are ready preparing the dataset in the last step. we can use `group_by()` and `summarise()` to find out how many tracts are in each category.
+
+`` {rlabel="sumtable1", message = FALSE, warning=FALSE} pop_data |> group_by(Status) |>    summarise(`Number of Tracts` = n()) ``
+
+Speaking of summary tables, `gt()` is powerful tool for creating presentable and customizable tables with ease. For instance, we can add a few more lines in the previous code to enhance this table by adding titles and colorization. There are also [many other](https://gt.rstudio.com/articles/gt.html) [styling options](https://rfortherestofus.com/2023/08/table-theme-gt) available.
+
+```{r label="sumtable2", message = FALSE, warning=FALSE}
+pop_data |> group_by(Status) |> 
+  summarise(`Number of Tracts` = n()) |> 
+  gt() |> 
+  tab_header(title = "Change in Population, 1970-2022",
+             subtitle = "Cook County, IL") |> 
+  tab_options(column_labels.background.color = 'dodgerblue4')
+  
 
 ```
 
-# Exercise
+# Step 4 Clip out Chicago
 
-This exercise will be a self-guided mini research to evaluate the **public transportation service (supply)** of selected Boston neighborhoods. You will define 3-4 indicators that describe existing public transportation services, formulate your analysis strategy, calculate the indicators, then focus on two neighborhoods in Boston to compare your results and evaluate the public transportation supply in your study areas.
+As you might have noticed, we are still working with Cook County so far. How is Chicago located within Cook County exactly? Let's visualize that using another census-related package `tigris`.
 
-You can describe public transportation service by number of bus and rail stops, number of routes, length of bike routes and sidewalks, etc. You can download the datasets you need from Boston websites or OSM. The primary purpose of this exercise is to practice spatial analysis in R. You should operationalize the metrics in a manageable way and specify indicators that work for you.
+`tigris` fetches census geographics. You can think of it as a programmatic way of downloading TIGER/Line Shapefiles. It uses geographic entities as [function names](https://github.com/walkerke/tigris). For example, `tracts()` indicates that you want to download tract boundaries, and `county()` indicates you want to download county boundaries, and so on.
 
-# Work Product
+The function `place()` fetches census-designated place. The city of Chicago is one of such places in Illinois.
 
-Please document your work process and results in a new Quarto Document, and **upload your .qmd file and rendered HTML file to Canvas** **by the end of day, Tuesday, Dec 5.**
+```{r label="tigris", message = FALSE, warning=FALSE}
+options(tigris_use_cache=TRUE) # This is to allow tigris to use caching for downloaded data so that we don't need to fetch the same data again every time you need it.
 
-A quick tip: if you include `self_contained = TRUE` in your YAML header, you won't lose the pictures of your html file.
+# Download the boundary of Chicago. 
+chi_boundary <- places(state = "IL") |> 
+  filter(NAME == "Chicago")
+```
 
-![](/img/lab3-html.PNG)
+Recall that we have included spatial information in our F_2022 dataset, which means we can direct plot it. We can also plot both F_2022 and the Chicago boundary together to see the overlay.
+
+```{r label="compare", message = FALSE, warning=FALSE}
+ggplot()+
+  geom_sf(data = F_2022)+ # boundary of Cook County
+  geom_sf(data = chi_boundary, color = "blue", 
+          linewidth = 0.5, fill = NA) # boundary of Chicago
+```
+
+`st_intersection()` performs a geometric intersection between two spatial objects. When we apply this function on these two spatial files, we can extract the overlapping census tracts within Chicago.
+
+```{r label="cut_chicago", message = FALSE, warning=FALSE}
+st_intersection(F_2022, chi_boundary) |> 
+  ggplot() +
+  geom_sf() 
+```
+
+We've got the key method, but in the end, we want to know which tracts in Chicago are "growing", "declining", or "no change", which is in the plain table we have prepared. So what we are going to do next involves two steps: before performing the spatial intersection, we need to reattach the spatial information back to the summary table `pop_data`.
+
+```{r label="join_and_intersection", message = FALSE, warning=FALSE}
+# 
+chi_pop_data <- 
+  # join our result table to the spatial file F_2022
+  left_join(F_2022, pop_data, by = "GEOID") |> 
+  # Cut it to the Chicago boundary
+  st_intersection(chi_boundary) |> 
+  # Keep the columns we need
+  select(GEOID, POP22:Status)
+```
+
+Take a look at your `chi_pop_data`, if everything goes well, we will have a dataset that looks like this.
+
+![](../img/lab3_final_check.PNG)
+
+We've (finally) obtained a column indicating whether each tract's population is growing, declining, or relatively stable in Chicago. Can't wait to put this column into `ggplot`.
+
+```{r label="plot_chicago_1", message = FALSE, warning=FALSE}
+ggplot(chi_pop_data) + 
+  geom_sf(aes(fill = Status))
+```
+
+Feel free to modify the colors, add text, or apply any design touches as you wish.
+
+```{r message = FALSE, warning=FALSE}
+ggplot(chi_pop_data) + 
+  geom_sf(aes(fill = Status), color = alpha("white", 0.5))+
+  scale_fill_manual(values = c(
+    "Group 1 - Growing" = "#FC8D59",
+    "Group 2 - Declining" = "#D73027",
+    "Group 3 - Low Change" = "#FDCC8A",
+    "Uncategorized" = "#B0BEC5"
+  )) +
+  labs(title = "Change in population, 1970-2022",
+       subtitle = "City of Chicago, by Census tract")+
+  theme_void()
+```
+
+### Exercise 2
+
+racial
+
+\% of B/W/A

@@ -4,41 +4,41 @@ title: "Schedule Overview"
 
 ### Schedule
 
-W01 (Oct 23 - Oct 27):
+W01 (Oct 21 - Oct 25):
 
 -   Course Overview
 -   Lab1: Cambridge Building Energy: R, Quarto, `dplyr` essentials
 
-W02 (Oct 30 - Nov 3):
+W02 (Oct 28 - Nov 1):
 
 -   Exploratory Data Analysis
 -   Lab 2: Opportunity Zones: `tidyverse`, `ggplot2` packages
 
-W03 (Nov 6 - Nov 10):
+W03 (Nov 4 - Nov 8):
 
--   Census Data and Demographic Analysis
--   Lab 3: Racial Distribution: `tidycensus`, `tidyr` packages
+-   Spatial Analysis; Obtain data from multiple sources
+-   Lab 3: Walkable Environment: `sf`, `osmdata` packages
 
-W04 (Nov 13 -- Nov 17):
+W04 (Nov 11 -- Nov 15):
 
 -   Create interactive graphs and maps
 -   Lab 4: Airbnb in Chicago: `plotly` and `leaflet` packages
 
-W05 (Nov 20 -- Nov 22):
+W05 (Nov 18 -- Nov 22):
 
--   Spatial Analysis; Obtain data from multiple sources
--   Lab 5: Walkable Environment: `sf`, `osmdata` packages
+-   Census Data and Demographic Analysis
+-   Lab 5: Neighborhood Change: `tidycensus`, `tidyr` packages
 
-W06 (Nov 27 -- Dec 1):
+W06 (Nov 25 -- Nov 29):
 
 -   Web Storytelling I
 -   Lab 6: Build ShinyApp with `flexdashboard`
 
-W07 (Dec 4 -- Dec 8):
+W07 (Dec 2 -- Dec 6):
 
 -   Web Storytelling II
 -   Work on projects
 
-W08 (Dec 11 -- Dec 13):
+W08 (Dec 9 -- Dec 11):
 
 -   Presentation

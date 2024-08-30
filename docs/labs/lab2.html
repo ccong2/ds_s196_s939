@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-08-11">
+<meta name="dcterms.date" content="2024-08-29">
 
 <title>Applied Data Science for Cities - Exploratory Data Analysis with </title>
 <style>
@@ -23,7 +23,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -104,9 +111,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Applied Data Science for Cities</span>
     </a>
@@ -118,42 +125,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../syllabus/index.html" rel="" target="">
- <span class="menu-text">Syllabus</span></a>
+    <a class="nav-link" href="../syllabus/index.html"> 
+<span class="menu-text">Syllabus</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../labs/index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Labs</span></a>
+    <a class="nav-link active" href="../labs/index.html" aria-current="page"> 
+<span class="menu-text">Labs</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../howto/index.html" rel="" target="">
- <span class="menu-text">How To</span></a>
+    <a class="nav-link" href="../howto/index.html"> 
+<span class="menu-text">How To</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab2.html">02 Opportunity Zones: tidyverse, ggplot2 packages</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab2.html">02 Opportunity Zones: tidyverse, ggplot2 packages</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -204,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../labs/lab6.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">06 Build ShinyApp with Flexdashboard</span></a>
+ <span class="menu-text">06 Build ShinyApps</span></a>
   </div>
 </li>
       </ul>
@@ -212,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -256,10 +263,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab2.html">02 Opportunity Zones: tidyverse, ggplot2 packages</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Exploratory Data Analysis with <img src="../img/Rlogo.png" class="img-fluid" width="60"></h1>
-<p class="subtitle lead"><span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span></p>
+<p class="subtitle lead"><span style="color:#2C3E50">11.S939 Applied Data Science for Cities</span></p>
 </div>
 
 
@@ -270,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 11, 2024</p>
+      <p class="date">August 29, 2024</p>
     </div>
   </div>
   
@@ -278,7 +285,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="overview" class="level1">
 <h1>Overview</h1>
@@ -378,7 +387,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>DataExplorer<span class="sc">::</span><span class="fu">plot_missing</span>(ozs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/missingvalues-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/missingvalues-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><code>plot_missing</code> calculates the proportion of missing values in a given variable, and makes some judgemental calls of whether the missing is significant, indicated by “Good”, “OK”, and “Bad”. (Check out the documentation by typing <code>?plot_missing</code> in your console. What are the default ranges for these three categories?) Overall, most of our columns have a very small percentage of missing values (less than 1%) and would not create significant representative issues. However, when performing calculations, we need to include the <code>na.rm = TRUE</code> argument, indicating that we are calculating based on the available 99%.</p>
@@ -409,10 +422,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, DesignatedOZ) <span class="sc">|&gt;</span> </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'state'. You can override using the
-`.groups` argument.</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 108 × 3
 # Groups:   state [57]
@@ -435,15 +444,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The two commands <code>pivot_wider()</code> and <code>pivot_longer()</code> are useful for reshaping our data. <code>pivot_wider()</code> essentially adds columns to a dataset by transitioning content from rows to columns. <code>pivot_longer()</code> does the opposite - it makes a dataset longer by transitioning columns to rows.</p>
 <p>In our case, let’s use <code>pivot_wider()</code> to transition our Designated and Not Designated rows into columns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ozs <span class="sc">|&gt;</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, DesignatedOZ) <span class="sc">|&gt;</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> DesignatedOZ, <span class="at">values_from =</span> Income)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'state'. You can override using the
-`.groups` argument.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ozs <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, DesignatedOZ) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> DesignatedOZ, <span class="at">values_from =</span> Income)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 57 × 3
 # Groups:   state [57]
@@ -464,16 +469,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>That makes it easier to calculate and show the difference in income between designated and not designated tracts:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ozs <span class="sc">|&gt;</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, DesignatedOZ) <span class="sc">|&gt;</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> DesignatedOZ, <span class="at">values_from =</span> Income) <span class="sc">|&gt;</span> </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Difference =</span> Designated <span class="sc">-</span> <span class="st">`</span><span class="at">Not Designated</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has grouped output by 'state'. You can override using the
-`.groups` argument.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ozs <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(state, DesignatedOZ) <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> DesignatedOZ, <span class="at">values_from =</span> Income) <span class="sc">|&gt;</span> </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Difference =</span> Designated <span class="sc">-</span> <span class="st">`</span><span class="at">Not Designated</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 57 × 4
 # Groups:   state [57]
@@ -526,12 +527,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>We used a new function <code>scale_y_continuous</code> to specify y axis properties. Here we are making sure the poverty rate are labeled as <strong>percentages</strong>. If you remove this line, they will by default show as decimal numbers.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ozs) <span class="sc">+</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> DesignatedOZ, <span class="at">y =</span> PovertyRate, <span class="at">fill =</span> DesignatedOZ), <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Opportunity Zone Eligible Tracts"</span>, <span class="at">y =</span> <span class="st">"Poverty Rate"</span>, <span class="at">fill =</span> <span class="st">"Tracts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ozs) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> DesignatedOZ, <span class="at">y =</span> PovertyRate, <span class="at">fill =</span> DesignatedOZ), <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Opportunity Zone Eligible Tracts"</span>, <span class="at">y =</span> <span class="st">"Poverty Rate"</span>, <span class="at">fill =</span> <span class="st">"Tracts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/boxplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/boxplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>By comparing <em>the 50th percentile</em> (the horizontal line inside each box) we can see that tracts designated as Opportunity Zones have a higher poverty rate compared with those not designated. The <em>heights</em> of the boxes themselves give us an indication of how closely around the median all values in the dataset are concentrated—the degree of dispersion or spread. The <em>vertical lines</em> are called whiskers and extend upward and downward to the lowest values that are not candidates for outlier status. An <em>outlier</em> is an unusual value that could potentially influence the results of an analysis. These are indicated with dots in the boxplot.</p>
@@ -541,12 +546,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="density-plot">Density plot</h3>
 <p>By modifying the last code chunk, we can make a <strong>density plot</strong> to describe the distribution of poverty rate. A density plot can be understood as a smoothed version of the histogram, and provides a more direct view of of the shape and peaks in the data. The x-axis typically represents the range of values for the variable of interest, while the y-axis represents the probability density (how likely it is for the variable to take on a particular value within that range).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ozs) <span class="sc">+</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> PovertyRate, <span class="at">fill =</span> DesignatedOZ), <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Poverty Rate"</span>, <span class="at">fill =</span> <span class="st">"Tracts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ozs) <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> PovertyRate, <span class="at">fill =</span> DesignatedOZ), <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Poverty Rate"</span>, <span class="at">fill =</span> <span class="st">"Tracts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/densityplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/densityplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>If you have noticed - in the code above, we didn’t provide a variable that what goes to the y-axis. Where does the value “density” come from?</p>
@@ -562,19 +571,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>legend.position = "none"</code>: the position of legend (“left”, “right”, “bottom”, “top”, or two-element numeric vector), or not showing the legend (“none”).</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozs) <span class="sc">+</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">x =</span> DesignatedOZ, <span class="at">y =</span> PovertyRate, <span class="at">fill =</span> DesignatedOZ), <span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> DesignatedOZ, <span class="at">y =</span> PovertyRate), <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">width =</span> .<span class="dv">15</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Opportunity Zone Eligible Tracts"</span>,</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Poverty Rate"</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution of Poverty Rate"</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozs) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">x =</span> DesignatedOZ, <span class="at">y =</span> PovertyRate, <span class="at">fill =</span> DesignatedOZ), <span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> DesignatedOZ, <span class="at">y =</span> PovertyRate), <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">width =</span> .<span class="dv">15</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Opportunity Zone Eligible Tracts"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Poverty Rate"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution of Poverty Rate"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/extra-1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/extra-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -600,16 +613,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s use your subset of <strong>Massachusetts data</strong> to perform this part of analysis. (We could use the nationwide dataset, but there will be over 40,000 points showing on the graph, which will not be pleasing to the eye).</p>
 <p>We begin by creating a scatterplot of poverty rate and unemployment rate. Note that we used <code>theme_bw</code>, which is a <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme</code> template</a> for a cleaner look.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozs_ma) <span class="sc">+</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> unemprate, <span class="at">y =</span> PovertyRate)) <span class="sc">+</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Unemployment rate"</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Poverty rate"</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Poverty rate vs. unemployment rate in Opportunity Zone eligible tracts"</span>, </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"State of Massachusetts"</span>,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Source: Urban Institute (2018)"</span>) <span class="sc">+</span> </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozs_ma) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> unemprate, <span class="at">y =</span> PovertyRate)) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Unemployment rate"</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Poverty rate"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Poverty rate vs. unemployment rate in Opportunity Zone eligible tracts"</span>, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"State of Massachusetts"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Source: Urban Institute (2018)"</span>) <span class="sc">+</span> </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/Scatterplot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/Scatterplot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>It is generally easy to recognize patterns in a graphical display. As we move from left to right along the x-axis (i.e., as the unemployment rate creases), the amount of poverty rate reported also increases.</p>
@@ -621,8 +638,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>1 indicates a perfectly positive linear correlation between two variables</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ozs_ma <span class="sc">|&gt;</span> <span class="fu">select</span>(Population<span class="sc">:</span>medrent, pctwhite<span class="sc">:</span>BAorhigher) <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  stats<span class="sc">::</span><span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ozs_ma <span class="sc">|&gt;</span> <span class="fu">select</span>(Population<span class="sc">:</span>medrent, pctwhite<span class="sc">:</span>BAorhigher) <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  stats<span class="sc">::</span><span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                Population medhhincome PovertyRate  unemprate    medvalue
 Population    1.0000000000   0.1971310 -0.17219731 -0.1255690  0.05060663
@@ -672,11 +689,15 @@ BAorhigher   -0.718007353 -0.003268322 -0.92318480  1.000000000</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ozs_ma <span class="sc">|&gt;</span> <span class="fu">select</span>(Population<span class="sc">:</span>medrent, pctwhite<span class="sc">:</span>BAorhigher) <span class="sc">|&gt;</span> </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  DataExplorer<span class="sc">::</span><span class="fu">plot_correlation</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ozs_ma <span class="sc">|&gt;</span> <span class="fu">select</span>(Population<span class="sc">:</span>medrent, pctwhite<span class="sc">:</span>BAorhigher) <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  DataExplorer<span class="sc">::</span><span class="fu">plot_correlation</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/correlation-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/correlation-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>An additional note to the code above is that we selected several continuous variables that we want to inspect, and removed NA values (<code>use = "complete.obs"</code>) so that the correlation values can be correctly calculated.</p>
@@ -686,11 +707,11 @@ BAorhigher   -0.718007353 -0.003268322 -0.92318480  1.000000000</code></pre>
 <h3 class="anchored" data-anchor-id="bar-plot">Bar plot</h3>
 <p>In the following code, you can see our familiar <code>group_by</code> + <code>summarise</code> process used to calculate the average median house income by county in Massachusetts. This summarized table is then piped to <code>ggplot()</code> for visualization.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ozs_ma <span class="sc">|&gt;</span> </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county, DesignatedOZ) <span class="sc">|&gt;</span>  </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Tracts =</span> <span class="fu">n</span>(),</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ozs_ma <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(county, DesignatedOZ) <span class="sc">|&gt;</span>  </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Tracts =</span> <span class="fu">n</span>(),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income =</span> <span class="fu">mean</span>(medhhincome, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 25 × 4
 # Groups:   county [13]
@@ -736,13 +757,17 @@ BAorhigher   -0.718007353 -0.003268322 -0.92318480  1.000000000</code></pre>
 <h2 class="anchored" data-anchor-id="bonus-scatterplot-with-marginal-histograms">Bonus: Scatterplot with marginal histograms</h2>
 <p>This is just for fun - If you want to create more advanced statistical plots, there are ways to do that too. The following graph requires an additional package <code>ggExtra</code>. But the other syntax should be familiar now.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("ggExtra")</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ozs_ma) <span class="sc">+</span> </span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> pctBlack, <span class="at">y =</span> PovertyRate, <span class="at">color =</span> DesignatedOZ)) <span class="sc">+</span> </span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>ggExtra<span class="sc">::</span><span class="fu">ggMarginal</span>(p, <span class="at">type =</span> <span class="st">"histogram"</span>, <span class="at">groupFill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("ggExtra")</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ozs_ma) <span class="sc">+</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> pctBlack, <span class="at">y =</span> PovertyRate, <span class="at">color =</span> DesignatedOZ)) <span class="sc">+</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>ggExtra<span class="sc">::</span><span class="fu">ggMarginal</span>(p, <span class="at">type =</span> <span class="st">"histogram"</span>, <span class="at">groupFill =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="lab2_files/figure-html/extra-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="lab2_files/figure-html/extra-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -841,10 +866,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -854,8 +896,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -867,7 +918,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -911,6 +1085,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -936,6 +1111,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1004,9 +1205,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right">Made with R and <a href="https://quarto.org/">Quarto</a></div>
+    <div class="nav-footer-right">
+<p>Made with R and <a href="https://quarto.org/">Quarto</a></p>
+</div>
   </div>
 </footer>
+
 
 
 

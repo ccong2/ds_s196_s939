@@ -32,12 +32,12 @@ W05 (Nov 18 -- Nov 22):
 W06 (Nov 25 -- Nov 29):
 
 -   Web Storytelling I
--   Lab 6: Build ShinyApp with `flexdashboard`
+-   Lab 6: Build `ShinyApps`
 
 W07 (Dec 2 -- Dec 6):
 
 -   Web Storytelling II
--   Work on projects
+-   Lab 7 (optional): Quarto Website
 
 W08 (Dec 9 -- Dec 11):
 

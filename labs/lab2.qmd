@@ -1,6 +1,6 @@
 ---
 title: "Exploratory Data Analysis with ![](../img/Rlogo.png){width=60px}"
-subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
+subtitle: <span style="color:#2C3E50">11.S939 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
 editor: visual
@@ -128,7 +128,7 @@ mean(ozs$medhhincome, na.rm = TRUE)
 
 With that, we can calculate the average median household income for designated and not-designated census tracts using `group_by` + `summarise`.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ozs |> 
   group_by(DesignatedOZ) |> 
   summarise(
@@ -138,7 +138,7 @@ ozs |>
 
 We could summarize based on two groups - summarize first by state than by legibility - so that we have such comparisons for each state.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ozs |> 
   group_by(state, DesignatedOZ) |> 
   summarise(
@@ -151,7 +151,7 @@ The two commands `pivot_wider()` and `pivot_longer()` are useful for reshaping o
 
 In our case, let's use `pivot_wider()` to transition our Designated and Not Designated rows into columns.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ozs |> 
   group_by(state, DesignatedOZ) |> 
   summarise(
@@ -161,7 +161,7 @@ ozs |>
 
 That makes it easier to calculate and show the difference in income between designated and not designated tracts:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ozs |> 
   group_by(state, DesignatedOZ) |> 
   summarise(

@@ -1,6 +1,6 @@
 ---
 title: "Get started with ![](../img/Rlogo.png){width=60px}"
-subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
+subtitle: <span style="color:#2C3E50">11.S939 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
 editor: visual
@@ -20,7 +20,7 @@ We have talked about files paths in class, and the importance of explicitly sett
 
 In our labs, we are going to use **R Projects** to organize our works and make sure we don't lose files during transfers. R projects organize all files related to a project in one place and setting up relative file paths. Let's start by setting up a project for our exercise.
 
-Launch RStudio, then click **File - New Project\...** A dialog box will open up. Select **New Directory**, then **New Project.** Here, you can create a new folder to save everything related to this project. For example, I navigated to my D:/Fall24 folder and created a new folder there called Lab 1:
+Launch RStudio, then click **File - New Project...** A dialog box will open up. Select **New Directory**, then **New Project.** Here, you can create a new folder to save everything related to this project. For example, I navigated to my D:/Fall24 folder and created a new folder there called Lab 1:
 
 ![](../img/lab1_project.PNG){width="450"}
 

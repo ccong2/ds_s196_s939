@@ -1,6 +1,6 @@
 ---
 title: "Describe neighborhood dynamics with ![](../img/Rlogo.png){width=60px}"
-subtitle: <span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span>
+subtitle: <span style="color:#2C3E50">11.S939 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
 editor: visual
@@ -264,13 +264,19 @@ result <- left_join(neighborhood,
 <!-- Repeat -->
 
 <!-- ```{r} -->
+
 <!-- result <- -->
+
 <!--   left_join(result, -->
+
 <!--             st_drop_geometry(count_restaurants), by = "nbh_name")  -->
 
 <!-- result <- -->
+
 <!--   left_join(result, -->
+
 <!--             st_drop_geometry(tree_data), by = "nbh_name") -->
+
 <!-- ``` -->
 
 <!-- Check the "result" variable, we now have one dataset that contains everything! -->
@@ -278,22 +284,31 @@ result <- left_join(neighborhood,
 <!-- By observing it you'll notice: the tree coverage data for Harbor Island is not recorded. the population for Harbor Island is also not recorded. As we can't find them in the dataset we downloaded, we can choose to remove it and focus only on the geography cropped to the coastline. -->
 
 <!-- ```{r} -->
+
 <!-- result <- result |> filter(nbh_name != "Harbor Islands") -->
+
 <!-- ``` -->
 
 <!-- Then the normalization process can be done with a series of `mutate` functions. -->
 
 <!-- ```{r} -->
+
 <!-- result <- result |>  -->
+
 <!--   mutate(sidewalk_density = sidewalk_length/nbh_area, -->
+
 <!--          poi_density = (restaurant+fastfood+grocery)/population, -->
+
 <!--          tree_coverage = canopy_area/nbh_area) -->
+
 <!-- ``` -->
 
 <!-- Finally, Remove intermediary variables in the working environment: -->
 
 <!-- ```{r message = FALSE, warning=FALSE} -->
+
 <!-- rm(list=setdiff(ls(), "result")) -->
+
 <!-- ``` -->
 
 <!-- # Present our result -->
@@ -301,40 +316,65 @@ result <- left_join(neighborhood,
 <!-- use gt to make a nice table -->
 
 <!-- ```{r message = FALSE, warning=FALSE} -->
+
 <!-- # Rescore the sub-dimensional indices to 0-100 as well -->
+
 <!-- score <- -->
+
 <!--   score |> -->
+
 <!--   mutate_at(vars(pop_density, sidewalk_coverage, poi_density), -->
+
 <!--     ~rescale(., to = c(0, 100))) |>  -->
+
 <!--   st_drop_geometry() -->
 
 <!-- library(gt) -->
+
 <!-- score|>  -->
+
 <!--   modify_if(~is.numeric(.), ~round(., 2)) |>  -->
+
 <!--   gt() |>  -->
+
 <!--   tab_style( -->
+
 <!--     locations = cells_body(columns = nbh_name), -->
+
 <!--     style = cell_text(weight = "bold") -->
+
 <!--   ) |> -->
+
 <!--   opt_interactive( -->
+
 <!--     use_compact_mode = TRUE, -->
+
 <!--     use_text_wrapping = FALSE -->
+
 <!--   ) -->
+
 <!-- ``` -->
 
 <!-- Or, we can make some [radar charts](https://r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html): -->
 
 <!-- ```{r message = FALSE, warning=FALSE} -->
+
 <!-- nbh = "Downtown" -->
+
 <!-- # The radar chart requires only value columns -->
+
 <!-- temp <- score |>  -->
+
 <!--   filter(nbh_name == nbh)|>  -->
+
 <!--   select(pop_density, sidewalk_coverage, poi_density) -->
 
 <!-- # I also have to manually add 2 new row: the max and min of each indicator -->
+
 <!-- temp <- rbind(rep(100, 3), rep(0, 3), temp)  -->
 
 <!-- library(fmsb) -->
+
 <!-- radarchart(temp, title = nbh) -->
 
 <!-- ``` -->

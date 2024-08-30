@@ -43,7 +43,7 @@ website:
               file: labs/lab4.qmd
             - text: "05 Neighborhood Change: tidycensus, tidyr packages"
               file: labs/lab5.qmd
-            - text: "06 Build ShinyApp with Flexdashboard"
+            - text: "06 Build ShinyApps"
               file: labs/lab6.qmd
 
     
@@ -51,14 +51,16 @@ website:
       contents:
         - section: "How To"
           contents:
+            - text: "Introduction"
+              file: howto/index.qmd
             - text: "Set Up R and RStudio"
               file: howto/setupr.qmd
             - text: "Quick Code Guides"
-              file: howto/setupr.qmd
+              file: howto/startcode.qmd
             - text: "Start with GIT"
-              file: howto/setupr.qmd
+              file: howto/git.qmd
             - text: "Publish a Quarto Website"
-              file: howto/setupr.qmd
+              file: howto/quartoweb.qmd
 
 # 
 #     - title: "Resources"

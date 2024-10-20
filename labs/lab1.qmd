@@ -1,6 +1,6 @@
 ---
 title: "Get started with ![](../img/Rlogo.png){width=60px}"
-subtitle: <span style="color:#2C3E50">11.S939 Applied Data Science for Cities</span>
+subtitle: <span style="color:#2C3E50">11.S196/11.S939 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
 format: html
 editor: visual
@@ -30,7 +30,7 @@ Click the button "Create Project". R will take a second to refresh. Then you wil
 
 The .Rproj file is the "key" that R references all project-related files. If you save all files related to Lab 1 in this folder, all relative paths remain intact and consistently applied.
 
-*Note: In future labs, I may provide you with a project folder containing data. As long as you launch RStudio by double-clicking the .Rproj file, you will be taken directly to the project's home directory.*
+*Note: In future labs, I may provide you with a project folder containing data. As long as you launch RStudio by double-clicking the **.Rproj** file, you will be taken directly to the project's home directory.*
 
 ## Practice formatting text with Quarto
 
@@ -42,7 +42,7 @@ You will then see a template file. At the very top you will see the [YAML](https
 
 To get an idea of how everything works, let's click the **"Render"** button on top of your toolbar.
 
-When prompted, give this file a name, it will be saved in the folder where your ".Rproj" file is.
+When prompted, give this file a name, it will be saved in the folder where your ".Rproj" file is, as a .qmd file.
 
 You will see a formatted document in a web browser. Switch between them back and forth to see where each part of the code is placed in the rendered HTML file.
 
@@ -67,7 +67,7 @@ Now let's delete everything below the YAML header in the template file, so that 
 
 ### Your practice
 
-In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, add 2-3 sentences below your YAML section that explain the following:
+In 2014, the City of Cambridge passed a local ordinance on building energy use disclosure. Spend a few moments reviewing [this website](https://www.cambridgema.gov/CDD/zoninganddevelopment/sustainabledevelopment/buildingenergydisclosureordinance) to become familiar with the ordinance (in general). Then, add a short paragraph below your YAML section that explain the following:
 
 -   What does the Building Energy Use Disclosure Ordinance require?
 -   What kind of data have been compiled and where to find them?
@@ -78,25 +78,27 @@ When you finished, save your file and click Render again. You can immediately se
 
 # Insert a video
 
-You've probably noticed there is a video on the Cambridge webpage. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document. All you need to do is open the embed code for the video itself (i.e., right-click the video - Copy embed code), then copy-and-paste it into your Markdown section **in the** **"Source"** **panel**.
+You've probably noticed there is a Youtube video on the Cambridge webpage, which is a recording of their Cambridge Building Emissions Public Forum on September 15, 2022. Let's assume that the video hosted on that webpage might be useful for others who view our rendered document. We can insert the video in Quarto and it will render in the output when we knit the document.
+
+All you need to do is embed the video in your document. Right-click on the video, select "Copy embed code." Then, paste that embed code into your Markdown section **in the** **"Source" panel.**
 
 ![](../img/lab1_youtube.PNG)
 
 What we have above is HTML code. A quick explanation without going into lots of detail:
 
--   The \<iframe\> tag is what inserts the video (or another document) in line with the Markdown text.
--   The src attribute provides the URL for the video
+-   The `<iframe>` tag is what inserts the video (or another document) in line with the Markdown text.
+-   The `src` attribute provides the URL for the video
 -   The remaining attributes outline the specifics of how the video will appear.
 
-For our purposes, the most important of these attributes is **data-external="1"**. This attribute is typically **NOT SPECIFIED** in the embed code you find on the web by default and **YOU WILL NEED TO ADD IT** in order for video content to render in your output. This attribute is currently required for the `knitr` package to properly render video content.
+For our purposes, the most important of these attributes is **data-external="1"**. This attribute is typically **NOT SPECIFIED** in the embed code you find on the web by default and **YOU WILL NEED TO ADD IT** in order for video content to render in your output. This attribute is currently required for Quarto to properly render video content.
 
 ### Your practice
 
-Embed this video in your Markdown section after the introductory sentences you have written. Render your document again and inspect your work.
+Embed this video in your document after the introductory sentences you have written. Render your document again and inspect your work.
 
 # Download and read data
 
-As you know, Quarto Document integrates both texts and code chunks. Recall that code chunks are where the R code lives in a document. These are easy to spot as shaded blocks leading by {r}. (In the Source panel, they always have three backticks followed by {r}).
+As you know, Quarto Document integrates both texts and code chunks. Recall that code chunks are where the R code lives in a document. These are easy to spot as shaded blocks leading by `{r}`. (In the Source panel, they always have three backticks followed by `{r}`).
 
 ```{verbatim}
 {r}
@@ -105,20 +107,23 @@ As you know, Quarto Document integrates both texts and code chunks. Recall that 
 
 In accordance with the ordinance, the City maintains BEUDO data for individual properties from 2015-2022. You can view this data on the [Cambridge Open Data Portal](https://data.cambridgema.gov/Energy-and-the-Environment/Cambridge-Building-Energy-and-Water-Use-Data-Discl/72g6-j7aq/). Take a few moments to explore the dataset by scrolling down the page and viewing the "What's in the Dataset" sections in particular. Now **download this dataset in CSV format.** You can create a new "data" folder in your project folder and save the table there.
 
-Check if you have installed the `tidyverse` package: Click the **Packages** tab in your lower-right panel in RStudio. Type tidyverse in the search box. If it's NOT shown in the list, go to your **Console** panel and run `install.packages("tidyverse")`
+Check if you have installed the `tidyverse` package: Click the **Packages** tab in your lower-right panel in RStudio. Type "tidyverse" in the search box. If it's NOT shown in the list, go to your **Console** panel and run `install.packages("tidyverse")`
 
 Insert a code chunk in your Quarto document by going to **Code - Insert Chunk**. I usually use the shortcut key RStudio provides (Alt+Ctrl/Cmd+I). Type a few things in the chunk and make it look like the following:
 
 ```{verbatim}
-{r label="loadtidyverse", message=FALSE, warning=FALSE}
+{r}
+#| label: "loadtidyverse"
+#| message: FALSE
+#| warning: FALSE
 library(tidyverse)
 ```
 
-The `label` option is not required, but can be helpful when you render the notebook (otherwise you will see "unnamed-chunk" in the Render tab next to the Console tab). The other options (described [in greater detail here](https://rmarkdown.rstudio.com/lesson-3.html)) suppress all warnings and messages that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.
+The `label` option is not required, but can be helpful when you render the notebook (otherwise you will see "unnamed-chunk" in the Render tab next to the Console tab). The other chunk options (described [in detail here](https://rmarkdown.rstudio.com/lesson-3.html)) suppress all `warnings` and `messages` that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.
 
 Run this code chunk to load `tidyverse` package. You can either click the green triangle on the top-right of this chunk, or use Ctrl/Cmd+Enter.
 
-**Note:** Why I said running `install.packages("tidyverse")` in the console but `library(tidyverse)` in the code chunk? You only need to "install" a package once, so there is no need to keep it in the script and run it every time you render the document. However, you must "library" (aka: activate) the package each time to use its functions.
+**Note:** Why I said running `install.packages("tidyverse")` in the **console** but `library(tidyverse)` in the **code chunk**? You only need to "install" a package once, so there is no need to keep it in the script and run it every time you render the document. However, you must "library" (aka: activate) the package each time to use its functions.
 
 ### Your practice
 
@@ -142,21 +147,13 @@ energy <- read_csv("../data/Cambridge_Building_Energy_Use_Disclosure_Ordinance__
 
 ## `Select`: selects a subset of **columns.**
 
-While in base R, we do:
-
-`dataset[, c("Column1", "Column2")]`
-
-In `dplyr`, we do:
+In the `energy` dataset, we probably don't need all of the 46 columns. So we can make it a smaller dataset by specifying a few columns to keep.
 
 `dataset |> select(Column1, Column2)`
 
-In other words, we can simply insert the column names into the `select` function, without worrying about syntax like indexing, concatenation (`c()`), and the quotation marks.
+**Insert a new code chunk in your document like this one below.** We will only keep 9 columns in the new dataset. You can type the pipe `|>` operator in using Shift+Ctrl/Cmd+M.
 
-In the `energy` dataset, we probably don't need all of the 46 columns. So we can make it a smaller dataset by specifying a few columns to keep. **Insert a new code chunk in your document like this one below.** We will only keep 9 columns in the new dataset.
-
-You can type the pipe `|>` operator in using Shift+Ctrl/Cmd+M.
-
-```{r label="select", message=FALSE, warning=FALSE}
+```{r}
 energy <- energy |>
   select(
     `Data Year`,
@@ -175,58 +172,43 @@ Some of the column names are surrounded by backticks (\`), that's because they i
 
 ## `filter`: Select a subset of **rows**
 
-In base R, we do this to pick observations by their values:
+Now let's create a new dataset that only contains energy use records from MIT buildings.
 
-`dataset[dataset$place == “Boston", ]`
+`dataset |> filter(<condition>)`
 
-In `dplyr`, we do:
+Take a look at how we achieve this using the following code:
 
-`dataset |> filter(place == “Boston")`
+```{verbatim}
+{r}
+energy |> 
+  filter(Owner == "MASSACHUSETTS INSTITUTE OF TECHNOLOGY")
+```
 
-Again, a simpler and more understandable syntax.
+Viewing the new variable `mit_energy`, you'll notice that some entries are missing records for total GHG emissions, which appear as NA under the "Total GHG Emissions (Metric Tons CO2e)" column. If we want to simplify the dataset by keeping only the rows with valid GHG emission records, we can apply this as a `filter` condition. By doing so, we can combine multiple filter conditions using the pipe operator.
 
-Now let's create a new dataset that only contains energy use records from MIT buildings and that are not missing the total GHG emission attribute. Take a look at how we achieve this using the following code, then proceed to **insert a new code chunk in your document like the one below**:
+Proceed to **insert a new code chunk in your document like the one below**
 
-```{r label="createMITdata", message=FALSE, warning=FALSE}
+```{r}
 mit_energy <- energy |> 
   filter(Owner == "MASSACHUSETTS INSTITUTE OF TECHNOLOGY") |> 
   filter(!is.na(`Total GHG Emissions (Metric Tons CO2e)`))
 ```
 
-## `mutate`: create or modify columns
+`is.na()` is a function commonly used to check whether each value in a column is missing (NA). The `!` is a logical negation operator, so `!is.na()` checks for values that are not missing. It returns TRUE for non-missing values and FALSE for missing values.
 
-`mutate` allows you to modify your dataset by 1) add new columns to a data frame, or 2) modify values in existing columns. It's commonly used to calculate or transform data by applying functions, helping you derive new values from your existing data.
+## `Group_by` + `Summarise`
 
-For example, in the Owner column of our dataset, we have the full name of the institute. We can replace these long names with "MIT".
+`Summarise` is usually used in conjunction with `group_by` because the latter changes the scope from operating on the entire dataset to operating on it group-by-group. Go ahead and run the following code and observe the result:
 
-```{r label="mutate_1", message=FALSE, warning=FALSE}
-mit_energy |> mutate(Owner = "MIT")
-```
-
-You can also use `mutate` to add new columns to your data that are calculated from existing columns. Here we are showing how to create a new column for building ages.
-
-```{r label="mutate_2", message=FALSE, warning=FALSE}
-mit_energy |> mutate(Building_Age = 2023 - `Year Built`)
-```
-
-**Note:** A common point of confusion is the similarity between `<-` (assign to) and `|>`(pipe). In the two code chunks above, we are only displaying the results, not saving them to an object. The `mit_energy` data thus remains unchanged. To put it briefly:
-
--   **When to Use `<-`:** Use `<-` to save or update an object with new values.
--   **When Not to Use `<-`:** If you only want to test and view results without modifying the object, do not use `<-`.
-
-## Group_by + Summarise
-
-`Summarise` is usually used in conjunction with `group_by` because the latter changes the scope from operating on the entire dataset to operating on it group-by-group. Go ahead and run the following code:
-
-```{r label=annual_count, message=FALSE, warning=FALSE}
+```{r}
 mit_energy |> 
   group_by(`Data Year`) |> 
   summarise(count = n())
 ```
 
-We use `group_by` such that observations (i.e., rows) are grouped according to `Data Year`, which is the year when the energy record was taken. The result is then passed to `summarise` to generate a **total number of records** per year. By default, the `n()` function creates a new attribute (i.e., column), which we here name as "count".  
+We now have a summary table that says, in our dataset, there are 130 records in 2015, 135 in 2016, and so on. We use `group_by` such that rows are grouped according to `Data Year`, which is the year when the energy record was taken. The result is then passed to `summarise` to count a total number of records per year. By default, the `n()` function creates a new column, which we here name as "count".  
 
-Below we are using the same `group_by` + `summarise` chain to calculate the average GHG emissions of all buildings, and the average GHG emission intensity (use the column `Total GHG Emissions Intensity (kgCO2e/ft2)`). Pay attention to how we are giving new names to each of the new columns.
+Below we are using the same `group_by` + `summarise` chain to calculate the average GHG emissions of all buildings, and the average GHG emission intensity. Pay attention to how we are giving new names to each of the new columns.
 
 ```{r label=annual_mean, message=FALSE, warning=FALSE}
 mit_energy |> 
@@ -246,14 +228,14 @@ mit_energy |>
 
     ![](../img/lab1_table.PNG){width="600"}
 
-You can create this table mostly by modifying the last code chunk, however, there are a few small things you can experiment on:
+**You can create this table mostly by modifying the sample code,** however, there are a few small things you can experiment on:
 
 -   The calculated average numbers in this table are rounded to 2 decimals, how to achieve that?
 -   The table is arranged in descending order based on the "avg_emission" column, how to do that? ([Hint](https://dplyr.tidyverse.org/reference/arrange.html))
 
-We are already trying to ask questions and find hints of interesting stories from the dataset, which is what Exploratory Data Analysis (EDA) is all about. If the results so far look interesting/surprising/expected to you, write a few sentences describing what you see from the analysis.
+We are already trying to ask questions and find hints of interesting stories from the dataset! If the results so far look interesting/surprising/expected to you, write a few sentences describing what you see from the analysis.
 
-3.  Lastly, we will insert a map to complete your working document! This dataset includes "Longitude" and "Latitude" columns, which I love, because it indicates that location information is readily available and can be visualized.
+3.  Lastly, and for fun, we will insert a map to complete your working document! The dataset we have includes "Longitude" and "Latitude" columns, which I love, because it indicates that location information is readily available and can be visualized.
 
     Add the following code to your document, and you should be able to run it and see a map. (If your R says it can't find `mapview`, run the line `install.packages("mapview")`)
 
@@ -276,4 +258,4 @@ Now **Save**, **Render** your document again. You have now created a pretty, mul
 ------
 ```
 
-In this lab we have introduced how to create and develop a Quarto Document. We have also introduced some commonly-used `dplyr` funtions including `select`, `filter`, `mutate`, `group_by` and `summarise`. This is the beginning of our data wrangling and leads to the work in Week 2.
+In this lab we have introduced how to create and develop a Quarto Document. We have also introduced some commonly-used `dplyr` functions including `select`, `filter`, `group_by` and `summarise`. This is the beginning of our data wrangling and leads to the work in Week 2.

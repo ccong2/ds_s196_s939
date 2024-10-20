@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-08-29">
 
-<title>Applied Data Science for Cities - Build ShinyApp with Flexdashboard and </title>
+<title>Applied Data Science for Cities</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -138,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../howto/index.html"> 
-<span class="menu-text">How To</span></a>
+<span class="menu-text">Resources</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -222,192 +187,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#shiny-essentials" id="toc-shiny-essentials" class="nav-link active" data-scroll-target="#shiny-essentials">Shiny Essentials</a></li>
-  <li><a href="#flexdashboard-shiny" id="toc-flexdashboard-shiny" class="nav-link" data-scroll-target="#flexdashboard-shiny">Flexdashboard + Shiny</a>
-  <ul class="collapse">
-  <li><a href="#preparation" id="toc-preparation" class="nav-link" data-scroll-target="#preparation">Preparation</a></li>
-  <li><a href="#customize-your-flexdashboard-structure" id="toc-customize-your-flexdashboard-structure" class="nav-link" data-scroll-target="#customize-your-flexdashboard-structure">Customize your flexdashboard structure</a></li>
-  <li><a href="#load-and-prepare-your-data" id="toc-load-and-prepare-your-data" class="nav-link" data-scroll-target="#load-and-prepare-your-data">Load and prepare your data</a></li>
-  <li><a href="#work-with-the-implicit-ui-and-server" id="toc-work-with-the-implicit-ui-and-server" class="nav-link" data-scroll-target="#work-with-the-implicit-ui-and-server">Work with the implicit UI and Server</a></li>
-  <li><a href="#fill-in-your-input-functions" id="toc-fill-in-your-input-functions" class="nav-link" data-scroll-target="#fill-in-your-input-functions">Fill in your input functions</a></li>
-  <li><a href="#complete-your-render-functions" id="toc-complete-your-render-functions" class="nav-link" data-scroll-target="#complete-your-render-functions">Complete your render functions</a></li>
-  </ul></li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
-  <li><a href="#publish-your-shiny-dashboard" id="toc-publish-your-shiny-dashboard" class="nav-link" data-scroll-target="#publish-your-shiny-dashboard">Publish your Shiny dashboard</a></li>
-  <li><a href="#work-product" id="toc-work-product" class="nav-link" data-scroll-target="#work-product">Work Product</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab6.html">06 Build ShinyApps</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">Build ShinyApp with Flexdashboard and <img src="../img/Rlogo.png" class="img-fluid" width="60"></h1>
-<p class="subtitle lead"><span style="color:#2C3E50">11.S954 Applied Data Science for Cities</span></p>
-</div>
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">August 29, 2024</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<section id="shiny-essentials" class="level1">
-<h1>Shiny Essentials</h1>
-<p>As a brief review, a ShinyApp comprises two essential components: <strong>the User Interface (UI) and the Server</strong>. The UI dictates the app’s appearance, defining the layout and visual elements, while the Server handles the underlying logic and data processing, enabling dynamic, real-time interactions.</p>
-<p>A ShinyApp typically starts from a three-line template:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># library(shiny)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Input functions</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Output functions</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># output$id &lt;- render*function(input$id)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>In <code>ui</code>, you can define the…</p>
-<ol type="1">
-<li>Type of interface (e.g.&nbsp;<code>fluidPage</code>),</li>
-<li>Structure (panels, layout, etc.),</li>
-<li>Components that <strong>acquire user inputs</strong> (choose a corresponding <a href="https://mastering-shiny.org/basic-ui.html#inputs"><code>Input</code> function</a>). Each input component must have a unique ID.</li>
-<li>Components that will <strong>display outputs</strong> (choose a corresponding <a href="https://mastering-shiny.org/basic-ui.html#outputs"><code>Output</code> function</a>). Each output component must have a unique ID.</li>
-</ol>
-<p>In <code>server</code>, most reactivity happens. The <code>server</code> works as an open, running function that takes the input and output defined and acquired from <code>ui</code>, and then produces the result in concert with <a href="https://shiny.posit.co/r/getstarted/build-an-app/reactive-flow/render-functions.html">a <code>render</code> function.</a></p>
-<p>The relationship between the UI and the Server is established by <code>shinyApp(ui, server)</code> so that the app will <em>react</em> to the user input (<code>ui</code>) by re-rendering (<code>server</code>) <em>continuously</em> while the app is running.</p>
-</section>
-<section id="flexdashboard-shiny" class="level1">
-<h1>Flexdashboard + Shiny</h1>
-<p>Shiny apps are commonly integrated with other dashboard frameworks (e.g.&nbsp;<a href="https://rstudio.github.io/shinydashboard/">Shiny Dashboard</a>) to enhance their communicative capabilities, as this allows for the utilization of pre-designed elements without the necessity for the developers to specify every detail. Given our familiarity with <code>flexdashboard</code>, it is comparatively easy to transform the dashboard you’ve created into a reactive Shiny app.</p>
-<section id="preparation" class="level2">
-<h2 class="anchored" data-anchor-id="preparation">Preparation</h2>
-<p>Let’s copy and paste the files you used for creating your flexdashboard for <strong>lab 4</strong> to your current working directory. This is what my current working directory looks like, it contains my Rproj. file, my flexdashboard.Rmd, and a data folder. In my data folder, I have the airbnb.rds that I used for the flexdashboard.</p>
-<p><img src="../img/lab6_structure.PNG" class="img-fluid" width="325"></p>
-<p>Knit your flexdashboard and make sure it works. Suppose that you have created a two-column dashboard with one map on the left and two charts on the right. We will work from here and add reactive features.</p>
-</section>
-<section id="customize-your-flexdashboard-structure" class="level2">
-<h2 class="anchored" data-anchor-id="customize-your-flexdashboard-structure">Customize your flexdashboard structure</h2>
-<p>You’ll first need to modify 5 places in your <code>flexdashboard.Rmd</code> to restructure it to work with Shiny.</p>
-<p><img src="../img/lab6_5places.png" class="img-fluid" width="597"></p>
-<ol type="1">
-<li><p>Add <code>runtime: shiny</code> to the YAML header at the top of the document. This specifies that the Shiny package will be used to handle reactive content.</p></li>
-<li><p>Load the libraries. The packages you used may be different from what is shown above. But you can simply add <code>library(shiny</code>) to the list of packages you’ve already used in your flexdashboard.</p></li>
-<li><p>Add a new code chunk <strong><em>{r data}</em></strong> where we will load and work with local data. Include the code chunk options <code>message=FALSE, warning=FALSE, results='hide'</code> .</p></li>
-<li><p>Create a <strong><em>sidebar</em></strong> column. You can simply copy and paste a Column header and the dashed-line divider from your code. But make sure to add the attribute <code>.sidebar</code>. I have also changed the column width to 200 pixels.</p></li>
-<li><p>Slightly adjust the column width for your maps and charts. I have changed the two columns to 500 and 300 pixels, respectively. The total number of pixels of your sidebar + two columns should be 1,000.</p></li>
-</ol>
-</section>
-<section id="load-and-prepare-your-data" class="level2">
-<h2 class="anchored" data-anchor-id="load-and-prepare-your-data">Load and prepare your data</h2>
-<p>Just like a normal .Rmd, your Shiny app code will run line by line or chunk by chunk. To keep it organized, we are dedicating one code chunk for loading libraries, and the second one for working with global data. In your code chunk <strong><em>{r data}</em></strong>, read in your <code>airbnb</code> data:</p>
-<p><code>airbnb &lt;- readRDS("data/airbnb.rds")</code></p>
-<p><strong>If your flexdashboard involves downloading census geography data, the best practice is to relocate those lines of code here as well.</strong></p>
-</section>
-<section id="work-with-the-implicit-ui-and-server" class="level2">
-<h2 class="anchored" data-anchor-id="work-with-the-implicit-ui-and-server">Work with the implicit UI and Server</h2>
-<p>Building on top of a flexdashboard framework, the process of constructing our app is simplified. We don’t need to explicitly define a ui and a server - the connection between inputs and outputs happens implicitly. What it means to us is that we only need to:</p>
-<ul>
-<li><p>In our <strong><code>sidebar</code></strong> column, directly enter <strong>input functions</strong></p></li>
-<li><p>In your <strong><code>Chart A-C</code></strong> areas, directly enter <strong>render functions</strong></p></li>
-</ul>
-<p>Your initial structure should look like this:</p>
-<p><img src="../img/lab6_initialstructure.png" class="img-fluid" width="577"></p>
-</section>
-<section id="fill-in-your-input-functions" class="level2">
-<h2 class="anchored" data-anchor-id="fill-in-your-input-functions">Fill in your input functions</h2>
-<p>Fill in the <code>sliderInput</code> and <code>selectInput</code> with their required arguments. I’m giving them an <code>inputId</code> of <code>price_range</code> and <code>nbh_name</code>, respectively.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"price_range"</span>, <span class="at">label =</span> <span class="st">"Select a price range"</span>,</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">1000</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">selectInput</span>(<span class="at">inputId =</span> <span class="st">"nbh_name"</span>, <span class="at">label =</span> <span class="st">"Select a neigborhood"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">choices =</span> <span class="fu">unique</span>(airbnb<span class="sc">$</span>neighborhood))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="complete-your-render-functions" class="level2">
-<h2 class="anchored" data-anchor-id="complete-your-render-functions">Complete your render functions</h2>
-<p>Consider one of your <strong>Plotly charts</strong> as an example. First, wrap all the code you used to create this chart into the curly braces of <code>renderPlotly({})</code>.</p>
-<p>Whenever you choose a neighborhood, it results in the <strong>filtering</strong> of a subset from the original airbnb data. To make your original code for creating the bar chart responsive to your inputs, you will need to incorporate a few lines like the following (right after <code>airbnb |&gt;</code>), calling the input IDs.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">renderPlotly</span>({</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> airbnb <span class="sc">|&gt;</span> </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(neighborhood <span class="sc">==</span> input<span class="sc">$</span>nbh_name, </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        price <span class="sc">&gt;=</span> input<span class="sc">$</span>price_range[<span class="dv">1</span>],       </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        price <span class="sc">&lt;</span> input<span class="sc">$</span>price_range[<span class="dv">2</span>]) <span class="sc">|&gt;</span>  </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(room_type) <span class="sc">|&gt;</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">median_price =</span> <span class="fu">median</span>(price)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> room_type, <span class="at">y =</span> median_price), <span class="at">fill =</span> <span class="st">"#62A0CA"</span>, <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()<span class="sc">+</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Room Type"</span>, <span class="at">y =</span> <span class="st">"Median Price"</span>)<span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplotly</span>(g)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>For your <strong>Leaflet map</strong>, there are a few additional things to do. But first, wrap all your code related to creating your leaflet map into the curly braces of <code>renderLeaflet({})</code>.</p>
-<ol type="1">
-<li>The dataset for your map should also react to your input, requiring a similar filtering process. I’m assigning the filtered results to a new object, <code>df_map</code>, replacing the original <code>airbnb</code> object that exists at multiple places in this code chunk. Here it requires your careful decisions about where to perform replacements and where not to.</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_map <span class="ot">&lt;-</span> airbnb <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(neighborhood <span class="sc">==</span> input<span class="sc">$</span>nbh_name,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    price <span class="sc">&gt;=</span> input<span class="sc">$</span>price_range[<span class="dv">1</span>],</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    price <span class="sc">&lt;</span> input<span class="sc">$</span>price_range[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="2" type="1">
-<li>Adjust the <code>setView</code> function to zoom in on the selected neighborhood rather than the entire region. My approach is using the average longitude and latitude of the subset data.</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add these two lines before leaflet()</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mid_long <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_map<span class="sc">$</span>longitude, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mid_lat <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_map<span class="sc">$</span>latitude, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace the original lat and lon which represents the center of your region</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  ...</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> mid_long, <span class="at">lat =</span> mid_lat, <span class="at">zoom =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><strong>Give it a try!</strong> Now your Shiny dashboard should work. <strong>Save your file, then click “Run Document”</strong>. If some errors show up, that’s fine, and we will figure it out! You can find my final code <a href="https://drive.google.com/file/d/1vuu8yQsbuCq7lJ0hsT6t6kKM7N2Hqwfd/view?usp=sharing">here</a> for troubleshooting.</p>
-</section>
-</section>
-<section id="exercise" class="level1">
-<h1>Exercise</h1>
-<p>Your map probably does not have neighborhood boundaries yet - if I guess right, there is only a city boundary. The neighborhood data points seem to be floating within an unbounded area. To add neighborhood boundaries, please navigate again to the <a href="http://insideairbnb.com/get-the-data">Inside Airbnb</a> data download page, find the city you worked on, and download the <code>neighbourhoods.geojson</code> to your data folder.</p>
-<p>Then I will leave it to you to display the neighborhood boundaries in the way you like!</p>
-</section>
-<section id="publish-your-shiny-dashboard" class="level1">
-<h1>Publish your Shiny dashboard</h1>
-<p><a href="https://www.shinyapps.io/">shinyapp.io</a> is probably the best place for you to host, display, and distribute your Shiny apps. The platform is designed for Shiny and R language so all your reactive elements will work seamlessly. If it’s the first time you connect with shinyapp.io, you may have to sign up and obtain a token.</p>
-<p><a href="https://statsandr.com/blog/how-to-publish-shiny-app-example-with-shinyapps-io/">Here</a> is a step-by-step screenshot guide for setting up and hosting with <code>shinyapps.io</code>.</p>
-</section>
-<section id="work-product" class="level1">
-<h1>Work Product</h1>
-<p>There is no deadline or grading for this lab. If you find the procedure useful, feel free to incorporate it into your own project!</p>
-
-
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

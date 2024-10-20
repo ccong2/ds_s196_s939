@@ -18,7 +18,7 @@ website:
       - href: labs/index.qmd
         text: "Labs"
       - href: howto/index.qmd
-        text: "How To"
+        text: "Resources"
       # - href: resources/index.qmd
       #   text: "Resources"
     search: true
@@ -47,9 +47,9 @@ website:
               file: labs/lab6.qmd
 
     
-    - title: "How To"
+    - title: "Resources"
       contents:
-        - section: "How To"
+        - section: "Resources"
           contents:
             - text: "Introduction"
               file: howto/index.qmd

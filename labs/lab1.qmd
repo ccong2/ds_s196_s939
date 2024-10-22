@@ -6,7 +6,9 @@ format: html
 editor: visual
 ---
 
-This practice exercise provides some more structured exploration and practice with **Quarto Document** (in R Markdown format). We will mix Markdown sections with code chunks, build familiarity with basic data types, and experiment with importing a tabular dataset. Because this is an in-class exercise, there is nothing you need to submit---the goal is to apply what we have read and seen in the lectures.
+This exercise provides some more structured exploration and practice with **Quarto Document**. We will mix Markdown sections with code chunks, and experiment with working with a tabular dataset.
+
+Lab 1 is not graded, and there's no need to submit anything after you've completed it. But for labs after this one, you will complete them and submit your lab report, details will be specified in each lab document.
 
 ```{r include=FALSE}
 library(tidyverse)
@@ -16,9 +18,9 @@ library(tidyverse)
 
 ## Set up a New Project
 
-We have talked about files paths in class, and the importance of explicitly setting a directory to work out of. Most of the time we can use `setwd()`, this works fine until when you want to move your working folder to another computer or share your work. If you explicitly set your working directory in the code, it won't be able to access the directory that doesn't exist on another computer.
+We have talked about files paths in class, and the importance of setting a directory to work out of. Most of the time we can use `setwd()`, this works fine until when you want to move your working folder to another computer or share your work. If you write out a path in the code, it might not work on another computer if that directory does not exist.
 
-In our labs, we are going to use **R Projects** to organize our works and make sure we don't lose files during transfers. R projects organize all files related to a project in one place and setting up relative file paths. Let's start by setting up a project for our exercise.
+In our labs, we are going to use **R Projects** to organize our works and make sure we don't lose files. R projects organize all files related to a project in one place and setting up relative file paths. Let's start by setting up a project for our exercise.
 
 Launch RStudio, then click **File - New Project...** A dialog box will open up. Select **New Directory**, then **New Project.** Here, you can create a new folder to save everything related to this project. For example, I navigated to my D:/Fall24 folder and created a new folder there called Lab 1:
 
@@ -28,9 +30,9 @@ Click the button "Create Project". R will take a second to refresh. Then you wil
 
 ![](../img/lab1_files_tab.PNG){width="450"}
 
-The .Rproj file is the "key" that R references all project-related files. If you save all files related to Lab 1 in this folder, all relative paths remain intact and consistently applied.
+The .Rproj file serves as a reference point that R uses to locate all files associated with the project. If you save all files related to Lab 1 in this folder, all relative paths remain intact and consistently applied.
 
-*Note: In future labs, I may provide you with a project folder containing data. As long as you launch RStudio by double-clicking the **.Rproj** file, you will be taken directly to the project's home directory.*
+*Note: In future sessions, I may provide you with a project folder containing data. As long as you launch RStudio by double-clicking the **.Rproj** file, you will be taken directly to the project's home directory.*
 
 ## Practice formatting text with Quarto
 
@@ -44,7 +46,7 @@ To get an idea of how everything works, let's click the **"Render"** button on t
 
 When prompted, give this file a name, it will be saved in the folder where your ".Rproj" file is, as a .qmd file.
 
-You will see a formatted document in a web browser. Switch between them back and forth to see where each part of the code is placed in the rendered HTML file.
+You will now see a formatted document in a web browser. Switch between your code and the document back and forth to see where each part of the code is placed in the rendered HTML file.
 
 Now we can add a new line to the YAML header:
 
@@ -52,9 +54,9 @@ Now we can add a new line to the YAML header:
 
 Render it again and see where the difference is.
 
-There can be other options specified in the YAML, particularly if you are rendering to a format other than HTML (see [the reading](https://r4ds.had.co.nz/r-markdown-formats.html) from this week).
+There can be other options specified in the YAML, particularly if you are rendering to a format other than HTML (such as pdf, or Word, see [all formats](https://quarto.org/docs/output-formats/all-formats.html)).
 
-On the very left of this toolbar, click the **"Source"** button to switch Markdown editing mode. These sections of text typically explain or provide context for the code and graphics, and they are formatted using [Markdown syntax](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf). For example:
+On the very left of this toolbar, click the **"Source"** button to switch Markdown editing mode. These sections of text typically explain or provide context for the code and graphics, and they are formatted using [Markdown syntax](https://quarto.org/docs/authoring/markdown-basics.html). For example:
 
 -   #: a header element.
 -   \*\*: bold text.
@@ -72,9 +74,9 @@ In 2014, the City of Cambridge passed a local ordinance on building energy use d
 -   What does the Building Energy Use Disclosure Ordinance require?
 -   What kind of data have been compiled and where to find them?
 
-You may edit your text either in the **"Source"** or **"Visual"** panel, or toggle between them to get familiar with both. Make sure to make gratuitous use of bold, italics, bullet points, etc. in your text. You have access to the "Markdown Quick Reference" directly from RStudio (**Help - Markdown Quick Reference**).
+You may edit your text either in the **"Source"** or **"Visual"** panel, or toggle between them to get familiar with both. Make sure to make gratuitous use of bold, italics, bullet points, etc. in your text.
 
-When you finished, save your file and click Render again. You can immediately see your nicely formatted document in a web browser.
+When you finish, save your file and click Render again. You can immediately see your nicely formatted document in a web browser.
 
 # Insert a video
 
@@ -119,11 +121,11 @@ Insert a code chunk in your Quarto document by going to **Code - Insert Chunk**.
 library(tidyverse)
 ```
 
-The `label` option is not required, but can be helpful when you render the notebook (otherwise you will see "unnamed-chunk" in the Render tab next to the Console tab). The other chunk options (described [in detail here](https://rmarkdown.rstudio.com/lesson-3.html)) suppress all `warnings` and `messages` that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.
+All lines led by the symbol `#|` are [chuck options](https://quarto.org/docs/computations/execution-options.html). The `label` option is not required, but can be helpful when you want to quickly locate your steps. The other chunk options (described [in detail here](https://quarto.org/docs/computations/execution-options.html)) suppress all `warnings` and `messages` that might otherwise appear in the rendered HTML output, making it unnecessarily cluttered and hard to read.
 
 Run this code chunk to load `tidyverse` package. You can either click the green triangle on the top-right of this chunk, or use Ctrl/Cmd+Enter.
 
-**Note:** Why I said running `install.packages("tidyverse")` in the **console** but `library(tidyverse)` in the **code chunk**? You only need to "install" a package once, so there is no need to keep it in the script and run it every time you render the document. However, you must "library" (aka: activate) the package each time to use its functions.
+***Note:** Why I said running `install.packages("tidyverse")` in the **console** but `library(tidyverse)` in the **code chunk**? You only need to "install" a package once, so there is no need to keep it in the script and run it every time you render the document. However, you must "library" (aka: activate) the package each time to use its functions.*
 
 ### Your practice
 
@@ -143,7 +145,7 @@ energy <- read_csv("../data/Cambridge_Building_Energy_Use_Disclosure_Ordinance__
 
 # Key `dplyr` functions
 
-`dplyr` is another package within `tidyverse`, specializing in data manipulation and transformation. It provides a set of functions that work with data frames in a clean and consistent way. Explore more of `dplyr` functionality described [here](https://dplyr.tidyverse.org/) and [here](https://info201.github.io/dplyr.html). We are going to walk through four "verbs" of `dplyr`.
+`dplyr` is another package within `tidyverse`, specializing in data manipulation and transformation. It provides a set of functions that work with data frames in a clean and consistent way. Explore more of `dplyr` functionality described [here](https://dplyr.tidyverse.org/). We are going to walk through some "verbs" of `dplyr`.
 
 ## `Select`: selects a subset of **columns.**
 
@@ -184,9 +186,9 @@ energy |>
   filter(Owner == "MASSACHUSETTS INSTITUTE OF TECHNOLOGY")
 ```
 
-Viewing the new variable `mit_energy`, you'll notice that some entries are missing records for total GHG emissions, which appear as NA under the "Total GHG Emissions (Metric Tons CO2e)" column. If we want to simplify the dataset by keeping only the rows with valid GHG emission records, we can apply this as a `filter` condition. By doing so, we can combine multiple filter conditions using the pipe operator.
+Viewing the result, you'll notice that some entries are missing records for total GHG emissions, which appear as NA under the "Total GHG Emissions (Metric Tons CO2e)" column. If we want to simplify the dataset by keeping only the rows with valid GHG emission records, we can apply that as a `filter` condition too.
 
-Proceed to **insert a new code chunk in your document like the one below**
+Proceed to **insert a new code chunk in your document like the one below.** Now we are filtering MIT buildings that have emission data, and we are assigning the result to a new variable "mit_energy".
 
 ```{r}
 mit_energy <- energy |> 
@@ -196,27 +198,28 @@ mit_energy <- energy |>
 
 `is.na()` is a function commonly used to check whether each value in a column is missing (NA). The `!` is a logical negation operator, so `!is.na()` checks for values that are not missing. It returns TRUE for non-missing values and FALSE for missing values.
 
-## `Group_by` + `Summarise`
+## `Summarise`: Create a summary of your data
 
-`Summarise` is usually used in conjunction with `group_by` because the latter changes the scope from operating on the entire dataset to operating on it group-by-group. Go ahead and run the following code and observe the result:
+Go ahead and run the following code and observe the result:
 
 ```{r}
 mit_energy |> 
-  group_by(`Data Year`) |> 
-  summarise(count = n())
+  summarise(avg_emission = mean(`Total GHG Emissions (Metric Tons CO2e)`))
 ```
 
-We now have a summary table that says, in our dataset, there are 130 records in 2015, 135 in 2016, and so on. We use `group_by` such that rows are grouped according to `Data Year`, which is the year when the energy record was taken. The result is then passed to `summarise` to count a total number of records per year. By default, the `n()` function creates a new column, which we here name as "count".  
+It calculates the average of the column "Total GHG Emissions (Metric Tons CO2e)" of the entire dataset, and names the result "avg_emission". The result says, of all MIT buildings, through all years, the average annual GHG emission is \~1458 MTCO2e.
 
-Below we are using the same `group_by` + `summarise` chain to calculate the average GHG emissions of all buildings, and the average GHG emission intensity. Pay attention to how we are giving new names to each of the new columns.
+`summarise` calculates summary statistics, like a total, mean, or count, across all values in the dataset. However, when used with `group_by()`, it calculates each group separately, collapsing each group into its own summary row.
 
-```{r label=annual_mean, message=FALSE, warning=FALSE}
+For instance, below we calculate the average GHG emissions by `Data Year`, which is the year when the energy record was taken.
+
+```{r}
 mit_energy |> 
   group_by(year = `Data Year`) |> 
-  summarise(count = n(),
-            avg_emission = mean(`Total GHG Emissions (Metric Tons CO2e)`),
-            avg_intensity = mean(`Total GHG Emissions Intensity (kgCO2e/ft2)`))
+  summarise(avg_emission = mean(`Total GHG Emissions (Metric Tons CO2e)`))
 ```
+
+This says, in 2015, the average annual GHG emission was \~1575 MTCO2e., and in 2016, it was \~1436 MTCO2e., so on and so forth.
 
 ### Your practice
 
@@ -237,7 +240,7 @@ We are already trying to ask questions and find hints of interesting stories fro
 
 3.  Lastly, and for fun, we will insert a map to complete your working document! The dataset we have includes "Longitude" and "Latitude" columns, which I love, because it indicates that location information is readily available and can be visualized.
 
-    Add the following code to your document, and you should be able to run it and see a map. (If your R says it can't find `mapview`, run the line `install.packages("mapview")`)
+    Copy and paste the following code to your document, and you should be able to run it and see a map. (If your R says it can't find `mapview`, run the line `install.packages("mapview")`)
 
 ```{r label=mapview, message=FALSE, warning=FALSE}
 #install.packages("mapview")

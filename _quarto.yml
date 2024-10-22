@@ -53,14 +53,12 @@ website:
           contents:
             - text: "Introduction"
               file: howto/index.qmd
-            - text: "Set Up R and RStudio"
-              file: howto/setupr.qmd
-            - text: "Quick Code Guides"
-              file: howto/startcode.qmd
-            - text: "Start with GIT"
-              file: howto/git.qmd
-            - text: "Publish a Quarto Website"
-              file: howto/quartoweb.qmd
+            # - text: "Keyboard Shortcuts in RStudio"
+            #   file: howto/setupr.qmd
+            # - text: "Quick Code Guides"
+            #   file: howto/startcode.qmd
+            # - text: "Publish a Quarto Website"
+            #   file: howto/quartoweb.qmd
 
 # 
 #     - title: "Resources"

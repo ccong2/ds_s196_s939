@@ -390,7 +390,7 @@ Please pipe your summarized table to `ggplot()` for visualization. The `geom` fu
 
 There should be a few differences, which have enhanced the overall quality. How can you modify your code to replicate the bar chart in this image? In a new code chunk, please copy and paste your last bar chart code, and try your best to address the following questions.
 
-1.  The bars are put side-by-side instead of stacking on top of one another. [More explanations here](https://r4ds.had.co.nz/data-visualisation.html#position-adjustments). If you don't want a stacked bar chart, you can use one of the three other options: "identity", "dodge", or "fill".
+1.  The bars are put side-by-side instead of stacking on top of one another. If you don't want a stacked bar chart, you can use the `position` argument in `geom_col`. There will be three options: "identity", "dodge", or "fill".
 2.  The x-axis labels are titled to 45 degrees. How can I achieve this? [Hint](https://ggplot2.tidyverse.org/reference/theme.html).
 3.  The labels on the y-axis are formatted in thousands with commas. This can be achieved by modifying the function `scale_y_continuous(labels = scales::percent)` we have seen above. [Hint](https://ggplot2.tidyverse.org/reference/scale_continuous.html).
 4.  Lastly, the counties are not arranged alphabetically, but rather by the income values mapped to the y-axis, starting from large to small. How can I achieve this? [Hint](https://blog.albertkuo.me/post/2022-01-04-reordering-geom-col-and-geom-bar-by-count-or-value/).

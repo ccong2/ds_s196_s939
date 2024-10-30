@@ -368,7 +368,7 @@ Focus on your data in Massachusetts, now choose from the following variables: `m
 
 ## Exercise 3
 
-First, let's use our familiar `group_by` + `summarise` process to calculate the average median house income by county in Massachusetts.
+In this part, we will make a Bar Chart. First, let's use our familiar `group_by` + `summarise` process to calculate the average median house income by county in Massachusetts.
 
 ```{r}
 #| label: "barplot"

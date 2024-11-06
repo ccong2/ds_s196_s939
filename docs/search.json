@@ -261,5 +261,27 @@
       "Labs",
       "02 Opportunity Zones: tidyverse, ggplot2 packages"
     ]
+  },
+  {
+    "objectID": "labs/lab3.html",
+    "href": "labs/lab3.html",
+    "title": "Describe neighborhood dynamics with ",
+    "section": "",
+    "text": "In this lab, we will develop a place profile to quantify the physical and environmental characteristics of a given area. Planners are usually interested in understanding and enhance improving urban environments. Our approach will involve utilizing spatial data and conducting spatial analysis.\n\nTo put things into context, we will describe pedestrian-friendly built environment in Boston neighborhoods. Urban factors such as the presence of walking facilities, the density and variety of businesses, the number of residents and jobs, and streetscape elements like benches, storefronts, and shade all influence the extent and nature of walkable areas (Lai & Kontokosta, 2018; Frank et al., 2006; Owen et al., 2007; Ewing & Cervero, 2010).\n\nlibrary(sf)\nlibrary(tidyverse)\nlibrary(osmdata)\nlibrary(DT)\nlibrary(scales)\n\nFor the purpose of demonstrating how to gather, combine and analyze spatial data from different sources, we are going to develop three relatively simple indicators to measure the pedestrian environment in a Boston neighborhoods: sidewalk density, number of restaurants measured by points of interest (POI), and tree canopy coverage.",
+    "crumbs": [
+      "Labs",
+      "03 Walkable Environment: sf, osmdata packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab3.html#calculate-the-number-of-pois-by-neighborhood",
+    "href": "labs/lab3.html#calculate-the-number-of-pois-by-neighborhood",
+    "title": "Describe neighborhood dynamics with ",
+    "section": "Calculate the number of POIs by neighborhood",
+    "text": "Calculate the number of POIs by neighborhood\nWe now have a point shapefile (restaurants) and a polygon shapefile (neighborhood), and we want to count the number of points in each neighborhood. They are points, so we don’t need to look for overlapping/intersecting parts, st_join() will be sufficient.\n\nrestaurant_data &lt;- \n  st_join(restaurants, neighborhood) \n\nTake a look at what we’ve got. It’s still the same set of restaurants but each one has neighborhood information joined to it. Remove those fall outside of our neighborhood boundary, then count by neighborhood:\n\nrestaurant_data &lt;- \n  restaurant_data |&gt; \n  filter(!is.na(nbh_name)) |&gt; \n  count(nbh_name, name = \"restaurant\") |&gt; \n  st_drop_geometry()",
+    "crumbs": [
+      "Labs",
+      "03 Walkable Environment: sf, osmdata packages"
+    ]
   }
 ]

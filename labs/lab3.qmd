@@ -1,1 +1,414 @@
+---
+title: "Describe neighborhood dynamics with ![](../img/Rlogo.png){width=60px}"
+subtitle: <span style="color:#2C3E50">11.S196/11.S939 Applied Data Science for Cities</span>
+date: "Last Updated `r Sys.Date()`"
+format: html
+editor: visual
+execute: 
+  warning: false
+---
 
+# Overview
+
+In this lab, we will develop a place profile to quantify the physical and environmental characteristics of a given area. Planners are usually interested in understanding and enhance improving urban environments. Our approach will involve utilizing spatial data and conducting spatial analysis.
+
+![](../img/lab3_quantify_place.gif)
+
+To put things into context, we will describe **pedestrian-friendly built environment** in Boston neighborhoods. Urban factors such as the presence of walking facilities, the density and variety of businesses, the number of residents and jobs, and streetscape elements like benches, storefronts, and shade all influence the extent and nature of walkable areas ([Lai & Kontokosta, 2018](https://www.sciencedirect.com/science/article/pii/S0169204618308491); [Frank et al., 2006](10.1080/01944360608976725); [Owen et al., 2007](10.1016/j.amepre.2007.07.025); [Ewing & Cervero, 2010](https://doi.org/10.1080/01944361003766766)).
+
+```{r}
+#| message: false
+library(sf)
+library(tidyverse)
+library(osmdata)
+library(DT)
+library(scales)
+```
+
+For the purpose of demonstrating how to gather, combine and analyze spatial data from different sources, we are going to develop three relatively simple indicators to measure the pedestrian environment in a Boston neighborhoods: **sidewalk density**, **number of** **restaurants measured by points of interest (POI), and tree canopy coverage**.
+
+# Boston Neighborhoods
+
+From [Analyze Boston](#0), let's navigate to the [Boston neighborhood boundaries](#0) page. Find the **shapefile** format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.
+
+> Note: If you are interested, here is how we can directly unzip a file with R commands.
+>
+> ```{verbatim}
+> unzip(zipfile = "your_file_name.zip", exdir = "data", overwrite = TRUE)   
+> file.remove("your_file_name.zip")}
+> ```
+
+Use `st_read()` in the `sf` package to read in the data. You may want to apply the correct path on your end.
+
+```{verbatim}
+neighborhood <- st_read("Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp")
+```
+
+```{r}
+#| message: false
+#| echo: false
+#| results: hide
+neighborhood <- st_read("../data/Boston_Neighborhood_Boundaries_approximated_by_2020_Census_Block_Groups.shp")
+```
+
+There are many columns in this dataset, but we will choose the ones we need (neighborhood names and population) and assign them identifiable names.
+
+```{r}
+neighborhood <- neighborhood |>       
+  select(nbh_name = blockgr202, population = tot_pop_al)
+```
+
+Note that **this does not remove the `geometry`**—geometries are "sticky," meaning this column will stay attached to your table unless you explicitly remove them using `st_drop_geometry()`.
+
+# Strategize our task
+
+Eventually we aim to have a table where each row represents a neighborhood, and each column provides the values of a specific indicator, such as:
+
+| Neighborhood | Sidewalk Density | Tree Canopy Coverage | Number of Restaurants |
+|------------------|------------------|------------------|------------------|
+| Allston      | xx               | xx                   | xx                    |
+| Back Bay     | xx               | xx                   | xx                    |
+
+-   We have [line data for sidewalks](https://data.boston.gov/dataset/sidewalk-centerline). But we can split sidewalks at neighborhood boundaries (`st_intersection`), and calculate the total sidewalk length within each neighborhood.
+
+-   Using [tree canopy polygon data](https://data.boston.gov/dataset/treekeeper-street-trees). Similarly, we can identify the overlap (`st_intersection`) between tree canopy and neighborhoods and sum the canopy area within each neighborhood.
+
+-   We’ll obtain restaurant location data from OpenStreetMap. These are point data, so we’ll count the number of restaurant points within each neighborhood.
+
+-   Then these three tables will be joined together to create the table we want.
+
+# Sidewalk density
+
+From the front page of Analyze Boston, search for "sidewalk", you will find the [Sidewalk Centerline](https://data.boston.gov/dataset/sidewalk-centerline) data. Download the **Shapefile** to your data folder, unzip it, and then use `st_read()` to read it into R and assign it to a variable (named e.g. "sidewalk").
+
+```{r}
+#| message: false
+#| echo: false
+#| results: hide
+sidewalk <- st_read("../data/Sidewalk_Centerline.shp")
+```
+
+Check the results by clicking `sidewalk` in the Environment panel, or equivalently, using `View(sidewalk)`. Details of each line are stored in the `geometry` attribute. While these details aren't meant for humans to read directly, machines can interpret it and perform operations, such as calculating areas for polygons and length for lines:
+
+```{r}
+sidewalk |> mutate(length = st_length(geometry))
+```
+
+We have an additional column, `length` , that stores the length of each segment. These lengths are calculated in feet because the neighborhood shapefile uses EPSG code 2249, which represents the "State Plane coordinate system Massachusetts Mainland (ftUS)" projection. State Plane projections are "projected", meaning that x and y coordinates are measured in linear units (feet, in our case).
+
+```{r}
+st_crs(sidewalk)$epsg  
+st_crs(sidewalk)$input
+```
+
+Second, the values are "unit" objects. Although we can do basic math operations on unit objects, we typically convert them to simple numeric values using `as.numeric()`:
+
+```{r}
+sidewalk |> mutate(length = as.numeric(st_length(geometry)))
+```
+
+Now we are going to perform intersection. `st_intersection()` finds the shared part of two spatial objects. If we overlay `sidewalks` with the entire `neighborhoods`, it splits sidewalks at neighborhood boundaries. Each split segment is linked to the attributes of the neighborhood it falls within.
+
+```{r}
+sidewalk_data <- 
+  st_intersection(sidewalk, neighborhood)
+```
+
+It takes a few seconds to run, but when it's finished, you will see that neighborhood names are attached in `sidewalk_data`! Then we can calculate the length of each split sidewalk segment.
+
+```{r}
+sidewalk_data <- sidewalk_data |> 
+  mutate(length = as.numeric(st_length(geometry))) 
+```
+
+With neighborhood names here in the table, we will `group_by()` neighborhood and `summarise()` the total sidewalk length.
+
+```{r}
+sidewalk_data <- sidewalk_data |> 
+  group_by(nbh_name) |> 
+  summarise(sidewalk_length = sum(length)) |> 
+  st_drop_geometry()
+```
+
+I've dropped the geometry so we have a plain table. When it's finished, you can `View(sidewalk_data)` . It has 24 rows, showing the total sidewalk length in feet in each neighborhood.
+
+# Tree canopy
+
+For street trees, we will use the tree canopy data available for Boston. We have a visualization from the [Treekeeper Street Trees](https://bostonma.treekeepersoftware.com/index.cfm?deviceWidth=2082). To work with this data, download and read the shapefile from [this link](https://data.boston.gov/dataset/treekeeper-street-trees).
+
+As usual, check the CRS. This data uses EPSG: 4326, which is an unprojected system where locations are stored in longitude and latitude. To calculate areas, we need to use `st_transform` to convert it to the same projection as the sidewalks, EPSG: 2249.
+
+```{verbatim}
+tree <- st_read("Treekeeper_Street_Trees.shp") |> 
+  st_transform(2249)
+```
+
+```{r}
+#| echo: false
+#| results: hide
+tree <- st_read("../data/Treekeeper_Street_Trees.shp") |> 
+  st_transform(2249)
+```
+
+View the attributes of the dataset. It uses **point** geometry, which indicates the location of trees. However, the dataset includes a `dbh` attribute, representing the diameter of trees at breast height. We can use this attribute to create a buffer around each tree to represent the canopy area.
+
+```{r}
+tree_buffer <- st_buffer(tree, dist = tree$dbh/2)
+```
+
+Tree canopies may overlap, so we need to "dissolve" these buffers into a single large polygon. The `st_union()` function achieves this by merging the overlapping areas to create the entire covered region.
+
+> Note: In the following code, the two steps following `st_union()` may not always be necessary. In this specific case, I used `st_cast()` to convert multiple polygons into a single one. You won't need them if geometries being unioned are simple.
+
+```{r}
+tree_data <- st_union(tree_buffer) |> 
+  # Cast the unioned geometry to POLYGON type
+  st_cast("POLYGON") |> 
+  # Convert the result back to an sf object and rename the geometry column
+  st_as_sf() |> rename(geometry = x)
+```
+
+![](../img/lab3_dissolve.png)
+
+Then we can calculate the area of tree canopy in each neighborhood.
+
+Similar to the sidewalk data, intersect tree canopy and neighborhood polygons, then use mutate to calculate the overlapping areas, and then summarize the total areas by neighborhood. In the following code, we chained these steps together into one sentence.
+
+```{r}
+tree_data <- 
+  st_intersection(tree_data, neighborhood) |> 
+  mutate(area = as.numeric(st_area(geometry))) |> 
+  group_by(nbh_name) |> 
+  summarize(canopy_area = sum(area)) |> 
+  st_drop_geometry()
+```
+
+Again, it take a few seconds to run. When it's finished, you will have a `tree_data` object that has 23 rows - why one less than the sidewalk data - we will find out soon. But now we can pause and take a moment to appreciate what we’ve accomplished. We’ve worked with large spatial datasets using just a few lines of code. Consider the numerous clicks required in GIS; programming allows us to scale and automate many complex processes.
+
+To free up memory, we can now delete a few intermediate objects in the R environment that are no longer needed:
+
+```{r}
+rm(sidewalk, tree, tree_buffer)
+```
+
+# Obtain and process OSM data
+
+To measure the number of amenities, we are going to download points of interest (POI) from OpenStreetMap (OSM). By allowing anyone to contribute, OSM enables the real-time evolution of its database and offers convenient options for downloading data through its free [Overpass API](https://overpass-turbo.eu/#). In this lab, we will use the [`osmdata` R package](https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html), which simplifies API download queries without much understanding of the overpass syntax.
+
+In order to obtain data from OSM, you will need to specify:
+
+-   a bounding box
+-   key-value pairs
+
+### The bounding box
+
+A bounding box is like a window of where you want to clip a piece of map. It can be defined by manually specifying two longitude (x) - latitude (y) pairs. The following example defines one bounding box for Boston, the first pair (-71.188, 42.238) is the lower-left corner (southwest), and the second pair (-70.924, 42.393) is the upper-right corner (northeast)
+
+```{r}
+#| message: false
+# A bounding box for Boston
+bbox = c(-71.188, 42.238, -70.924, 42.393)
+```
+
+### The key-value pairs
+
+An overpass query `opq` starts with engaging with the bounding box like this:
+
+`q <- opq(bbox)`
+
+Following the initial `opq(bbox)` call, we will build queries by adding one or more features (`add_osm_feature()`). Features are defined by *key-value pairs*. For example, restaurants are categorized in OSM under `key=amenity`, and `value=restaurant`. Here is [a complete list of key-value pairs on OSM](https://wiki.openstreetmap.org/wiki/Map_Features).
+
+A query of all restaurants within the bounding box of Boston will be constructed as follows:
+
+```{r}
+restaurants <- opq(bbox)|>   
+  add_osm_feature(key = "amenity", value = "restaurant") |>  
+  osmdata_sf() 
+```
+
+The retrieved object `restaurants` is a large list of `sf` objects with many attributes; What we need is one named `osm_points` nested in this list. The following code extracts `osm_ponits`, and selects only the `name` attribute and the associated geometry.
+
+```{r}
+restaurants <- restaurants$osm_points |> select(name)
+```
+
+Now we can `View` the `restaurants` object. If you notice many missing values (NAs) in the names, scroll down to find more typical entries of restaurant names. This is a common issue with crowdsourced data like OSM, where the information provided may be incomplete.
+
+> Note: if you want to visually check your result, use `mapview(restaurants, legend = FALSE)`
+
+Check the CRS of `restaurant`. We want to associate our downloaded OSM data with the `neighborhood` shapefile, so they need to have the same CRS. Here we are converting it using `st_transform()`.
+
+```{r}
+restaurants <- restaurants |> 
+  st_transform(2249)
+```
+
+That's it. Below I am repeating the "download, extract, and transform" process. You can try it with any other OSM data, such as grocery stores, fast food places, and other amenities, by applying the corresponding key-value pairs.
+
+```{r}
+# bbox = c(-71.188, 42.238, -70.924, 42.393)
+# restaurants <- 
+#   opq(bbox)|>   
+#   add_osm_feature(key = "amenity", value = "restaurant") |>  
+#   osmdata_sf() |> 
+#   pluck("osm_points") |> 
+#   select(name)|> 
+#   st_transform(2249)
+  
+```
+
+## Calculate the number of POIs by neighborhood
+
+We now have a point shapefile (`restaurants`) and a polygon shapefile (`neighborhood`), and we want to count the number of points in each neighborhood. They are points, so we don't need to look for overlapping/intersecting parts, `st_join()` will be sufficient.
+
+```{r}
+restaurant_data <- 
+  st_join(restaurants, neighborhood) 
+```
+
+Take a look at what we've got. It's still the same set of restaurants but each one has neighborhood information joined to it. Remove those fall outside of our neighborhood boundary, then count by neighborhood:
+
+```{r}
+restaurant_data <- 
+  restaurant_data |> 
+  filter(!is.na(nbh_name)) |> 
+  count(nbh_name, name = "restaurant") |> 
+  st_drop_geometry()
+```
+
+# Assemble results
+
+After calculating the three elements separately, we now have the following data for each neighborhood:
+
+-   `sidewalk_data`: Total sidewalk length in feet.
+-   `restaurant_data`: Number of POIs for restaurants.
+-   `tree_data`: Total area of street tree canopy in square feet.
+
+To create comparable metrics, we'll normalize the raw data by calculating:
+
+-   **Sidewalk density:** total sidewalk length divided by neighborhood area (ft/sq.ft)
+-   **POI per capita:** total restaurant POIs divided by neighborhood population
+-   **Street tree coverage:** total tree canopy area divided by neighborhood area (sq.ft/sq.ft)
+
+Okay, do we have the population and area of the neighborhoods? Check out the `neighborhood` shapefile we have, yes, population is there, and we just need to calculate the area.
+
+```{r}
+neighborhood <- neighborhood |> 
+  mutate(area = as.numeric(st_area(geometry))) 
+```
+
+Up to this step we have four plain tables: `neighborhood`, `sidewalk_data`, `tree_data`, and `restaurant_data`, all sharing the key column `nbh_name`.
+
+`left_join()` merges two datasets by **keeping all rows from the left** and adding matching rows from the right based on a specified key column(s). It requires the arguments `x` (the left data), `y` (the right data), and `by` (the column(s) to join on).
+
+Keeping `neighborhood` on the left, we can join the other three tables one by one:
+
+```{r}
+result <- 
+  neighborhood |> 
+  left_join(sidewalk_data, by = "nbh_name") |> 
+  left_join(restaurant_data, by = "nbh_name") |> 
+  left_join(tree_data, by = "nbh_name")
+```
+
+Let's `View` the result.
+
+By observing `result` you'll notice: the canopy coverage for Harbor Island is not recorded - which is why we had one less rows for tree data. The original TreeKeeper dataset does not cover islands. We will also find no population is recorded for Harbor Island as well. We can choose to exclude this area and focus only on the geography cropped to the coastline.
+
+```{r}
+result <- result |> filter(nbh_name != "Harbor Islands")
+```
+
+Let's calculate the normalized metrics. Normalization can be done with a series of `mutate()` functions as shown below. Following that, we will `select()` only the final output columns:
+
+```{r}
+result <- result |> 
+  mutate(sidewalk_density = sidewalk_length/area,
+         restaurant_density = restaurant/population, 
+         tree_coverage = canopy_area/area) |> 
+  select(nbh_name, sidewalk_density:tree_coverage) 
+```
+
+Here we've got our final, summary table.
+
+```{r}
+result
+```
+
+# Present our result
+
+There are plenty of ways to create nicer, more presentable tables than the default output. You can check out packages such as `DT` (for data tables):
+
+```{verbatim}
+result |> 
+  st_drop_geometry() |> 
+  datatable()
+```
+
+The calculated values may appear low and hard to distinguish. You can `rescale()` them to a range of 0-100 to create standardized "scores" for each neighborhood.
+
+```{r}
+scores <- result |> 
+  mutate(across(sidewalk_density:tree_coverage, 
+                ~ rescale(., to = c(0, 100)) |> round(2)
+                ))
+
+scores |> 
+  st_drop_geometry() |> 
+  datatable()
+```
+
+------------------------------------------------------------------------
+
+As our result is a spatial object, we can also create maps to show the scores in neighborhoods:
+
+```{r}
+scores |> 
+  pivot_longer(cols = sidewalk_density:tree_coverage,
+               names_to = "indicators", values_to = "score") |> 
+  ggplot()+
+  geom_sf(aes(fill = score))+
+  facet_wrap(~ indicators)+
+  scale_fill_viridis_c()+
+  theme_void()
+```
+
+------------------------------------------------------------------------
+
+We can also make some [radar charts](https://r-graph-gallery.com/143-spider-chart-with-saveral-individuals.html) to show these scores - many examples on the linked page to customize the chart.
+
+```{r}
+my_neighborhood <- "Downtown"
+
+# install.packages("fmsb")
+library(fmsb)
+
+# Filter, select columns, and add max/min rows in one step
+chart <- rbind(
+  c(100, 100, 100),  # Max values
+  c(0, 0, 0),        # Min values
+  scores |> 
+    st_drop_geometry() |> 
+    filter(nbh_name == my_neighborhood) |>
+    select(sidewalk_density:tree_coverage)
+)
+
+# Plot radar chart
+radarchart(chart, title = my_neighborhood)
+```
+
+# Exercise
+
+What other indicators can you use to describe the built environment in Boston neighborhoods? For example, their transit supply (e.g. the number of [bus stops](https://gis.data.mass.gov/datasets/massgis::mbta-bus-stops-3/explore?location=42.346124%2C-71.067200%2C10.03), [rail stops](https://www.mass.gov/info-details/massgis-data-mbta-rapid-transit), or [Bluebike stations](https://bluebikes.com/system-data)), business activities (e.g., [supermarkets, cafes](https://wiki.openstreetmap.org/wiki/Map_features)), land use ([open spaces](https://data.boston.gov/dataset/open-space) or vacant land), or available facilities (e.g., benches, shelters).
+
+In this exercise, you’ll continue exploring Boston neighborhoods by doing a mini-research to replicate or even expand on our process. Start by choosing 2-3 indicators that interest you, think about how you might calculate them, and then use spatial tools to work through your calculations. When you're ready, present your results in your preferred way.
+
+You can download the datasets you need from Boston data sources or OSM. Feel free to use any of the code provided earlier that you find helpful. But keep in mind the primary goal of this exercise is to practice spatial analysis in R. You should operationalize your metrics in a manageable way and choose indicators that work for you.
+
+# Work Product
+
+Please start a new Quarto Document to document your work. Submit the Rendered HTML file when you finish. Make sure you have included `embed-resources: true` in your YAML header, this is to help preserve all your pictures in your HTML.
+
+![](/img/lab3-html.PNG)
+
+Please **upload your report to Canvas** **by the end of day, Tuesday, Nov 12.**

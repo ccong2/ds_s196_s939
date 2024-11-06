@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-11-05">
+<meta name="dcterms.date" content="2024-11-06">
 
 <title>Applied Data Science for Cities - Describe neighborhood dynamics with </title>
 <style>
@@ -279,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 5, 2024</p>
+      <p class="date">November 6, 2024</p>
     </div>
   </div>
   
@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="boston-neighborhoods" class="level1">
 <h1>Boston Neighborhoods</h1>
-<p>From <a href="#0">Analyze Boston</a>, let’s navigate to the <a href="#0">Boston neighborhood boundaries</a> page. Find the <strong>shapefile</strong> format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.</p>
+<p>From <a href="https://data.boston.gov/">Analyze Boston</a>, let’s navigate to the <a href="https://data.boston.gov/dataset/census-2020-block-group-neighborhoods">Boston neighborhood boundaries</a> page. Find the <strong>shapefile</strong> format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.</p>
 <blockquote class="blockquote">
 <p>Note: If you are interested, here is how we can directly unzip a file with R commands.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>unzip(zipfile = "your_file_name.zip", exdir = "data", overwrite = TRUE)   </span>
@@ -653,8 +653,8 @@ First 10 features:
 <span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">datatable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-cfd1cb0bb37d910ff7e9" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-cfd1cb0bb37d910ff7e9">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["Allston","Back Bay","Beacon Hill","Brighton","Charlestown","Chinatown","Dorchester","Downtown","East Boston","Fenway","Hyde Park","Jamaica Plain","Longwood","Mattapan","Mission Hill","North End","Roslindale","Roxbury","South Boston","South Boston Waterfront","South End","West End","West Roxbury"],[40.89,88.19,100,45.32,35.06,83.51000000000001,42.1,59.71,0,32.08,16.19,32.36,66.95999999999999,32.42,78.61,54.49,39.15,54.52,41.59,4.14,93.42,47.79,21.83],[47.51,39.83,20.39,23.7,20.46,54.03,5.12,100,44.98,23.04,4.46,8.77,7.46,0,4.38,45.57,2.86,3.09,8.67,77.05,23.84,17.78,4.68],[18.24,62.19,59.58,19.31,23.12,14.36,16.02,10.74,8.949999999999999,18.26,10.05,12.74,14.92,20.08,12.51,15.98,20.79,21.23,23.41,0,100,9.58,28.85]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>nbh_name<\/th>\n      <th>sidewalk_density<\/th>\n      <th>restaurant_density<\/th>\n      <th>tree_coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"nbh_name","targets":1},{"name":"sidewalk_density","targets":2},{"name":"restaurant_density","targets":3},{"name":"tree_coverage","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-df7f1f843816a8dd41eb" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-df7f1f843816a8dd41eb">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["Allston","Back Bay","Beacon Hill","Brighton","Charlestown","Chinatown","Dorchester","Downtown","East Boston","Fenway","Hyde Park","Jamaica Plain","Longwood","Mattapan","Mission Hill","North End","Roslindale","Roxbury","South Boston","South Boston Waterfront","South End","West End","West Roxbury"],[40.89,88.19,100,45.32,35.06,83.51000000000001,42.1,59.71,0,32.08,16.19,32.36,66.95999999999999,32.42,78.61,54.49,39.15,54.52,41.59,4.14,93.42,47.79,21.83],[47.51,39.83,20.39,23.7,20.46,54.03,5.12,100,44.98,23.04,4.46,8.77,7.46,0,4.38,45.57,2.86,3.09,8.67,77.05,23.84,17.78,4.68],[18.24,62.19,59.58,19.31,23.12,14.36,16.02,10.74,8.949999999999999,18.26,10.05,12.74,14.92,20.08,12.51,15.98,20.79,21.23,23.41,0,100,9.58,28.85]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>nbh_name<\/th>\n      <th>sidewalk_density<\/th>\n      <th>restaurant_density<\/th>\n      <th>tree_coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"nbh_name","targets":1},{"name":"sidewalk_density","targets":2},{"name":"restaurant_density","targets":3},{"name":"tree_coverage","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <hr>
@@ -707,7 +707,7 @@ First 10 features:
 </section>
 <section id="exercise" class="level1">
 <h1>Exercise</h1>
-<p>What other indicators can you use to describe the built environment in Boston neighborhoods? For example, their transit supply (e.g.&nbsp;the number of <a href="https://gis.data.mass.gov/datasets/massgis::mbta-bus-stops-3/explore?location=42.346124%2C-71.067200%2C10.03">bus stops</a>, <a href="https://www.mass.gov/info-details/massgis-data-mbta-rapid-transit">rail stops</a>, or <a href="https://bluebikes.com/system-data">Bluebike stations</a>), business activities (e.g., <a href="https://wiki.openstreetmap.org/wiki/Map_features">supermarkets, cafes</a>), land use (<a href="https://data.boston.gov/dataset/open-space">open spaces</a> or vacant land), or available facilities (e.g., benches, shelters).</p>
+<p>What other indicators can you use to describe the built environment in Boston neighborhoods? For example, their transit supply (e.g.&nbsp;the number of <a href="https://gis.data.mass.gov/datasets/massgis::mbta-bus-stops-3/explore?location=42.346124%2C-71.067200%2C10.03">bus stops</a>, <a href="https://www.mass.gov/info-details/massgis-data-mbta-rapid-transit">rail stops</a>, or <a href="https://bluebikes.com/system-data">Bluebike stations</a>), business activities (e.g., <a href="https://wiki.openstreetmap.org/wiki/Map_features">supermarkets, cafes</a>), land use (<a href="https://data.boston.gov/dataset/open-space">open spaces</a> or vacant land), or available facilities (e.g., <a href="https://wiki.openstreetmap.org/wiki/Map_features">benches, gardens</a>).</p>
 <p>In this exercise, you’ll continue exploring Boston neighborhoods by doing a mini-research to replicate or even expand on our process. Start by choosing 2-3 indicators that interest you, think about how you might calculate them, and then use spatial tools to work through your calculations. When you’re ready, present your results in your preferred way.</p>
 <p>You can download the datasets you need from Boston data sources or OSM. Feel free to use any of the code provided earlier that you find helpful. But keep in mind the primary goal of this exercise is to practice spatial analysis in R. You should operationalize your metrics in a manageable way and choose indicators that work for you.</p>
 </section>

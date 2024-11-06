@@ -29,7 +29,7 @@ For the purpose of demonstrating how to gather, combine and analyze spatial data
 
 # Boston Neighborhoods
 
-From [Analyze Boston](#0), let's navigate to the [Boston neighborhood boundaries](#0) page. Find the **shapefile** format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.
+From [Analyze Boston](https://data.boston.gov/), let's navigate to the [Boston neighborhood boundaries](https://data.boston.gov/dataset/census-2020-block-group-neighborhoods) page. Find the **shapefile** format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.
 
 > Note: If you are interested, here is how we can directly unzip a file with R commands.
 >
@@ -399,7 +399,7 @@ radarchart(chart, title = my_neighborhood)
 
 # Exercise
 
-What other indicators can you use to describe the built environment in Boston neighborhoods? For example, their transit supply (e.g. the number of [bus stops](https://gis.data.mass.gov/datasets/massgis::mbta-bus-stops-3/explore?location=42.346124%2C-71.067200%2C10.03), [rail stops](https://www.mass.gov/info-details/massgis-data-mbta-rapid-transit), or [Bluebike stations](https://bluebikes.com/system-data)), business activities (e.g., [supermarkets, cafes](https://wiki.openstreetmap.org/wiki/Map_features)), land use ([open spaces](https://data.boston.gov/dataset/open-space) or vacant land), or available facilities (e.g., benches, shelters).
+What other indicators can you use to describe the built environment in Boston neighborhoods? For example, their transit supply (e.g. the number of [bus stops](https://gis.data.mass.gov/datasets/massgis::mbta-bus-stops-3/explore?location=42.346124%2C-71.067200%2C10.03), [rail stops](https://www.mass.gov/info-details/massgis-data-mbta-rapid-transit), or [Bluebike stations](https://bluebikes.com/system-data)), business activities (e.g., [supermarkets, cafes](https://wiki.openstreetmap.org/wiki/Map_features)), land use ([open spaces](https://data.boston.gov/dataset/open-space) or vacant land), or available facilities (e.g., [benches, gardens](https://wiki.openstreetmap.org/wiki/Map_features)).
 
 In this exercise, you’ll continue exploring Boston neighborhoods by doing a mini-research to replicate or even expand on our process. Start by choosing 2-3 indicators that interest you, think about how you might calculate them, and then use spatial tools to work through your calculations. When you're ready, present your results in your preferred way.
 

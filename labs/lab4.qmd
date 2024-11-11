@@ -2,9 +2,7 @@
 title: "Creating Interactive Maps and Graphs with ![](../img/Rlogo.png){width=60px}"
 subtitle: <span style="color:#2C3E50">11.S196/11.S939 Applied Data Science for Cities</span>
 date: "Last Updated `r Sys.Date()`"
-format: 
-  html:
-    embed-resources: true
+format: html
 filters: 
   - line-highlight
 execute: 
@@ -340,7 +338,7 @@ For your interest in digging deeper into `plotly`, check out [`plotly` R graph l
 
 # Exercise
 
-Now that you have **one Leaflet map** and **two interactive graphs**, in this exercise, you will present these three elements in a dashboard.
+Now that you have **one Leaflet map** and **two interactive graphs**. Make sure they work well and produce the visualizations you want. Then you will present these three elements in a dashboard.
 
 ## Introduction to `flexdashboard`
 

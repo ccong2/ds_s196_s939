@@ -283,5 +283,82 @@
       "Labs",
       "03 Walkable Environment: sf, osmdata packages"
     ]
+  },
+  {
+    "objectID": "labs/lab4.html",
+    "href": "labs/lab4.html",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "",
+    "text": "Today we’re going to explore some new packages to enhance our visualizations. We will use an example of analyzing Airbnb data in Chicago to illustrate how to use these tools effectively.\n\nInteractive maps with leaflet\nplotly and adding interactivity through ggplotly\nIntroduce dashboards with flexdashboard\n\nCreate a project folder to hold your files. Once set up, I recommend starting your code in a simple R file to follow along with the tutorial. Later, you’ll be asked to identify which parts of the code are for the map and which are for the graph for submissions.\n\n# You may need to install plotly, leaflet, flexdashboard\nlibrary(tidyverse)\nlibrary(sf)\nlibrary(plotly)\nlibrary(leaflet)\nlibrary(flexdashboard)",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab4.html#work-process",
+    "href": "labs/lab4.html#work-process",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "Work Process",
+    "text": "Work Process\n\nBasemap\nFirst, we initiate leaflet and add a basemap. With addTiles() you will add the default base map, and with setView() you will be able to set a center point and a zoom level. Run the following code to set our view to Chicago.\nleaflet() |&gt;\n  addTiles() |&gt;\n  setView(lng = -87.636483, lat = 41.862984, zoom = 10) \nBy default, addTiles() generates a basemap using OpenStreetMap tiles. They’re suitable, but the options of which basemap to use are extensive. Check out a lengthy list here. You can use addProviderTiles() instead to pick from among a set of third-party options. I’m partial to the washed simplicity of the “CartoDB.Positron” tiles, so I’ll use those in the maps that follow.\n\nleaflet() |&gt;\n  addProviderTiles(providers$CartoDB.Positron) |&gt;\n  setView(lng = -87.636483, lat = 41.862984,zoom = 10) \n\n\n\n\n\n\n\nCircle markers\nThen we can add all Airbnb listings as “circle markers” on the map. Circle markers offer more styling options than simple points, allowing you to define attributes such as: circle size (radius), whether to have storkes (stroke=TRUE) or fill (fill=TRUE), with what fill color (fillColor) and transparency (fillOpacity), etc.,\n\nleaflet() |&gt;\n  addProviderTiles(providers$CartoDB.Positron) |&gt;\n  setView(lng = -87.636483, lat = 41.862984,  zoom = 10) |&gt; \n  addCircleMarkers(data = airbnb,\n                   fill = TRUE,\n                   fillOpacity = 0.5,\n                   stroke = FALSE,\n                   radius = 1) \n\n\n\n\n\n\n\nColor\n\nFunction-Based Color Mapping\nRather than showing all listings in one color, we might want to differentiate listings by, for example, room type.\nIn ggplot2, when you specify color = &lt;variable name&gt;, ggplot automatically map colors based on your variable. However, Leaflet doesn’t know how to handle colors unless you tell it. You will need to create a color palette (pal) using color mapping functions to explicitly define how values in your variable correspond to colors.\n\n\nDefine pal using color mapping functions:\nIn the following line of code, we are defining our color palette pal using a color mapping function colorFactor(). This builds a relationship between the categorical values in the airbnb$room_type variable and a color ramp (“RdYlGn” – red, yellow, green).\npal &lt;- colorFactor(palette = \"RdYlGn\", domain = airbnb$room_type)\nWe used colorFactor() because variables in room_type are categorical. For numeric data, we will instead use colorBin() , which divides the range into “equal intervals”; and colorQuantile() , which creates quantiles for varying values.\n\n\nApplying pal to Map Elements\nOnce defined, you can use pal in multiple places on your map to consistently apply the color mapping. In the following code, the palette is passed to two things:\n1) fillColor = ~pal(room_type) - so that each room type will be filled with its corresponding color. The ~ is telling the system to treat room_type as a column of the airbnb dataset rather than a separate object.\n2) addLegend(pal = pal) so the that colors in the legend will show up accordingly.\n\npal &lt;- colorFactor(palette = \"RdYlGn\", domain = airbnb$room_type)\n\nleaflet() |&gt;\n  addProviderTiles(providers$CartoDB.Positron) |&gt;\n  setView(lng = -87.636483, lat = 41.862984,  zoom = 10) |&gt;\n  addCircleMarkers(data = airbnb,\n                   fillColor = ~pal(room_type),\n                   fillOpacity = 1,\n                   stroke = FALSE,\n                   radius = 1) |&gt;\n  addLegend(\n    position = 'topright',\n    pal = pal,\n    values = airbnb$room_type,\n    title = \"Room Type\"\n  )\n\n\n\n\n\n\n\n\nPolygons\nShapefiles can be added to leaflet through addPolygons() . For now, let’s download the Chicago boundary shapefile here. Once it’s downloaded, read it into R using appropriate sf functions.\nIn the last lab, we have been transforming all shapes to 2249, because we were performing spatial calculations, and need to use a local CRS like 2249 for Massachusetts to minimize distortion. For web mapping, however, EPSG:4326 (latitude/longitude) is always used to ensure global compatibility, as it’s the standard for GPS-based systems.\n\nchi_bnd &lt;- \n  st_read(\"../data/Chicago_City_Limits.shp\") |&gt; # change this to your path\n  st_transform(4326)\n\nNow we will add Chicago boundary to our map, while also adjusting the boundary color, width, and setting the fill color to transparent.\n\nleaflet() |&gt;\n  addProviderTiles(providers$CartoDB.Positron) |&gt;\n  setView(lng = -87.636483, lat = 41.862984,  zoom = 10) |&gt;\n  addCircleMarkers(data = airbnb,\n                   fillColor = ~pal(room_type),\n                   fillOpacity = 1,\n                   stroke = FALSE,\n                   radius = 1) |&gt;\n  addPolygons(data = chi_bnd,\n              color = \"blue\",\n              fill = FALSE,\n              weight = 1) |&gt;\n  addLegend(\n    position = 'topright',\n    pal = pal,\n    values = airbnb$room_type,\n    title = \"Room Type\"\n  )\n\n\n\n\n\n\n\nPopup labels\nPop-ups show information when clicking a map item. In our example, each circle marker represents one Airbnb listing. We can request the map to show an attribute of this listing (such as name) when clicking it.\n\naddCircleMarkers(data = airbnb,\n                 fillOpacity = 0.5,\n                 stroke = FALSE,\n                 radius = 1,\n                 popup = ~name) \n\nOr, displays more than one attributes, such as name, host_name and price:\n\naddCircleMarkers(data = airbnb,\n                 fillOpacity = 0.5,\n                 stroke = FALSE,\n                 radius = 1,\n                 popup = ~paste(name, host_name, price)) \n\nSame as before, we use ~ to indicate these are data attributes rather than individual objects.\nTry adding the popup argument to your addCircleMarkers() function. You will see that information are displayed in one continuous row, which is not easy to read. But we can fix this by defining a label format outside of the plotting process. We can even control the appearance of pop-up information using line breaks &lt;br&gt; or making text bold. For example:\n\npopup_format &lt;-\n  paste0(\"&lt;b&gt;Name:&lt;/b&gt;\", airbnb$name, \"&lt;br&gt;\",\n         \"&lt;b&gt;Host Name: &lt;/b&gt;\", airbnb$host_name,\"&lt;br&gt;\",\n         \"&lt;b&gt;Price: &lt;/b&gt;\", \"$\", airbnb$price, \"&lt;br&gt;\"\n  )\n\nleaflet() |&gt;\n  addProviderTiles(providers$CartoDB.Positron) |&gt;\n  setView(lng = -87.636483, lat = 41.862984,  zoom = 10) |&gt;\n  addCircleMarkers(data = airbnb,\n                   fillColor = ~pal(room_type),\n                   fillOpacity = 1,\n                   stroke = FALSE,\n                   radius = 1,\n                   popup = popup_format) |&gt;\n  addPolygons(data = chi_bnd,\n              color = \"blue\",\n              fill = FALSE,\n              weight = 1) |&gt;\n  addLegend(\n    position = 'topright',\n    pal = pal,\n    values = airbnb$room_type,\n    title = \"Room Type\"\n  )\n\n\n\n\n\nWhat we have created so far already resembles the map on Inside Airbnb’s visualization. For the last step, we will add a layer control to turn on and off layer groups as we wish!\n\n\nLayer Control\nIn the following code, we are assigning each item we added into a group. Then these group names are passed to the addLayersControl() for users to toggle on and off.\nAdd these layer control lines to your code - be careful to match all parentheses correctly.\n\nleaflet() |&gt;\n  addProviderTiles(providers$CartoDB.Positron,\n                   group = \"CartoDB Positron\") |&gt;\n  addProviderTiles(\"Esri.WorldImagery\", \n                   group = \"ESRI World Imagery\") |&gt;\n  addProviderTiles(providers$CartoDB.DarkMatter, \n                   group = \"CartoDB Dark\") |&gt;\n  setView(lng = -87.636483, lat = 41.862984,  zoom = 10) |&gt;\n  addCircleMarkers(data = airbnb,\n                   fillColor = ~pal(room_type),\n                   fillOpacity = 1,\n                   stroke = FALSE,\n                   radius = 1,\n                   popup = popup_format, \n                   group = \"Airbnb Listings\") |&gt;\n  addPolygons(data = chi_bnd,\n              color = \"blue\",\n              fill = FALSE,\n              weight = 1, \n              group = \"Chicago Boundary\") |&gt;\n  addLegend(\n    position = 'topright',\n    pal = pal,\n    values = airbnb$room_type,\n    title = \"Room Type\") |&gt; \n  addLayersControl(\n    baseGroups = c(\"CartoDB Positron\", \n                   \"ESRI World Imagery\",\n                   \"CartoDB Dark\"),\n    overlayGroups = c(\"Airbnb Listings\", \"Chicago Boundary\")\n  )\n\n\n\n\n\nNow, you should have a complete code for the Leaflet map. Make sure it runs properly and produces the map you want. You can then save it as a file, such as leaflet.R.",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab4.html#median-room-price-by-type",
+    "href": "labs/lab4.html#median-room-price-by-type",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "Median Room Price by Type",
+    "text": "Median Room Price by Type\nThis graph displays the median price by room type. It starts with a static ggplot graph, which is then passed to ggplotly for interactivity.\n\ng &lt;- airbnb |&gt; \n  group_by(room_type) |&gt; \n  summarise(median_price = median(price, na.rm = TRUE)) |&gt; \n  ggplot() + \n    geom_col(aes(x = room_type, y = median_price), \n             fill = \"#62A0CA\", width = 0.5) + \n  theme_bw()+\n  labs(x = \"Room Type\", y = \"Median Price\")\n\nggplotly(g)",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab4.html#proportion-of-airbnb-listings-by-type",
+    "href": "labs/lab4.html#proportion-of-airbnb-listings-by-type",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "Proportion of Airbnb Listings by Type",
+    "text": "Proportion of Airbnb Listings by Type\nPlotly follows an extremely similar grammar as ggplot2, with aesthetic arguments such as x, y, color, size, and functions for adding geometric objects including add_markers(), add_shape(), add_hline(). I’d perfer to convert almost any ggplot graphs into plotly to save me from having to remember a new set of functions. However, there’s one type of graph where I’d go directly to plotly: pie or donut charts. ggplot2 is less flexible with circular graphs since it’s more focused on x and y axes.\nThis graph shows the count of listings for each room type. The room type goes to labels(read: groups or legend items) and the number of listings for each type goes to values.\n\nairbnb |&gt; \n  count(room_type) |&gt; \n  plot_ly() |&gt;  \n  add_pie(labels = ~room_type, \n          values = ~n,\n          hole = 0.6)\n\n\n\n\n\nFor your interest in digging deeper into plotly, check out plotly R graph library and its ggplot2 integration examples.",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab4.html#introduction-to-flexdashboard",
+    "href": "labs/lab4.html#introduction-to-flexdashboard",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "Introduction to flexdashboard",
+    "text": "Introduction to flexdashboard\nCrafting a fundamental flexdashboard does not require additional web development knowledge because it uses simple templates in R code. From your RStudio interface, let’s go to File - New File - R Markdown.\nIn the popped-up window, select “From Template” - “Flex Dashboard”\n\nYou have a new opened file that serves as the template of the dashboard. Save this file as “flexdashboard.Rmd”\nGo ahead click “Knit” - “Knit to flex_dashboard”. You now should see a blank dashboard. Any code you put into the “Chart A”, “Chart B” and “Chart C” sections will be displayed in their corresponding spaces!",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab4.html#populate-a-dashboard-template",
+    "href": "labs/lab4.html#populate-a-dashboard-template",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "Populate a dashboard template",
+    "text": "Populate a dashboard template\nJust below the YAML header of flexdashboard.Rmd, there is a code chuck named setup and marked include = FALSE. Here you can supply any data related to package loading and data preparation. Make sure you include here any of your scripts related to loading packages and reading data:\n\nNow you only need to identify and isolate the code that we produced today to populate the respective three chart sections.\nIn other words, you should copy the code you’ve worked through building a leaflet map, and paste them in the blank code chunk under “Chart A”.\nThen copy and paste the codes under “Median Room Price by Type” and “Proportion of Airbnb Listings by type” to the flexdashboard sections “Chart B” and “Chart C”.\nWhen you are ready, knit the document again, and a dashboard should appear!\nFor your reference, I have my flexdashboard.Rmd uploaded here.",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
+  },
+  {
+    "objectID": "labs/lab4.html#make-your-own-dashboard",
+    "href": "labs/lab4.html#make-your-own-dashboard",
+    "title": "Creating Interactive Maps and Graphs with ",
+    "section": "Make your own dashboard",
+    "text": "Make your own dashboard\nCongratulations on getting your dashboard up and running! For this week’s assignment, choose a U.S. city other than Chicago and create a flexdashboard to describe its Airbnb listings.\nYou should be able to reuse most of today’s code, but be sure to make the necessary changes to the Leaflet map for the new city.\nOf course, there are a number of things we can do to make our dashboard look even better. Feel free to refer to the following resources to figure out things like how to choose another layout, how to supply chart titles and adjust chart width, how to add a tabset, etc.\n\nHere are some flexdashboard product from last year’s cohort: Los Angeles, Seattle, and Berlin",
+    "crumbs": [
+      "Labs",
+      "04 Airbnb in Chicago: plotly and leaflet packages"
+    ]
   }
 ]

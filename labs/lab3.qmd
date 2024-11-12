@@ -29,7 +29,7 @@ For the purpose of demonstrating how to gather, combine and analyze spatial data
 
 # Boston Neighborhoods
 
-From [Analyze Boston](https://data.boston.gov/), let's navigate to the [Boston neighborhood boundaries](https://data.boston.gov/dataset/census-2020-block-group-neighborhoods) page. Find the **shapefile** format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.
+From [Analyze Boston](https://data.boston.gov/), let's navigate to the [Boston neighborhood boundaries](https://data.boston.gov/dataset/boston-neighborhood-boundaries-approximated-by-2020-census-block-groups1) page. Find the **shapefile** format, click Explore, and Go to resource. Save the zipped file to your project folder and then Unzip it. They are the polygons showing the boundaries of neighborhoods in Boston.
 
 > Note: If you are interested, here is how we can directly unzip a file with R commands.
 >

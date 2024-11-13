@@ -370,13 +370,11 @@ For your reference, I have my flexdashboard.Rmd uploaded [here](https://drive.go
 
 ## Make your own dashboard
 
-Congratulations on getting your dashboard up and running! For this week's assignment, [**choose a U.S. city**](http://insideairbnb.com/explore) **other than Chicago** and create a flexdashboard to describe its Airbnb listings.
+Congratulations on getting your dashboard up and running! For this week's assignment, [**choose a U.S. city**](http://insideairbnb.com/explore) **other than Chicago** and create a flexdashboard that includes one leaflet map and no less than two charts to describe its Airbnb listings.
 
 You should be able to reuse most of today’s code, but be sure to make the necessary changes to the Leaflet map for the new city.
 
-Of course, there are a number of things we can do to make our dashboard look even better. Feel free to refer to the following resources to figure out things like how to [choose another layout](https://pkgs.rstudio.com/flexdashboard/articles/flexdashboard.html#layout), how to supply chart titles and adjust chart width, how to [add a tabset](https://pkgs.rstudio.com/flexdashboard/articles/using.html#tabsets), etc.
-
--   Here are some flexdashboard product from last year's cohort: [Los Angeles](https://rpubs.com/mikberra/airbnb_la), [Seattle](https://rpubs.com/sarajex/seattle_airbnb), and [Berlin](https://rpubs.com/zacharygdavidson/berlinairbnb)
+There are a number of things we can stylish your dashboard. Feel free to refer to the [flexdashboard walk-through](https://pkgs.rstudio.com/flexdashboard/index.html), where you can find things such as choosing another layout, adjusting chart width, adding a tabset, etc.
 
 # Work Product
 

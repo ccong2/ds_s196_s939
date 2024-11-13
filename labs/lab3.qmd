@@ -65,7 +65,7 @@ Note that **this does not remove the `geometry`**—geometries are "sticky," mea
 Eventually we aim to have a table where each row represents a neighborhood, and each column provides the values of a specific indicator, such as:
 
 | Neighborhood | Sidewalk Density | Tree Canopy Coverage | Number of Restaurants |
-|------------------|------------------|------------------|------------------|
+|--------------|------------------|----------------------|-----------------------|
 | Allston      | xx               | xx                   | xx                    |
 | Back Bay     | xx               | xx                   | xx                    |
 

@@ -490,7 +490,8 @@ ggplot(chi_pop_data) +
     "Uncategorized" = "#B0BEC5"
   )) +
   labs(title = "Change in population, 1970-2020",
-       subtitle = "City of Chicago, by Census tract")+
+       subtitle = "City of Chicago, by Census tract",
+       caption = "Brown University Longitudinal Tract Data Base. Map showing Census Tract boundaries in 2010")+
   theme_void()
 ```
 
@@ -508,7 +509,8 @@ chi_pop_data |>
     geom_sf(aes(fill = pop_bin), color = NA) +
     facet_wrap(~year, nrow = 1, strip.position = "bottom")+
     scale_fill_brewer(palette = "OrRd", name = "Population") +
-    labs(title = "Chicago Population by Census Tract")+
+    labs(title = "Chicago Population by Census Tract", ,
+       caption = "Brown University Longitudinal Tract Data Base. Map showing Census Tract boundaries in 2010")+
     theme_void()
 ```
 

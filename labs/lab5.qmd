@@ -105,6 +105,8 @@ F_2022 <- get_acs(
   year = 2022)
 ```
 
+#### Map 1
+
 ```{r}
 F_2022 |> 
   # remove all Margin-of-error columns
@@ -478,7 +480,9 @@ pop_data_summary|>
   theme(legend.position = "bottom")
 ```
 
-Where are the places are gaining population and where are losing population? The column `status` in the data will be useful for incorporating into ggplot. We can set up our colors to create a "three-group" map.
+Where are the places are gaining population and where are losing population? The column status in the data will be useful for incorporating into ggplot. We can set up our colors to create a "three-group" map.
+
+#### Map 2
 
 ```{r}
 ggplot(chi_pop_data) + 
@@ -524,7 +528,7 @@ Population trends are not evenly experienced across Chicago's neighborhoods, whi
 
 Chicago is not only growing unevenly but also facing segregation challenges. In this assignment, continue to investigate by examining patterns of population distribution across different area of the city. Please start a new Quarto Document to document your work. Include brief explanations of your analysis process, along with your code, and provide any interpretations of the results.
 
-1.  **Use the CENSUS API** to download race data from the 2018-2022 5-year ACS for Cook County. Create a faceted map showing the percentage distribution of the non-Hispanic White, non-Hispanic Black, and Hispanic populations across census tracts in the City of Chicago.
+1.  **Use the CENSUS API** to download race data from the 2018-2022 5-year ACS for Cook County. Create a faceted map showing the percentage distribution of the non-Hispanic White, non-Hispanic Black, and Hispanic populations across census tracts in the City of Chicago in 2022. Your map should look something like [Map 1].
 
     -   Check out the table B03002. Which variables you might need to use to complete this API call?
 
@@ -532,15 +536,15 @@ Chicago is not only growing unevenly but also facing segregation challenges. In 
 
     -   The spatial intersection does not impact the percentage calculations. You don’t need to worry about the area ratio for this task as racial composition remains the same regardless of the intersected area.
 
-After completing the map, you can compare it with the "three-group" population change. How does it relate to the demographic trends and socio-economic factors in the resources you've reviewed? What insights might this add to your understanding of the city?
+After completing the map, you can compare it with the [Map 2] we made in the lab. How does it relate to the demographic trends and socio-economic factors in the resources you've reviewed? What insights might this add to your understanding of the city?
 
-2.  Use two years of historical LTDB population data **(1970 and 2020)** to calculate the percentage increase in population for tracts in **Cook County**. Create one "three-group" type graph to visualize census tracts that have shown significant increasing and decreasing trends over the past five decades.
+2.  Use two years of historical LTDB population data **(1970 and 2020)** to calculate the percentage increase in population for tracts in **Cook County**. Create one [Map 2] type graph to visualize census tracts that have shown significant increasing and decreasing trends over the past five decades.
 
     -   You will reuse your intermediate results in this lab (possibly continuing with `pop_data`), and there's no need to narrow the data to Chicago.
 
     -   The goal is to examine how areas surrounding Chicago are changing, especially when Chicago itself is experiencing an overall population decline. How are these surrounding areas growing or changing during the same period
 
-What does the result tell you, and how do you interpret these results in the context of our analysis?
+What does the result tell you? Are there additional details you would like to know or further analyses you think would enhance our understanding in the context of this study?
 
 # Work Product
 

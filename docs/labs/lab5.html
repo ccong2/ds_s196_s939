@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2024-11-19">
 
-<title>Applied Data Science for Cities</title>
+<title>Applied Data Science for Cities - Download and analyze Census data with </title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,6 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/line-highlight-1.0.0/line-highlight.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -187,16 +223,1072 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#step-1-collect-population-data" id="toc-step-1-collect-population-data" class="nav-link" data-scroll-target="#step-1-collect-population-data">Step 1 Collect Population Data</a>
+  <ul class="collapse">
+  <li><a href="#review-the-process-of-making-census-api-calls" id="toc-review-the-process-of-making-census-api-calls" class="nav-link" data-scroll-target="#review-the-process-of-making-census-api-calls">Review the Process of Making Census API Calls</a></li>
+  <li><a href="#decennial-data-get_decennial" id="toc-decennial-data-get_decennial" class="nav-link" data-scroll-target="#decennial-data-get_decennial">Decennial data (<code>get_decennial</code>)</a></li>
+  <li><a href="#longitudinal-tract-database-ltdb-data-download" id="toc-longitudinal-tract-database-ltdb-data-download" class="nav-link" data-scroll-target="#longitudinal-tract-database-ltdb-data-download">Longitudinal Tract Database (LTDB) Data Download</a></li>
+  </ul></li>
+  <li><a href="#step-2-compile-datasets" id="toc-step-2-compile-datasets" class="nav-link" data-scroll-target="#step-2-compile-datasets">Step 2 Compile Datasets</a></li>
+  <li><a href="#step-3-calculate-and-summarize-changes" id="toc-step-3-calculate-and-summarize-changes" class="nav-link" data-scroll-target="#step-3-calculate-and-summarize-changes">Step 3 Calculate and summarize changes</a>
+  <ul class="collapse">
+  <li><a href="#compare-population-changes" id="toc-compare-population-changes" class="nav-link" data-scroll-target="#compare-population-changes">Compare population changes</a></li>
+  <li><a href="#create-summary-tables" id="toc-create-summary-tables" class="nav-link" data-scroll-target="#create-summary-tables">Create summary tables</a></li>
+  </ul></li>
+  <li><a href="#step-4-clip-out-chicago" id="toc-step-4-clip-out-chicago" class="nav-link" data-scroll-target="#step-4-clip-out-chicago">Step 4 Clip out Chicago</a>
+  <ul class="collapse">
+  <li><a href="#obtain-census-geographies" id="toc-obtain-census-geographies" class="nav-link" data-scroll-target="#obtain-census-geographies">Obtain census geographies</a></li>
+  <li><a href="#write-a-function" id="toc-write-a-function" class="nav-link" data-scroll-target="#write-a-function">Write a function</a></li>
+  </ul></li>
+  <li><a href="#summary-graphs-examples" id="toc-summary-graphs-examples" class="nav-link" data-scroll-target="#summary-graphs-examples">Summary Graphs Examples</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#work-product" id="toc-work-product" class="nav-link" data-scroll-target="#work-product">Work Product</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab5.html">05 Neighborhood Change: tidycensus, tidyr packages</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Download and analyze Census data with <img src="../img/Rlogo.png" class="img-fluid" width="60"></h1>
+<p class="subtitle lead"><span style="color:#2C3E50">11.S196/11.S939 Applied Data Science for Cities</span></p>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 19, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
+</header>
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>In this lab, we will use Decennial Census data and American Community Survey (ACS) data to examine long-term population trends in neighborhoods.</p>
+<p>The <a href="https://voorheescenter.uic.edu/">Nathalie P. Voorhees Center</a> has conducted research on neighborhood and community improvement in the City of Chicago. In their <a href="https://voorheescenter.uic.edu/chicago_communities/">Three Cities</a> report, they calculate the average per capita income for each census tract in Chicago for the years 1970, 1980, 1990, 2000, 2010, and 2017, and then compare it to the regional weighted average income. They have found Chicago has become more segregated by income over time and is losing its middle class.</p>
+<p><img src="../img/lab5_chicago_multiyears.PNG" class="img-fluid"></p>
+<p>In their study, census tracts are classified into “three cities”: those that have increased their share of regional income by 20% or more from 1970 to 2016, those that have changed by less than 20%, and those that have decreased by 20% or more. The study also summarizes socio-demographic characteristics in these areas.</p>
+<p><img src="../img/lab3_chicago_three_cities.PNG" class="img-fluid"></p>
+<p>We will take the idea of the Voorhees Center’s study to examine population change in Chicago. We’ll look at population by census tracts over decades to see if we can categorize tracts as gaining, losing, or staying stable in population.</p>
+<p>Here are the packages we are going to use today.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You may need to install the packages: tidycensus, tigris and gt</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-1-collect-population-data" class="level1">
+<h1>Step 1 Collect Population Data</h1>
+<p>To analyze tract-level population change, we need to gather population data for Chicago across multiple years and make comparisons. In this exercise, we’ll obtain population data in four years: 1970, 1990, 2010, and 2020.</p>
+<p>If we can assemble a table like the one below, with rows representing tracts and columns being the years, we will be able to see the trend and calculate the percentage change in population from 1970 to 2020. This percentage change will enable us to categorize areas based on population increases or decreases, similar to the “three cities” methodology used by the Voorhees Center.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Census Tract</th>
+<th style="text-align: center;">1970</th>
+<th style="text-align: center;">1990</th>
+<th style="text-align: center;">2010</th>
+<th style="text-align: center;">2022</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>17031822400</td>
+<td style="text-align: center;">4336</td>
+<td style="text-align: center;">5956</td>
+<td style="text-align: center;">6226</td>
+<td style="text-align: center;">6012</td>
+</tr>
+<tr class="even">
+<td>17031740100</td>
+<td style="text-align: center;">4060</td>
+<td style="text-align: center;">3297</td>
+<td style="text-align: center;">3048</td>
+<td style="text-align: center;">3075</td>
+</tr>
+<tr class="odd">
+<td>17031828100</td>
+<td style="text-align: center;">5599</td>
+<td style="text-align: center;">4804</td>
+<td style="text-align: center;">4844</td>
+<td style="text-align: center;">5388</td>
+</tr>
+<tr class="even">
+<td>17031826600</td>
+<td style="text-align: center;">6290</td>
+<td style="text-align: center;">5168</td>
+<td style="text-align: center;">5540</td>
+<td style="text-align: center;">4872</td>
+</tr>
+</tbody>
+</table>
+<section id="review-the-process-of-making-census-api-calls" class="level2">
+<h2 class="anchored" data-anchor-id="review-the-process-of-making-census-api-calls">Review the Process of Making Census API Calls</h2>
+<p>We will first review how to use <code>tidycensus</code> to download data for the most recent year 2022. You’ll need a Census API key (Here is where you can <a href="https://api.census.gov/data/key_signup.html">request one from the census bureau</a>). After you’ve signed up for an API key, remember to activate the key from the email you receive.</p>
+<p>Declaring <code>install = TRUE</code> when calling <code>census_api_key()</code> will install the key for use in future R sessions, which may be convenient for many users.</p>
+<div class="sourceCode" id="cb2" data-code-line-numbers=""><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>census_api_key("yourkeyinquotationmarks", install = TRUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>(If you’re having trouble with your key, restarting R might fix it!)</p>
+<p>As a review, to complete the API call for ACS data, you will typically need to specify:</p>
+<ul>
+<li>A desired <strong>geography</strong> to look up (i.e.&nbsp;data <strong>by</strong> what area)</li>
+<li>The <strong>variable IDs</strong> we want to look up (we have the <a href="https://censusreporter.org/topics/table-codes/">table codes</a>, and the <a href="https://api.census.gov/data/2022/acs/acs5/variables.html">complete variable list</a> for 2022 5-year ACS.</li>
+<li>The state and county names to define your study region.</li>
+<li>The census year you want data for.</li>
+<li>The survey you’d like to use (such as ACS 1-, or 5-year data)</li>
+</ul>
+<p>The following code returns the number of total population by tract in <strong>Cook County, Illinois</strong> (where Chicago is in) in 2022. The table I consult is <a href="https://data.census.gov/table/ACSDT5Y2022.B01001?q=B01001">B01001: Sex by Age</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>F_2022 <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"B01001_001"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As discussed in class, we can choose to download multiple variables, reshape the table, calculate percentages, and then add the geometry column for quick mapping.</p>
+<ul>
+<li><code>output = "wide"</code> downloads data is in wide format, where each variable (e.g., totpop, Male_25to29) is represented as a separate column, and each row represent one tract.</li>
+<li><code>geometry = TRUE</code> returns a <a href="https://r-spatial.github.io/sf/articles/sf1.html">simple features</a> (<code>sf</code>) object with spatial information saved for each tract. The returned table will include a <code>geometry</code> variable that enables spatial analysis.</li>
+</ul>
+<p>For example, display one or more age groups, such as the male and female population aged 25–29:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>B01001_Vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">totpop =</span> <span class="st">"B01001_001"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">Male_25to29 =</span> <span class="st">"B01001_011"</span>, <span class="co"># look up the variable IDs</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">Female_25to29 =</span> <span class="st">"B01001_035"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>F_2022 <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> B01001_Vars, </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"wide"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>F_2022 <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove all Margin-of-error columns</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">ends_with</span>(<span class="st">"M"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean up the column names</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">str_remove</span>(., <span class="st">"E$"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Prepare for a faceted map</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(Male_25to29, Female_25to29),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"gender_group"</span>, <span class="at">values_to =</span> <span class="st">"group_pop"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> group_pop<span class="sc">/</span>totpop))<span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> gender_group) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Proportion of Total Population"</span>)<span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab5_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="decennial-data-get_decennial" class="level2">
+<h2 class="anchored" data-anchor-id="decennial-data-get_decennial">Decennial data (<code>get_decennial</code>)</h2>
+<p>In addition to <code>get_acs()</code>, <code>tidycensus</code> also provides <code>get_decennial()</code> for retrieving data from the US Decennial Census for the years 2000, 2010, and 2020. The function uses similar arguments, as shown below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>F_2010 <span class="ot">&lt;-</span> <span class="fu">get_decennial</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">"tract"</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">"IL"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">"Cook"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"P001001"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2010</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So far you might have seen our first problem: for both API calls, we don’t have the option for getting <strong>tract-level data for</strong> <strong>cities -</strong> because tracts are not nested within places. We will come back to it later to cut out tracts within Chicago’s spatial boundary. That’s why we’ve included the argument <code>geometry = TRUE</code>, which will be needed for our spatial processing.</p>
+<p>Our second problem is that these two datasets have different number of observations. F_2022 contains 1332 tracts, F_2010 contains 1319 tracts. Additionally, more than 40 GEOIDs have changed between the datasets:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(F_2022<span class="sc">$</span>GEOID, F_2010<span class="sc">$</span>GEOID)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre data-code-line-numbers=""><code> [1] "17031320101" "17031804316" "17031809402" "17031380600" "17031824128"
+ [6] "17031490200" "17031804315" "17031330103" "17031824126" "17031844700"
+[11] "17031829904" "17031844600" "17031630600" "17031829903" "17031828508"
+[16] "17031820204" "17031803613" "17031330101" "17031806006" "17031804204"
+[21] "17031460800" "17031806005" "17031803614" "17031828507" "17031824508"
+[26] "17031824127" "17031824125" "17031824124" "17031824129" "17031804313"
+[31] "17031820203" "17031803615" "17031804314" "17031320102" "17031809401"
+[36] "17031803616" "17031804513" "17031824509" "17031804514" "17031804312"
+[41] "17031804203" "17031330102" "17031804512" "17031612200"</code></pre>
+</div>
+</div>
+<p>The U.S. Census Bureau <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/table-and-geography-changes/2010/geography-changes.html">adjust geographies every 10 years</a>. Census geographies are based on population, and population change over time. Some tracts stay the same, but others may split as populations grow or merge when populations decline. The Census Bureau keeps <a href="https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2020.html">geographic relationship files</a> to document the relationships between geographies over time.</p>
+<p>Additionally, we cannot continue to use <code>get_decennial()</code> for the 1990 and 1970 data for our analysis. The main reason is that the Census Bureau has removed the API endpoints for earlier years.</p>
+</section>
+<section id="longitudinal-tract-database-ltdb-data-download" class="level2">
+<h2 class="anchored" data-anchor-id="longitudinal-tract-database-ltdb-data-download">Longitudinal Tract Database (LTDB) Data Download</h2>
+<p>Analysts often face the challenge of geographic inconsistencies when working with longitudinal data. To make it easier for researchers, Brown University’s <a href="https://s4.ad.brown.edu/projects/diversity/Researcher/Bridging.htm">Longitudinal Tract Database</a> (LTDB) offers demographic estimates for decennial census years from 1970 to 2020 adjusted to match the 2010 census tract boundaries. This means the tract areas and IDs match the 2010 geography, with attribute values recalculated based on population share.</p>
+<p>Let’s get familiar with LTDB data and how to use them. Go to the <a href="https://s4.ad.brown.edu/projects/diversity/researcher/LTBDDload/Default.aspx">data download</a> page. You will need to enter your email address and certify that you will follow terms of use for the data.</p>
+<p>Review the data standard descriptions a bit to see what datasets are available. In our analysis, we will only use the Standard Full Data Files for population counts.</p>
+<p>In “<strong>Download Standard Full Data Files</strong>”, select the year <strong>1970</strong>, click the download button. Then do the same for <strong>1990</strong> and <strong>2020</strong>. Save the three .csv files into your project folder.</p>
+<p>Now we can import these datasets using <code>read_csv</code>. Simultaneously, we’ll use <code>filter()</code> to extract only the portion for Cook County.</p>
+<div class="sourceCode" id="cb9" data-code-line-numbers=""><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>F_1970 &lt;- read_csv("LTDB_Std_1970_fullcount.csv")|&gt;</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  filter(county == "Cook County" &amp; state == "IL")</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>F_1990 &lt;- </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  read_csv("LTDB_Std_1990_fullcount.csv") |&gt;</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  filter(county == "Cook County" &amp; state == "IL")</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>F_2020 &lt;- </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  read_csv("ltdb_std_2020_fullcount.csv") |&gt;</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  filter(substr(TRTID2010, 1, 5) == "17031")</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a># We will not use the 2022 data for the rest of the lab, so feel free to remove it if you'd like:</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>rm(F_2022)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="step-2-compile-datasets" class="level1">
+<h1>Step 2 Compile Datasets</h1>
+<p>Now we have download data of the four years: 1970, 1990, 2010, and 2020, we can start planning how to join them for mapping and further analysis. Joins allow us to merge datasets based on common attributes, such as GEOID in our case. However, we’ll notice a few things after a quick look at these datasets:</p>
+<p>1) The column names for GEOID and population are not the same across years. For example, the attribute <code>GEOID</code> is named as <code>TRTID10</code> in the F_1970 and F_1990 datasets.</p>
+<blockquote class="blockquote">
+<p>We can retain the columns we need by using <code>select()</code> , and apply consistent column names by specifying [new name] = [column name] in our select calls.</p>
+</blockquote>
+<p>2) If we do a test <code>left_join</code>, we will notice another issue from its error message:</p>
+<div class="sourceCode" id="cb10" data-code-line-numbers=""><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>left_join(F_2010, F_1990, by = c("GEOID" = "TRTID10"))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="../img/lab3_error_in_join.PNG" class="img-fluid"></p>
+<blockquote class="blockquote">
+<p>Some of our GEOID columns are saved as characters while others are numeric, preventing them from directly joining. To resolve this, we can use <code>mutate()</code> and <code>as.character()</code> to convert the attribute type.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Alternatively, we can specify the column types while reading the data, using the <code>col_types</code> argument in <code>read_csv()</code>.</p>
+</blockquote>
+<p>With all these in mind, let’s clean up the datasets for joining. In the following code, I have saved them as new datasets (starting naming with “S_” so that we can keep our original data and come back if we need to).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>S_1970 <span class="ot">&lt;-</span> F_1970 <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># select and rename the columns we need</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">GEOID =</span> TRTID10, <span class="at">POP1970 =</span> POP70)<span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert the data type to character</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GEOID =</span> <span class="fu">as.character</span>(GEOID))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>S_1990 <span class="ot">&lt;-</span> F_1990 <span class="sc">|&gt;</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">GEOID =</span> TRTID10, <span class="at">POP1990 =</span> POP90) <span class="sc">|&gt;</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GEOID =</span> <span class="fu">as.character</span>(GEOID))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>S_2010 <span class="ot">&lt;-</span> F_2010 <span class="sc">|&gt;</span> </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOID, <span class="at">POP2010 =</span> value) <span class="sc">|&gt;</span> </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We are preparing data for non-spatial joins at this point, so I'm using st_drop_geometry() to exclude the spatial information here. </span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>S_2020 <span class="ot">&lt;-</span> F_2020 <span class="sc">|&gt;</span> </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">GEOID =</span> TRTID2010, <span class="at">POP2020 =</span> pop20) <span class="sc">|&gt;</span> </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GEOID =</span> <span class="fu">as.character</span>(GEOID)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Regarding types of joins, a <code>left_join</code> keeps all rows from the left dataset, even with no matches in the right, while a <code>right_join</code> keeps all rows from the right. In our case, small discrepancies exist because some tracts did not exist before 1990. For practical purposes, we should prioritize the most recent geographies. Given the left-to-right reading habit, it might make sense to place the 2020 data on the right side and perform <code>right_join</code>s.</p>
+<p>An additional trick: a typical <code>xxx_join</code> function only works with two datasets at a time, which means if we want to join four or more datasets, we have to:</p>
+<div class="sourceCode" id="cb12" data-code-line-numbers=""><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a># Only for showing, do not run #</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pop_data &lt;- right_join(S_2010, S_2020, by="GEOID")</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>pop_data &lt;- right_join(S_1990, pop_data, by="GEOID")</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>pop_data &lt;- right_join(S_1970, pop_data, by="GEOID")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>However, we can do this with less code and repetition using the <code>reduce()</code> function from the <code>purrr</code> package in combination with <code>right_join()</code>. Although we haven’t introduced it, <a href="https://purrr.tidyverse.org/">the <code>purrr</code> package</a> in <code>tidyverse</code> is designed for working with functional programming concepts like loops and recurrence.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pop_data <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="fu">list</span>(S_1970, S_1990, S_2010, S_2020), </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>         right_join, <span class="at">by =</span> <span class="st">"GEOID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Our joined result <code>pop_data</code> now has the same number of rows as the 2020 dataset - because we placed it on the right and applied <code>right_join()</code> sequentially to the left. Now we have a final result structured as intended from the beginning.</p>
+<p><img src="../img/lab3_example_dataset.PNG" class="img-fluid"></p>
+</section>
+<section id="step-3-calculate-and-summarize-changes" class="level1">
+<h1>Step 3 Calculate and summarize changes</h1>
+<section id="compare-population-changes" class="level2">
+<h2 class="anchored" data-anchor-id="compare-population-changes">Compare population changes</h2>
+<p>We now have compiled population data in one table. Our next step is to calculate the percentage change in population for each tract and classify the tracts based on whether their population has significantly decreased, increased, or remained largely unchanged in the past ~50 years, following the Voohver Center’s approach.</p>
+<p><img src="../img/lab3_example_result.PNG" class="img-fluid"></p>
+<p>Try to insert your own code to achieve the following, before you read along to the next chunk:</p>
+<ol type="1">
+<li><p>Calculate the population change from 1970 to 2020 by computing the percentage increase (POP2020 - POP1970) / POP1970. Use <code>mutate()</code> for this and create a new column called “change”.</p></li>
+<li><p>Create another column called “status” to classify the changes. Label the changes less than 10% as “Low Change”. Label changes greater than 10% as “Growing”, and less than -10% as “Declining”.</p>
+<p>Note that we also have a small number of missing values (NAs) in <code>change</code> because some 2010 tracts did not exist in earlier years. To account for that I included a fourth category in <code>status</code> named “Uncategorized”.</p></li>
+</ol>
+<p>How to populate values based on multiple conditions? The traditional and more straightforward approach is using the <code>if_else()</code> statement. Combining it with <code>mutate</code>, it looks something like this:</p>
+<div class="sourceCode" id="cb14" data-code-line-numbers=""><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a># Only for showing, do not run #</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pop_data |&gt; </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  mutate(status = ifelse(change &lt; -0.1, "declining",</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                ifelse(change &gt; 0.1, "growing",</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                ifelse(is.na(change), "uncategorized", "low change"))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>However, <code>dplyr</code> offers a more concise solution. <a href="https://dplyr.tidyverse.org/reference/case_when.html">Check out <code>case_when</code></a>, which simplifies handling multiple conditions by eliminating the need for nested <code>if else</code> statements within multiple parentheses.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pop_data <span class="ot">&lt;-</span> pop_data <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">change =</span> (POP2020 <span class="sc">-</span> POP1970)<span class="sc">/</span>POP1970)<span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">status =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(change) <span class="sc">~</span> <span class="st">"Uncategorized"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    change <span class="sc">&gt;</span> <span class="fl">0.10</span> <span class="sc">~</span> <span class="st">"Group 1 - Growing"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    change <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">0.10</span> <span class="sc">~</span> <span class="st">"Group 2 - Declining"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Group 3 - Low Change"</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-summary-tables" class="level2">
+<h2 class="anchored" data-anchor-id="create-summary-tables">Create summary tables</h2>
+<p>As the dataset is now prepared, we can use <code>group_by()</code> and <code>summarise()</code> to find out how many tracts are in each category.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pop_data <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(status) <span class="sc">|&gt;</span>    </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">num_tracts =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre data-code-line-numbers=""><code># A tibble: 4 × 2
+  status               num_tracts
+  &lt;chr&gt;                     &lt;int&gt;
+1 Group 1 - Growing           422
+2 Group 2 - Declining         639
+3 Group 3 - Low Change        256
+4 Uncategorized                 2</code></pre>
+</div>
+</div>
+<p>Speaking of summary tables, <code>gt()</code>&nbsp;is another powerful tool for creating customizable and polished tables with ease. For instance, we can add a few more lines in the previous code to enhance this table by adding titles and coloring. There are also <a href="https://gt.rstudio.com/articles/gt.html">many other</a> <a href="https://rfortherestofus.com/2023/08/table-theme-gt">styling options</a> available.</p>
+<div class="cell" data-source-line-numbers="4-7">
+<div class="sourceCode cell-code" id="cb18" data-source-line-numbers="4-7" data-code-line-numbers="4-7"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>pop_data <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2"></a>  <span class="fu">group_by</span>(<span class="at">Status =</span> status) <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Number of Tracts</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href="#cb18-5"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Change in Population, 1970-2020"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>             <span class="at">subtitle =</span> <span class="st">"Cook County, IL"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="fu">tab_options</span>(<span class="at">column_labels.background.color =</span> <span class="st">'dodgerblue4'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="pufjysptte" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pufjysptte table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#pufjysptte thead, #pufjysptte tbody, #pufjysptte tfoot, #pufjysptte tr, #pufjysptte td, #pufjysptte th {
+  border-style: none;
+}
+
+#pufjysptte p {
+  margin: 0;
+  padding: 0;
+}
+
+#pufjysptte .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pufjysptte .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pufjysptte .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pufjysptte .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pufjysptte .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pufjysptte .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pufjysptte .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pufjysptte .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #104E8B;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pufjysptte .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #104E8B;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pufjysptte .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pufjysptte .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pufjysptte .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pufjysptte .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#pufjysptte .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#pufjysptte .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pufjysptte .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pufjysptte .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pufjysptte .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pufjysptte .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pufjysptte .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pufjysptte .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pufjysptte .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#pufjysptte .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pufjysptte .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pufjysptte .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pufjysptte .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pufjysptte .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pufjysptte .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pufjysptte .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pufjysptte .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pufjysptte .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pufjysptte .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pufjysptte .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pufjysptte .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pufjysptte .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pufjysptte .gt_left {
+  text-align: left;
+}
+
+#pufjysptte .gt_center {
+  text-align: center;
+}
+
+#pufjysptte .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pufjysptte .gt_font_normal {
+  font-weight: normal;
+}
+
+#pufjysptte .gt_font_bold {
+  font-weight: bold;
+}
+
+#pufjysptte .gt_font_italic {
+  font-style: italic;
+}
+
+#pufjysptte .gt_super {
+  font-size: 65%;
+}
+
+#pufjysptte .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#pufjysptte .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pufjysptte .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pufjysptte .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pufjysptte .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pufjysptte .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pufjysptte .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#pufjysptte .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#pufjysptte div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_heading">
+<th colspan="2" class="gt_heading gt_title gt_font_normal">Change in Population, 1970-2020</th>
+</tr>
+<tr class="odd gt_heading">
+<th colspan="2" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Cook County, IL</th>
+</tr>
+<tr class="header gt_col_headings">
+<th id="Status" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Status</th>
+<th id="Number of Tracts" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Number of Tracts</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Status">Group 1 - Growing</td>
+<td class="gt_row gt_right" headers="Number of Tracts">422</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Status">Group 2 - Declining</td>
+<td class="gt_row gt_right" headers="Number of Tracts">639</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Status">Group 3 - Low Change</td>
+<td class="gt_row gt_right" headers="Number of Tracts">256</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Status">Uncategorized</td>
+<td class="gt_row gt_right" headers="Number of Tracts">2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-4-clip-out-chicago" class="level1">
+<h1>Step 4 Clip out Chicago</h1>
+<p>As you might have noticed, we are still working with Cook County so far. How is Chicago located within Cook County exactly? Let’s visualize that with the help of another census-related package <code>tigris</code>.</p>
+<section id="obtain-census-geographies" class="level2">
+<h2 class="anchored" data-anchor-id="obtain-census-geographies">Obtain census geographies</h2>
+<p><code>tigris</code> fetches census geographies. You can think of it as a programmatic way of downloading TIGER/Line Shapefiles. It uses geographic entities as <a href="https://github.com/walkerke/tigris">function names</a>. For example, <code>tracts()</code> indicates that you want to download tract boundaries, and <code>county()</code> indicates you want to download county boundaries, and so on.</p>
+<p>The function <code>place()</code> fetches the boundary for census-designated places. The city of Chicago is one of such places in Illinois.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache=</span><span class="cn">TRUE</span>) <span class="co"># This is to allow tigris to use caching for downloaded data so that we don't need to fetch the same data again the next time you need it.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the boundary of Chicago. </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>chi_bnd <span class="ot">&lt;-</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">places</span>(<span class="at">state =</span> <span class="st">"IL"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NAME <span class="sc">==</span> <span class="st">"Chicago"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Recall that we have included spatial geometry for census tracts in our <code>F_2010</code> dataset. We can plot both <code>F_2010</code> and the Chicago boundary together to see the overlay.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> F_2010)<span class="sc">+</span> <span class="co"># boundary of Cook County</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> chi_bnd, <span class="at">color =</span> <span class="st">"blue"</span>, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">linewidth =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="cn">NA</span>) <span class="co"># boundary of Chicago</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab5_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Okay, now we have:</p>
+<ul>
+<li><code>F_2010</code>: A spatial object containing geometry for all tracts in Cook County.</li>
+<li><code>pop_data</code>: A table with tract-level population change in Cook County, including our “growing, declining, low change” categorizations.</li>
+<li><code>chi_bnd</code>: A spatial object of Chicago’s boundary.</li>
+</ul>
+<p>We can first attach the spatial information of <code>F_2010</code> back to <code>pop_data</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>chi_pop_data <span class="ot">&lt;-</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># join geometry to our result table </span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(pop_data, F_2010, <span class="at">by =</span> <span class="st">"GEOID"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make sure it is a simple feature object</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And then take the intersection of the census tracts to fit within Chicago’s boundary.</p>
+</section>
+<section id="write-a-function" class="level2">
+<h2 class="anchored" data-anchor-id="write-a-function">Write a function</h2>
+<p>When doing intersections on census data, we often face the challenge of estimating the portion of population within boundaries. One method we often use is estimating the population based on the ratio of the intersected area to the total area.</p>
+<p><img src="../img/lab5_split.png" class="img-fluid"></p>
+<p>If you’re already familiar with this concept, we can now encapsulate the “proportional split” approach into a reusable function. <strong>Writing a function</strong> allows us to automate repetitive tasks, such as “calculating the area ratio of overlapping regions and comparing the intersected area to the total area every time when two shapefiles intersect”.</p>
+<p>Writing your own function can be a bit less intuitive, but it works like outlining the entire process using “placeholder” variables. After the process is built, you can run the function by providing actual variables as inputs to replace those placeholders.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to calculate area ratio of overlapping areas</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform intersection between a "census tract" and a "boundary"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>calculate_area_ratio <span class="ot">&lt;-</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(census_tracts, boundary) {</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    census_tracts <span class="ot">&lt;-</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>      census_tracts <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">total_area =</span> <span class="fu">st_area</span>(geometry))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    intersected_tracts <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(census_tracts, boundary)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    intersected_tracts <span class="ot">&lt;-</span> intersected_tracts <span class="sc">|&gt;</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">st_make_valid</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">intersect_area =</span> <span class="fu">st_area</span>(geometry),</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">area_ratio =</span> <span class="fu">as.numeric</span>(intersect_area <span class="sc">/</span> total_area)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">|&gt;</span> </span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="fu">as.numeric</span>(intersect_area) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(intersected_tracts)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, we can run the function we have defined, <code>calculate_area_ratio()</code> , on our two spatial object:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First prepare them with the correct CRS</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Chicago uses State Plane Illinois East (ftUS), EPSG:3435</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># https://spatialreference.org/ref/epsg/3435/</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>chi_pop_data <span class="ot">&lt;-</span> chi_pop_data <span class="sc">|&gt;</span> <span class="fu">st_transform</span>(<span class="dv">3435</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>chi_bnd <span class="ot">&lt;-</span> chi_bnd <span class="sc">|&gt;</span> <span class="fu">st_transform</span>(<span class="dv">3435</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Next input our two spatial objects into the function</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>chi_pop_data <span class="ot">&lt;-</span>  </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate_area_ratio</span>(<span class="at">census_tracts =</span> chi_pop_data, </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">boundary =</span> chi_bnd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After running the function, we will have a intersected spatial object that contains an <code>area_ratio</code> column, which is used for calculating population share.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>chi_pop_data <span class="ot">&lt;-</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  chi_pop_data <span class="sc">|&gt;</span>  </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">POP1970 =</span> POP1970 <span class="sc">*</span> area_ratio,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">POP1990 =</span> POP1990 <span class="sc">*</span> area_ratio,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">POP2010 =</span> POP2010 <span class="sc">*</span> area_ratio,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">POP2020 =</span> POP2020 <span class="sc">*</span> area_ratio) <span class="sc">|&gt;</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOID<span class="sc">:</span>status)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Take a look at your <code>chi_pop_data</code>, if everything goes well, we will have a smaller dataset (869 rows) that looks like this.</p>
+<p><img src="../img/lab3_final_check.PNG" class="img-fluid"></p>
+</section>
+</section>
+<section id="summary-graphs-examples" class="level1">
+<h1>Summary Graphs Examples</h1>
+<p>Based on the results, we may have a few observations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># prepare the data for visualization: reshape structures, adjust column names</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pop_data_summary <span class="ot">&lt;-</span> chi_pop_data <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(status <span class="sc">!=</span> <span class="st">"Uncategorized"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">col =</span> POP1970<span class="sc">:</span>POP2020, </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"population"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_replace</span>(year, <span class="st">"POP"</span>, <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The total population of the City of Chicago has been, largely, declining, a trend that can be attributed to many factors including the decline of manufacturing and suburban expansion.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pop_data_summary<span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">tot_population =</span> <span class="fu">sum</span>(population, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> tot_population, <span class="at">group =</span> <span class="dv">1</span>), </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Total Population"</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Chicago total population"</span>)<span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab5_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But within the city, some areas are still growing:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pop_data_summary<span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(status, year) <span class="sc">|&gt;</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sum_population =</span> <span class="fu">sum</span>(population, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> sum_population, <span class="at">color =</span> status, </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">group =</span> status), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Total Population"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Chicago tract population summed by subgroup"</span>)<span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab5_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Where are the places are gaining population and where are losing population? The column <code>status</code> in the data will be useful for incorporating into ggplot. We can set up our colors to create a “three-group” map.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chi_pop_data) <span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> status), <span class="at">color =</span> <span class="fu">alpha</span>(<span class="st">"white"</span>, <span class="fl">0.5</span>))<span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Group 1 - Growing"</span> <span class="ot">=</span> <span class="st">"#D73027"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Group 2 - Declining"</span> <span class="ot">=</span> <span class="st">"#FDCC8A"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Group 3 - Low Change"</span> <span class="ot">=</span> <span class="st">"#FC8D59"</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Uncategorized"</span> <span class="ot">=</span> <span class="st">"#B0BEC5"</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Change in population, 1970-2020"</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"City of Chicago, by Census tract"</span>)<span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab5_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Tract populations for each year can also be visualized in a side-by-side plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>custom_breaks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2500</span>, <span class="dv">5000</span>, <span class="dv">7000</span>, <span class="dv">16000</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>chi_pop_data <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(status <span class="sc">!=</span> <span class="st">"Uncategorized"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">col =</span> POP1970<span class="sc">:</span>POP2020, </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="at">values_to =</span> <span class="st">"population"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_replace</span>(year, <span class="st">"POP"</span>, <span class="st">""</span>),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">pop_bin =</span> <span class="fu">cut</span>(population, <span class="at">breaks =</span> custom_breaks))<span class="sc">|&gt;</span> </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pop_bin), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>year, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">strip.position =</span> <span class="st">"bottom"</span>)<span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"OrRd"</span>, <span class="at">name =</span> <span class="st">"Population"</span>) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Chicago Population by Census Tract"</span>)<span class="sc">+</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab5_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Population trends are not evenly experienced across Chicago’s neighborhoods, which show clustering of both growth and decline. South Chicago, for example, is losing residents, while northern and western areas are experiencing growth. Additional research and background resources on Chicago can provide more insight into the city’s changing dynamics, for instance:</p>
+<p><a href="https://uofi.app.box.com/s/rgf5h8oc8bnjq9ua2463oolvdj23qyun/file/970587325860">Shifting Population Trends in Chicago and the Chicago Metro Area</a></p>
+<p><a href="https://voorheescenter.red.uic.edu/wp-content/uploads/sites/122/2017/10/Voorhees-Center-Gentrification-Index-Oct-14.pdf">The Socioeconomic Change of Chicago’s Community Areas (1970-2010)</a></p>
+</section>
+<section id="exercise" class="level1">
+<h1>Exercise</h1>
+<p>Chicago is not only growing unevenly but also facing segregation challenges. In this assignment, continue to investigate by examining patterns of population distribution across different area of the city. Please start a new Quarto Document to document your work. Include brief explanations of your analysis process, along with your code, and provide any interpretations of the results.</p>
+<ol type="1">
+<li><p><strong>Use the CENSUS API</strong> to download race data from the 2018-2022 5-year ACS for Cook County. Create a faceted map showing the percentage distribution of the non-Hispanic White, non-Hispanic Black, and Hispanic populations across census tracts in the City of Chicago.</p>
+<ul>
+<li><p>Check out the table B03002. Which variables you might need to use to complete this API call?</p></li>
+<li><p>Start by calculating the population percentages for Cook County before narrowing down to the city of Chicago.</p></li>
+<li><p>The spatial intersection does not impact the percentage calculations. You don’t need to worry about the area ratio for this task as racial composition remains the same regardless of the intersected area.</p></li>
+</ul></li>
+</ol>
+<p>After completing the map, you can compare it with the “three-group” population change. How does it relate to the demographic trends and socio-economic factors in the resources you’ve reviewed? What insights might this add to your understanding of the city?</p>
+<ol start="2" type="1">
+<li><p>Use two years of historical LTDB population data <strong>(1970 and 2020)</strong> to calculate the percentage increase in population for tracts in <strong>Cook County</strong>. Create one “three-group” type graph to visualize census tracts that have shown significant increasing and decreasing trends over the past five decades.</p>
+<ul>
+<li><p>You will reuse your intermediate results in this lab (possibly continuing with <code>pop_data</code>), and there’s no need to narrow the data to Chicago.</p></li>
+<li><p>The goal is to examine how areas surrounding Chicago are changing, especially when Chicago itself is experiencing an overall population decline. How are these surrounding areas growing or changing during the same period</p></li>
+</ul></li>
+</ol>
+<p>What does the result tell you, and how do you interpret these results in the context of our analysis?</p>
+</section>
+<section id="work-product" class="level1">
+<h1>Work Product</h1>
+<p>Please submit the Rendered HTML file to Canvas <strong>by the end of day, Tuesday, Nov 26.</strong> As always, make sure you have included <code>embed-resources: true</code> in your YAML header before you render for submission.</p>
+<p>Also, the <code>get_acs()</code> function tends to produce messages and progress bar to the output. You can use chunk option <code>#| results: hide</code> to suppress that.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -626,4 +1718,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../site_libs/quarto-contrib/line-highlight-1.0.0/line-highlight.js" defer="true"></script>
 </body></html>

@@ -528,7 +528,7 @@ Population trends are not evenly experienced across Chicago's neighborhoods, whi
 
 Chicago is not only growing unevenly but also facing segregation challenges. In this assignment, continue to investigate by examining patterns of population distribution across different area of the city. Please start a new Quarto Document to document your work. Include brief explanations of your analysis process, along with your code, and provide any interpretations of the results.
 
-1.  **Use the CENSUS API** to download race data from the 2018-2022 5-year ACS for Cook County. Create a faceted map showing the percentage distribution of the non-Hispanic White, non-Hispanic Black, and Hispanic populations across census tracts in the City of Chicago in 2022. Your map should look something like [Map 1].
+1.  **Use the CENSUS API** to download race data from the 2018-2022 5-year ACS for Cook County. Create a faceted map showing the percentage distribution of the non-Hispanic White, non-Hispanic Black, and Hispanic populations across census tracts in the City of Chicago in 2022. Your map should resemble [Map 1], but colors and styles can be different.
 
     -   Check out the table B03002. Which variables you might need to use to complete this API call?
 

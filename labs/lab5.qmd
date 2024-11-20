@@ -536,9 +536,9 @@ Chicago is not only growing unevenly but also facing segregation challenges. In 
 
     -   The spatial intersection does not impact the percentage calculations. You don’t need to worry about the area ratio for this task as racial composition remains the same regardless of the intersected area.
 
-After completing the map, you can compare it with the [Map 2] we made in the lab. How does it relate to the demographic trends and socio-economic factors in the resources you've reviewed? What insights might this add to your understanding of the city?
+After completing the map, you can compare it with [Map 2] we made in the lab. How does it relate to the demographic trends and socio-economic factors in the resources you've reviewed? What insights might this add to your understanding of the city?
 
-2.  Use two years of historical LTDB population data **(1970 and 2020)** to calculate the percentage increase in population for tracts in **Cook County**. Create one [Map 2] type graph to visualize census tracts that have shown significant increasing and decreasing trends over the past five decades.
+2.  Use two years of historical LTDB population data **(1970 and 2020)** to calculate the percentage increase in population for tracts in **Cook County**. Create a map similar to [Map 2] to visualize census tracts that have shown significant increasing and decreasing trends over the past five decades.
 
     -   You will reuse your intermediate results in this lab (possibly continuing with `pop_data`), and there's no need to narrow the data to Chicago.
 

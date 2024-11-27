@@ -481,5 +481,60 @@
       "Labs",
       "05 Neighborhood Change: tidycensus, tidyr packages"
     ]
+  },
+  {
+    "objectID": "labs/lab6.html",
+    "href": "labs/lab6.html",
+    "title": "Build Shiny Apps with ",
+    "section": "",
+    "text": "In this lab, we’ll guide you through building a Shiny app to turn our Airbnb Leaflet map into an interactive version. It’s a gentle introduction to the Shiny app process, with plenty of potential for scaling up if you’re interested in exploring further in the future!\nA Shiny app is a plain and humble .R file, partly because it was developed long before Quarto documents and other tools. So, we will create the project folder for this week, then start a new R script file (File -&gt; New File -&gt; R script). Save the file with the name “app.R”.",
+    "crumbs": [
+      "Labs",
+      "06 Build ShinyApps"
+    ]
+  },
+  {
+    "objectID": "labs/lab6.html#preparation",
+    "href": "labs/lab6.html#preparation",
+    "title": "Build Shiny Apps with ",
+    "section": "Preparation",
+    "text": "Preparation\nLet’s continue using the city you worked on in your Lab 4 report, and build on your existing Leaflet code. Please put the “listings.csv” file that you downloaded for lab 4 report into your project folder. Then copy and paste the setup code below into your R script:\n\n# install.packages(\"shiny\")\nlibrary(shiny)\nlibrary(leaflet)\nlibrary(tidyverse)\n\nairbnb &lt;- read_csv(\"listings.csv\")\n\nui &lt;- fluidPage(\n  # *Input functions go here\n  # *Output functions go here\n)\n\nserver &lt;- function(input, output) {\n  # output$id &lt;- render*function(input$id)\n}\n\nshinyApp(ui, server)",
+    "crumbs": [
+      "Labs",
+      "06 Build ShinyApps"
+    ]
+  },
+  {
+    "objectID": "labs/lab6.html#design-your-ui",
+    "href": "labs/lab6.html#design-your-ui",
+    "title": "Build Shiny Apps with ",
+    "section": "Design your UI",
+    "text": "Design your UI\nFirst, we’ll walk through how to build a Shiny app like this for your city. In this example, there is one slider that allows users to control the price range, and the map will only display listings that fall within the selected price range.\nThe UI for this app consists of two main elements: the slider and the map. The slider is an input element, which means it receives user input, while the map is the output that displays the results.\nUI is built using input and output functions. The slider is linked to an input function, and the Leaflet map is linked to an output function. You can explore a complete list of input and output functions.\nFor this particular UI, I will first add a few lines of code to describe the slider’s appearance. The inputId is required, and you can give it any name that you can later use to reference the slider.\n\nui &lt;- fluidPage(\n  sliderInput(inputId = \"price_slider\",\n              label = \"Choose a price range\",\n              min = 1, max = 1500, value = c(500, 1000)),\n  # *Output functions\n)\n\nThe output is a Leaflet map, generated using the outputLeaflet() function. We will use this function here for the output object and assign it a name for reference.\n\nui &lt;- fluidPage(\n  sliderInput(inputId = \"price_slider\",\n              label = \"Choose a price range\",\n              min = 1, max = 1500, value = c(500, 1000)),\n  leafletOutput(outputId = \"map\")\n)\n\nWithout changing anything in the server part, let’s click “Run App” to see what we have now. A viewer will open up showing the layout of your app: a slider and a empty area ready for output map. Close the viewer. In order to actually show the map, we will need to process the data in the server function.",
+    "crumbs": [
+      "Labs",
+      "06 Build ShinyApps"
+    ]
+  },
+  {
+    "objectID": "labs/lab6.html#assemble-inputs-and-outputs-in-server",
+    "href": "labs/lab6.html#assemble-inputs-and-outputs-in-server",
+    "title": "Build Shiny Apps with ",
+    "section": "Assemble inputs and outputs in server",
+    "text": "Assemble inputs and outputs in server\nInside the curly braces of the server function template, we will write all the instructions to create the Leaflet map. It is recommended to compose the code in three steps:\nFirst, we will establish the connections between particular inputs and outputs. Right now we have only one input object price_slider, and one output object map, we can either write it down or mentally build this connection that the output$map will depend on the values of input$price_slider.\n\nserver &lt;- function(input, output) {\n  output$map &lt;- input$price_slider\n}\n\nNext, choose a render function that is associated with your output function. When building the UI we have reserved an area for leafletOutput(), so in the server we must use a renderLeaflet() function to produce the corresponding result. The connections between all output functions and render functions are also listed in the Shiny instruction page.\n\nserver &lt;- function(input, output) {\n  output$map &lt;- renderLeaflet(\n    input$price_slider\n  )\n}\n\nLastly, we’ll process the input variable. That means we will consider how user inputs - price ranges - influence the map. We are displaying only those within the selected price range by filtering out listings with prices outside the slider’s limits. In other words, we will use the slider’s two end values (input$price_slider[1] and input$price_slider[2]) to filter the airbnb dataset.\n\nserver &lt;- function(input, output) {\n  output$map &lt;- renderLeaflet({\n    # make a filtered dataset\n    filtered_airbnb &lt;- \n      airbnb |&gt; \n      filter(price &gt;= input$price_slider[1] & price &lt; input$price_slider[2])\n    \n    # pass the filtered dataset to a simple leaflet map\n    filtered_airbnb |&gt; \n      leaflet() |&gt; \n        addTiles() |&gt; \n        addCircleMarkers()\n  })\n}\n\nAll parentheses should be properly paired up. Note: We added a pairs of curly braces inside renderLeaflet(). This is necessary because {} allows us to group multiple lines of code into a single block that will be evaluated together.\nOnce you’ve completed the server code, click “Run App” again to check if the slider and reactive map appear as expected.",
+    "crumbs": [
+      "Labs",
+      "06 Build ShinyApps"
+    ]
+  },
+  {
+    "objectID": "labs/lab6.html#add-map-styles",
+    "href": "labs/lab6.html#add-map-styles",
+    "title": "Build Shiny Apps with ",
+    "section": "Add map styles",
+    "text": "Add map styles\nEverything you created for your previous Leaflet map will still work here! I’d suggest going back to your code from Exercise 4 and copying the leaflet() code to replace the basic version we used in the server. However, be mindful of two things:\n\nYou will need copy the color palette and the popup format too. If you have defined more elements for your map, make sure that they are all copied over. Place them inside the renderLeaflet() function.\n\n\nserver &lt;- function(input, output) {\n  output$map &lt;- renderLeaflet({\n    # make a filtered dataset\n    filtered_airbnb &lt;- \n      airbnb |&gt; \n      filter(price &gt;= input$price_slider[1] & price &lt; input$price_slider[2])\n    \n    popup_format &lt;-\n      paste0(\"&lt;b&gt;Name:&lt;/b&gt;\", filtered_airbnb$name, \"&lt;br&gt;\",\n             \"&lt;b&gt;Host Name: &lt;/b&gt;\", filtered_airbnb$host_name,\"&lt;br&gt;\",\n             \"&lt;b&gt;Price: &lt;/b&gt;\", \"$\", filtered_airbnb$price, \"&lt;br&gt;\"\n      )\n    \n    pal &lt;- colorFactor(palette = \"RdYlGn\", domain = airbnb$room_type)\n    \n    # pass the filtered dataset to a simple leaflet map\n    filtered_airbnb |&gt; \n      leaflet() |&gt;\n      addProviderTiles(providers$CartoDB.Positron,\n                       group = \"CartoDB Positron\") |&gt;\n      addProviderTiles(\"Esri.WorldImagery\", \n                       group = \"ESRI World Imagery\") |&gt;\n      addProviderTiles(providers$CartoDB.DarkMatter, \n                       group = \"CartoDB Dark\") |&gt;\n      addCircleMarkers(data = filtered_airbnb,\n                       fillColor = ~pal(room_type),\n                       fillOpacity = 1,\n                       stroke = FALSE,\n                       radius = 2,\n                       popup = popup_format, \n                       group = \"Airbnb Listings\") |&gt;\n      addLegend(\n        position = 'topright',\n        pal = pal,\n        values = airbnb$room_type,\n        title = \"Room Type\") |&gt; \n      addLayersControl(\n        baseGroups = c(\"CartoDB Positron\", \n                       \"ESRI World Imagery\",\n                       \"CartoDB Dark\"),\n        overlayGroups = c(\"Airbnb Listings\", \"City Boundary\")\n      )\n  })\n}\n\nSome style elements might need adjustments for the filtered dataset. In our case, the popups use the filtered dataset because the data shown in the popups matches the markers in the filtered map view. We’ll update them to use filtered_airbnb .\n\nserver &lt;- function(input, output) {\n  output$map &lt;- renderLeaflet({\n    # make a filtered dataset\n    filtered_airbnb &lt;- \n      airbnb |&gt; \n      filter(price &gt;= input$price_slider[1] & price &lt; input$price_slider[2])\n    \n    popup_format &lt;-\n      paste0(\"&lt;b&gt;Name:&lt;/b&gt;\", filtered_airbnb$name, \"&lt;br&gt;\",\n             \"&lt;b&gt;Host Name: &lt;/b&gt;\", filtered_airbnb$host_name,\"&lt;br&gt;\",\n             \"&lt;b&gt;Price: &lt;/b&gt;\", \"$\", filtered_airbnb$price, \"&lt;br&gt;\"\n      )\n    \n    pal &lt;- colorFactor(palette = \"RdYlGn\", domain = airbnb$room_type)\n    \n    # pass the filtered dataset to a simple leaflet map\n    filtered_airbnb |&gt; \n      leaflet() |&gt;\n        addProviderTiles(providers$CartoDB.Positron,\n                         group = \"CartoDB Positron\") |&gt;\n        addProviderTiles(\"Esri.WorldImagery\", \n                         group = \"ESRI World Imagery\") |&gt;\n        addProviderTiles(providers$CartoDB.DarkMatter, \n                         group = \"CartoDB Dark\") |&gt;\n        addCircleMarkers(data = filtered_airbnb,\n                         fillColor = ~pal(room_type),\n                         fillOpacity = 1,\n                         stroke = FALSE,\n                         radius = 2,\n                         popup = popup_format, \n                         group = \"Airbnb Listings\") |&gt;\n        addLegend(\n          position = 'topright',\n          pal = pal,\n          values = airbnb$room_type,\n          title = \"Room Type\") |&gt; \n        addLayersControl(\n          baseGroups = c(\"CartoDB Positron\", \n                         \"ESRI World Imagery\",\n                         \"CartoDB Dark\"),\n          overlayGroups = c(\"Airbnb Listings\", \"City Boundary\")\n        )\n  })\n}\n\nOnce you’ve finished editing the server code, click “Run App” and check if the price range works correctly, and if the colors and popups display as expected.",
+    "crumbs": [
+      "Labs",
+      "06 Build ShinyApps"
+    ]
   }
 ]

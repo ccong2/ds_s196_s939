@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2024-11-26">
 
-<title>Applied Data Science for Cities</title>
+<title>Applied Data Science for Cities - Build Shiny Apps with </title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,6 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/line-highlight-1.0.0/line-highlight.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -187,16 +223,319 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#shiny-essentials" id="toc-shiny-essentials" class="nav-link" data-scroll-target="#shiny-essentials">Shiny Essentials</a></li>
+  <li><a href="#visualize-airbnb-data-in-shiny" id="toc-visualize-airbnb-data-in-shiny" class="nav-link" data-scroll-target="#visualize-airbnb-data-in-shiny">Visualize airbnb data in Shiny</a>
+  <ul class="collapse">
+  <li><a href="#preparation" id="toc-preparation" class="nav-link" data-scroll-target="#preparation">Preparation</a></li>
+  <li><a href="#design-your-ui" id="toc-design-your-ui" class="nav-link" data-scroll-target="#design-your-ui">Design your UI</a></li>
+  <li><a href="#assemble-inputs-and-outputs-in-server" id="toc-assemble-inputs-and-outputs-in-server" class="nav-link" data-scroll-target="#assemble-inputs-and-outputs-in-server">Assemble inputs and outputs in server</a></li>
+  <li><a href="#add-map-styles" id="toc-add-map-styles" class="nav-link" data-scroll-target="#add-map-styles">Add map styles</a></li>
+  </ul></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#publish-your-shiny-dashboard" id="toc-publish-your-shiny-dashboard" class="nav-link" data-scroll-target="#publish-your-shiny-dashboard">Publish your Shiny dashboard</a></li>
+  <li><a href="#work-product" id="toc-work-product" class="nav-link" data-scroll-target="#work-product">Work Product</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../labs/index.html">Labs</a></li><li class="breadcrumb-item"><a href="../labs/lab6.html">06 Build ShinyApps</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Build Shiny Apps with <img src="../img/Rlogo.png" class="img-fluid" width="60"></h1>
+<p class="subtitle lead"><span style="color:#2C3E50">11.S196/11.S939 Applied Data Science for Cities</span></p>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 26, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
+</header>
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>In this lab, we’ll guide you through building a Shiny app to turn our Airbnb Leaflet map into an interactive version. It’s a gentle introduction to the Shiny app process, with plenty of potential for scaling up if you’re interested in exploring further in the future!</p>
+<p>A Shiny app is a plain and humble <strong>.R</strong> file, partly because it was developed long before Quarto documents and other tools. So, we will create the project folder for this week, then start a new R script file (<strong>File -&gt; New File -&gt; R script</strong>). Save the file with the name “<strong>app.R</strong>”.</p>
+</section>
+<section id="shiny-essentials" class="level1">
+<h1>Shiny Essentials</h1>
+<p>As a brief review, a Shiny app is built on two essential components: <strong>the User Interface (UI) and the Server</strong>. These are fancy names, but UI is what you see in your browser, controlling the layout and appearance of the app. The Server is your R session on your laptop, handling data processing behind the scenes.</p>
+<p>A Shiny app always starts from a three-line template:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Input functions go here</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Output functions go here</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># output$id &lt;- render*function(input$id)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In <code>ui</code>, you can define the…</p>
+<ol type="1">
+<li>Components that <strong>acquire user inputs</strong> (e.g.&nbsp;sliders, select box, radio buttons, etc.)</li>
+<li>Components that will <strong>display outputs</strong> (e.g.&nbsp;plots, maps, tables, text boxes, etc.)</li>
+<li>Type of interface (e.g.&nbsp;heights and width, sidebars, navigation bars, etc.)</li>
+</ol>
+<p>In <code>server</code>, most of the app’s dynamic behavior occurs. The <code>server</code> works as an open, running function that takes the <code>input</code> from <code>ui</code>, produces the result in concert with <a href="https://shiny.posit.co/r/getstarted/build-an-app/reactive-flow/render-functions.html">a <code>render</code> function</a>, then display the result to the <code>output</code> space on the <code>ui</code>.</p>
+<p>The last line <code>shinyApp(ui, server)</code> combines these two parts together so that the app will <em>react</em> to the user input (<code>ui</code>) by re-rendering (<code>server</code>) continuously while the app is running.</p>
+</section>
+<section id="visualize-airbnb-data-in-shiny" class="level1">
+<h1>Visualize airbnb data in Shiny</h1>
+<p>We love <code>flexdashboard</code> because it’s simple to use and perfect for showing both visualizations and the data behind them. In many cases, it’s all we need. However, Shiny allows you to build web applications that respond to user input, so users can decide what to display and explore different results on the fly.</p>
+<p>The choice really depends on what you need—it’s not that Shiny is “better.” Good analysis should always come first, and these tools are only here to help make your insights more accessible.</p>
+<section id="preparation" class="level2">
+<h2 class="anchored" data-anchor-id="preparation">Preparation</h2>
+<p>Let’s continue using the city you worked on in your Lab 4 report, and build on your existing Leaflet code. Please put the <strong>“listings.csv”</strong> file that you downloaded for lab 4 report into your project folder. Then copy and paste the setup code below into your R script:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("shiny")</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>airbnb <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"listings.csv"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Input functions go here</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Output functions go here</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># output$id &lt;- render*function(input$id)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="design-your-ui" class="level2">
+<h2 class="anchored" data-anchor-id="design-your-ui">Design your UI</h2>
+<p>First, we’ll walk through how to build <a href="https://ccong2.shinyapps.io/lab3example/">a Shiny app like this</a> for your city. In this example, there is one slider that allows users to control the price range, and the map will only display listings that fall within the selected price range.</p>
+<p>The UI for this app consists of two main elements: the slider and the map. The slider is an <strong>input</strong> element, which means it receives user input, while the map is the <strong>output</strong> that displays the results.</p>
+<p>UI is built using <strong>input and output functions</strong>. The slider is linked to an input function, and the Leaflet map is linked to an output function. You can explore <a href="https://shiny.posit.co/r/components/">a complete list of input and output functions</a>.</p>
+<p>For this particular UI, I will first add a few lines of code to describe the slider’s appearance. The <code>inputId</code> is required, and you can give it any name that you can later use to reference the slider.</p>
+<div class="cell" data-source-line-numbers="2-4">
+<div class="sourceCode cell-code" id="cb3" data-source-line-numbers="2-4" data-code-line-numbers="2-4"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"price_slider"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>              <span class="at">label =</span> <span class="st">"Choose a price range"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>              <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">1500</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">500</span>, <span class="dv">1000</span>)),</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="co"># *Output functions</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output is a Leaflet map, generated using the <code>outputLeaflet()</code> function. We will use this function here for the output object and assign it a name for reference.</p>
+<div class="cell" data-source-line-numbers="5">
+<div class="sourceCode cell-code" id="cb4" data-source-line-numbers="5" data-code-line-numbers="5"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">sliderInput</span>(<span class="at">inputId =</span> <span class="st">"price_slider"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>              <span class="at">label =</span> <span class="st">"Choose a price range"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>              <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">1500</span>, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">500</span>, <span class="dv">1000</span>)),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">leafletOutput</span>(<span class="at">outputId =</span> <span class="st">"map"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Without changing anything in the server part, let’s click “Run App” to see what we have now. A viewer will open up showing the layout of your app: a slider and a empty area ready for output map. Close the viewer. In order to actually show the map, we will need to process the data in the <code>server</code> function.</p>
+</section>
+<section id="assemble-inputs-and-outputs-in-server" class="level2">
+<h2 class="anchored" data-anchor-id="assemble-inputs-and-outputs-in-server">Assemble inputs and outputs in server</h2>
+<p>Inside the curly braces of the server function template, we will write all the instructions to create the Leaflet map. It is recommended to compose the code in three steps:</p>
+<p><strong>First, we will establish the connections between particular inputs and outputs.</strong> Right now we have only one input object <code>price_slider</code>, and one output object <code>map</code>, we can either write it down or mentally build this connection that the <code>output$map</code> will depend on the values of <code>input$price_slider</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>map <span class="ot">&lt;-</span> input<span class="sc">$</span>price_slider</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Next, choose a render function that is associated with your output function.</strong> When building the UI we have reserved an area for <code>leafletOutput()</code>, so in the server we must use a <code>renderLeaflet()</code> function to produce the corresponding result. The connections between all output functions and render functions are also listed in the <a href="https://shiny.posit.co/r/getstarted/build-an-app/reactive-flow/render-functions.html">Shiny instruction page</a>.</p>
+<div class="cell" data-source-line-numbers="2">
+<div class="sourceCode cell-code" id="cb6" data-source-line-numbers="2" data-code-line-numbers="2"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderLeaflet</span>(</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    input<span class="sc">$</span>price_slider</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  )</span>
+<span id="cb6-5"><a href="#cb6-5"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Lastly, we’ll process the input variable.</strong> That means we will consider how user inputs - price ranges - influence the map. We are displaying only those within the selected price range by filtering out listings with prices outside the slider’s limits. In other words, we will use the slider’s two end values (<code>input$price_slider[1]</code> and <code>input$price_slider[2]</code>) to <code>filter</code> the <code>airbnb</code> dataset.</p>
+<div class="cell" data-source-line-numbers="2-13">
+<div class="sourceCode cell-code" id="cb7" data-source-line-numbers="2-13" data-code-line-numbers="2-13"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderLeaflet</span>({</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="co"># make a filtered dataset</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>    filtered_airbnb <span class="ot">&lt;-</span> </span>
+<span id="cb7-5"><a href="#cb7-5"></a>      airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb7-6"><a href="#cb7-6"></a>      <span class="fu">filter</span>(price <span class="sc">&gt;=</span> input<span class="sc">$</span>price_slider[<span class="dv">1</span>] <span class="sc">&amp;</span> price <span class="sc">&lt;</span> input<span class="sc">$</span>price_slider[<span class="dv">2</span>])</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    </span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="co"># pass the filtered dataset to a simple leaflet map</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    filtered_airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb7-10"><a href="#cb7-10"></a>      <span class="fu">leaflet</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-11"><a href="#cb7-11"></a>        <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-12"><a href="#cb7-12"></a>        <span class="fu">addCircleMarkers</span>()</span>
+<span id="cb7-13"><a href="#cb7-13"></a>  })</span>
+<span id="cb7-14"><a href="#cb7-14"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All parentheses should be properly paired up. Note: We added a pairs of curly braces inside <code>renderLeaflet()</code>. This is necessary because <code>{}</code> allows us to group multiple lines of code into a single block that will be evaluated together.</p>
+<p>Once you’ve completed the server code, click “Run App” again to check if the slider and reactive map appear as expected.</p>
+</section>
+<section id="add-map-styles" class="level2">
+<h2 class="anchored" data-anchor-id="add-map-styles">Add map styles</h2>
+<p>Everything you created for your previous Leaflet map will still work here! I’d suggest going back to your code from Exercise 4 and copying the <code>leaflet()</code> code to replace the basic version we used in the server. However, be mindful of two things:</p>
+<ol type="1">
+<li>You will need copy the color palette and the popup format too. If you have defined more elements for your map, make sure that they are all copied over. Place them inside the <code>renderLeaflet()</code> function.</li>
+</ol>
+<div class="cell" data-source-line-numbers="8-14">
+<div class="sourceCode cell-code" id="cb8" data-source-line-numbers="8-14" data-code-line-numbers="8-14"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderLeaflet</span>({</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="co"># make a filtered dataset</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>    filtered_airbnb <span class="ot">&lt;-</span> </span>
+<span id="cb8-5"><a href="#cb8-5"></a>      airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb8-6"><a href="#cb8-6"></a>      <span class="fu">filter</span>(price <span class="sc">&gt;=</span> input<span class="sc">$</span>price_slider[<span class="dv">1</span>] <span class="sc">&amp;</span> price <span class="sc">&lt;</span> input<span class="sc">$</span>price_slider[<span class="dv">2</span>])</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    </span>
+<span id="cb8-8"><a href="#cb8-8"></a>    popup_format <span class="ot">&lt;-</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>      <span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Name:&lt;/b&gt;"</span>, filtered_airbnb<span class="sc">$</span>name, <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10"></a>             <span class="st">"&lt;b&gt;Host Name: &lt;/b&gt;"</span>, filtered_airbnb<span class="sc">$</span>host_name,<span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11"></a>             <span class="st">"&lt;b&gt;Price: &lt;/b&gt;"</span>, <span class="st">"$"</span>, filtered_airbnb<span class="sc">$</span>price, <span class="st">"&lt;br&gt;"</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a>      )</span>
+<span id="cb8-13"><a href="#cb8-13"></a>    </span>
+<span id="cb8-14"><a href="#cb8-14"></a>    pal <span class="ot">&lt;-</span> <span class="fu">colorFactor</span>(<span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">domain =</span> airbnb<span class="sc">$</span>room_type)</span>
+<span id="cb8-15"><a href="#cb8-15"></a>    </span>
+<span id="cb8-16"><a href="#cb8-16"></a>    <span class="co"># pass the filtered dataset to a simple leaflet map</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a>    filtered_airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb8-18"><a href="#cb8-18"></a>      <span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a>      <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>CartoDB.Positron,</span>
+<span id="cb8-20"><a href="#cb8-20"></a>                       <span class="at">group =</span> <span class="st">"CartoDB Positron"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a>      <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, </span>
+<span id="cb8-22"><a href="#cb8-22"></a>                       <span class="at">group =</span> <span class="st">"ESRI World Imagery"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a>      <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>CartoDB.DarkMatter, </span>
+<span id="cb8-24"><a href="#cb8-24"></a>                       <span class="at">group =</span> <span class="st">"CartoDB Dark"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a>      <span class="fu">addCircleMarkers</span>(<span class="at">data =</span> filtered_airbnb,</span>
+<span id="cb8-26"><a href="#cb8-26"></a>                       <span class="at">fillColor =</span> <span class="sc">~</span><span class="fu">pal</span>(room_type),</span>
+<span id="cb8-27"><a href="#cb8-27"></a>                       <span class="at">fillOpacity =</span> <span class="dv">1</span>,</span>
+<span id="cb8-28"><a href="#cb8-28"></a>                       <span class="at">stroke =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-29"><a href="#cb8-29"></a>                       <span class="at">radius =</span> <span class="dv">2</span>,</span>
+<span id="cb8-30"><a href="#cb8-30"></a>                       <span class="at">popup =</span> popup_format, </span>
+<span id="cb8-31"><a href="#cb8-31"></a>                       <span class="at">group =</span> <span class="st">"Airbnb Listings"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a>      <span class="fu">addLegend</span>(</span>
+<span id="cb8-33"><a href="#cb8-33"></a>        <span class="at">position =</span> <span class="st">'topright'</span>,</span>
+<span id="cb8-34"><a href="#cb8-34"></a>        <span class="at">pal =</span> pal,</span>
+<span id="cb8-35"><a href="#cb8-35"></a>        <span class="at">values =</span> airbnb<span class="sc">$</span>room_type,</span>
+<span id="cb8-36"><a href="#cb8-36"></a>        <span class="at">title =</span> <span class="st">"Room Type"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-37"><a href="#cb8-37"></a>      <span class="fu">addLayersControl</span>(</span>
+<span id="cb8-38"><a href="#cb8-38"></a>        <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"CartoDB Positron"</span>, </span>
+<span id="cb8-39"><a href="#cb8-39"></a>                       <span class="st">"ESRI World Imagery"</span>,</span>
+<span id="cb8-40"><a href="#cb8-40"></a>                       <span class="st">"CartoDB Dark"</span>),</span>
+<span id="cb8-41"><a href="#cb8-41"></a>        <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Airbnb Listings"</span>, <span class="st">"City Boundary"</span>)</span>
+<span id="cb8-42"><a href="#cb8-42"></a>      )</span>
+<span id="cb8-43"><a href="#cb8-43"></a>  })</span>
+<span id="cb8-44"><a href="#cb8-44"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Some style elements might need adjustments for the filtered dataset. In our case, the popups use the filtered dataset because the data shown in the popups matches the markers in the filtered map view. We’ll update them to use <code>filtered_airbnb</code> .</p>
+<div class="cell" data-source-line-numbers="9,10,11,25">
+<div class="sourceCode cell-code" id="cb9" data-source-line-numbers="9,10,11,25" data-code-line-numbers="9,10,11,25"><pre class="sourceCode numberSource r numberLines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderLeaflet</span>({</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    <span class="co"># make a filtered dataset</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>    filtered_airbnb <span class="ot">&lt;-</span> </span>
+<span id="cb9-5"><a href="#cb9-5"></a>      airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb9-6"><a href="#cb9-6"></a>      <span class="fu">filter</span>(price <span class="sc">&gt;=</span> input<span class="sc">$</span>price_slider[<span class="dv">1</span>] <span class="sc">&amp;</span> price <span class="sc">&lt;</span> input<span class="sc">$</span>price_slider[<span class="dv">2</span>])</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    </span>
+<span id="cb9-8"><a href="#cb9-8"></a>    popup_format <span class="ot">&lt;-</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>      <span class="fu">paste0</span>(<span class="st">"&lt;b&gt;Name:&lt;/b&gt;"</span>, filtered_airbnb<span class="sc">$</span>name, <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb9-10"><a href="#cb9-10"></a>             <span class="st">"&lt;b&gt;Host Name: &lt;/b&gt;"</span>, filtered_airbnb<span class="sc">$</span>host_name,<span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11"></a>             <span class="st">"&lt;b&gt;Price: &lt;/b&gt;"</span>, <span class="st">"$"</span>, filtered_airbnb<span class="sc">$</span>price, <span class="st">"&lt;br&gt;"</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a>      )</span>
+<span id="cb9-13"><a href="#cb9-13"></a>    </span>
+<span id="cb9-14"><a href="#cb9-14"></a>    pal <span class="ot">&lt;-</span> <span class="fu">colorFactor</span>(<span class="at">palette =</span> <span class="st">"RdYlGn"</span>, <span class="at">domain =</span> airbnb<span class="sc">$</span>room_type)</span>
+<span id="cb9-15"><a href="#cb9-15"></a>    </span>
+<span id="cb9-16"><a href="#cb9-16"></a>    <span class="co"># pass the filtered dataset to a simple leaflet map</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a>    filtered_airbnb <span class="sc">|&gt;</span> </span>
+<span id="cb9-18"><a href="#cb9-18"></a>      <span class="fu">leaflet</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a>        <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>CartoDB.Positron,</span>
+<span id="cb9-20"><a href="#cb9-20"></a>                         <span class="at">group =</span> <span class="st">"CartoDB Positron"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-21"><a href="#cb9-21"></a>        <span class="fu">addProviderTiles</span>(<span class="st">"Esri.WorldImagery"</span>, </span>
+<span id="cb9-22"><a href="#cb9-22"></a>                         <span class="at">group =</span> <span class="st">"ESRI World Imagery"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-23"><a href="#cb9-23"></a>        <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>CartoDB.DarkMatter, </span>
+<span id="cb9-24"><a href="#cb9-24"></a>                         <span class="at">group =</span> <span class="st">"CartoDB Dark"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-25"><a href="#cb9-25"></a>        <span class="fu">addCircleMarkers</span>(<span class="at">data =</span> filtered_airbnb,</span>
+<span id="cb9-26"><a href="#cb9-26"></a>                         <span class="at">fillColor =</span> <span class="sc">~</span><span class="fu">pal</span>(room_type),</span>
+<span id="cb9-27"><a href="#cb9-27"></a>                         <span class="at">fillOpacity =</span> <span class="dv">1</span>,</span>
+<span id="cb9-28"><a href="#cb9-28"></a>                         <span class="at">stroke =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-29"><a href="#cb9-29"></a>                         <span class="at">radius =</span> <span class="dv">2</span>,</span>
+<span id="cb9-30"><a href="#cb9-30"></a>                         <span class="at">popup =</span> popup_format, </span>
+<span id="cb9-31"><a href="#cb9-31"></a>                         <span class="at">group =</span> <span class="st">"Airbnb Listings"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-32"><a href="#cb9-32"></a>        <span class="fu">addLegend</span>(</span>
+<span id="cb9-33"><a href="#cb9-33"></a>          <span class="at">position =</span> <span class="st">'topright'</span>,</span>
+<span id="cb9-34"><a href="#cb9-34"></a>          <span class="at">pal =</span> pal,</span>
+<span id="cb9-35"><a href="#cb9-35"></a>          <span class="at">values =</span> airbnb<span class="sc">$</span>room_type,</span>
+<span id="cb9-36"><a href="#cb9-36"></a>          <span class="at">title =</span> <span class="st">"Room Type"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-37"><a href="#cb9-37"></a>        <span class="fu">addLayersControl</span>(</span>
+<span id="cb9-38"><a href="#cb9-38"></a>          <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"CartoDB Positron"</span>, </span>
+<span id="cb9-39"><a href="#cb9-39"></a>                         <span class="st">"ESRI World Imagery"</span>,</span>
+<span id="cb9-40"><a href="#cb9-40"></a>                         <span class="st">"CartoDB Dark"</span>),</span>
+<span id="cb9-41"><a href="#cb9-41"></a>          <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"Airbnb Listings"</span>, <span class="st">"City Boundary"</span>)</span>
+<span id="cb9-42"><a href="#cb9-42"></a>        )</span>
+<span id="cb9-43"><a href="#cb9-43"></a>  })</span>
+<span id="cb9-44"><a href="#cb9-44"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once you’ve finished editing the server code, click “Run App” and check if the price range works correctly, and if the colors and popups display as expected.</p>
+</section>
+</section>
+<section id="exercise" class="level1">
+<h1>Exercise</h1>
+<p>We will continue to work from here to add a selection box to your application! The goal is to let users pick a neighborhood from a list. When a neighborhood is selected, the map will zoom in on it and display only the listings within that area. Your result should look like <a href="https://ccong2.shinyapps.io/lab6report/">this example</a>.</p>
+<p>Here’s how we’ll approach this task:</p>
+<ol type="1">
+<li><p><strong>Add an Input Function to the UI:</strong><br>
+We will need to include a new input function in the <code>ui</code> for the selection box. Consider <a href="https://shiny.posit.co/r/components/">what type of input</a> is appropriate and what arguments are needed to define its appearance and behavior.</p></li>
+<li><p><strong>Filter the Data in the Server:</strong><br>
+In the server, we’ll update the logic to display only one neighborhood at a time. This involves further filtering the data, working with <code>filtered_airbnb</code> to narrow it down based on neighborhood names.</p>
+<p>You may want to include the neighborhood boundaries on your map. Inside Airbnb has provided <a href="https://insideairbnb.com/get-the-data/">GeoJSON file of neighbourhoods of the city</a>. GeoJSON is another format for spatial data primarily used for web mapping. You can read this format of file and add them to your map just like any other spatial data layer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" data-source-line-numbers="nil" data-code-line-numbers="nil"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>neighborhood_boundary <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"neighbourhoods.geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></li>
+<li><p><strong>Zoom the Map to the Neighborhood:</strong><br>
+To center and zoom the map on the chosen neighborhood, we’ll use the <code>setView</code> function that we have seen in Lab 4. My approach is to calculate the average longitude and latitude of the filtered dataset and use these values to adjust the map’s view dynamically.</p>
+<div class="sourceCode" id="cb11" data-code-line-numbers=""><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a># Add two lines before leaflet()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mid_long &lt;- mean(filtered_airbnb$longitude, na.rm = TRUE)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mid_lat &lt;- mean(filtered_airbnb$latitude, na.rm = TRUE)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a># Use lat and lon which represents the center of your region</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>leaflet() |&gt;</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  setView(lng = mid_long, lat = mid_lat, zoom = 14) |&gt; </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+<p>Give it a try! Once you’ve checked everything, click “Run App” to see your shiny app in action. If any errors pop up, don’t worry—we’ll work through them together.</p>
+<p>This is all you need to complete for your exercise—no need to make further improvements. If you find this application useful, feel free to incorporate it into your own project.</p>
+</section>
+<section id="publish-your-shiny-dashboard" class="level1">
+<h1>Publish your Shiny dashboard</h1>
+<p><a href="https://www.shinyapps.io/">shinyapp.io</a> is the best place for you to host, display, and distribute your Shiny apps. The platform is designed for Shiny and R language so all your reactive elements will work seamlessly. If it’s the first time you connect with shinyapp.io, you may have to sign up for an account.</p>
+<p>Check if your script is named <strong>app.R</strong>. This is the naming convention for Shiny apps, as it allows the platform to recognize and properly deploy your application.</p>
+<p>To publish your app, just like with other documents, use the <strong>blue “Publish” button</strong>. Then, select the option for ShinyApps.io. <a href="https://statsandr.com/blog/how-to-publish-shiny-app-example-with-shinyapps-io/#step-by-step-guide">Here</a> is a step-by-step screenshot guide for setting up your account, initializing your account with a token, and hosting with shinyapps.io.</p>
+<p>At the step of choose “Publish Files From…”, make sure to include the data files as well. In our case, we should select “app.R”, “listings.csv”, and “neighbourhood.geojson”.</p>
+<p><img src="..\img/lab6publish.PNG" class="img-fluid" width="590"></p>
+<p>When you see it working like this, it means it’s being successfully published.</p>
+<p><img src="..\img/lab6publishing.PNG" class="img-fluid" width="590"></p>
+</section>
+<section id="work-product" class="level1">
+<h1>Work Product</h1>
+<p>Please submit your <strong>app.R</strong> and <strong>the link to your Shiny app</strong> to Canvas. <strong>You can paste your link into the submission comments area.</strong> Please upload your work by the end of day, <strong>Wednesday, Dec 4</strong>.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -626,4 +965,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../site_libs/quarto-contrib/line-highlight-1.0.0/line-highlight.js" defer="true"></script>
 </body></html>

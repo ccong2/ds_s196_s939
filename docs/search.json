@@ -135,7 +135,7 @@
     "href": "labs/index.html",
     "title": "Schedule Overview",
     "section": "",
-    "text": "Schedule\nW01 (Oct 21 - Oct 25):\n\nCourse Overview\nLab1: Cambridge Building Energy: R, Quarto, dplyr essentials\n\nW02 (Oct 28 - Nov 1):\n\nExploratory Data Analysis\nLab 2: Opportunity Zones: tidyverse, ggplot2 packages\n\nW03 (Nov 4 - Nov 8):\n\nSpatial Analysis; Obtain data from multiple sources\nLab 3: Walkable Environment: sf, osmdata packages\n\nW04 (Nov 11 – Nov 15):\n\nCreate interactive graphs and maps\nLab 4: Airbnb in Chicago: plotly and leaflet packages\n\nW05 (Nov 18 – Nov 22):\n\nCensus Data and Demographic Analysis\nLab 5: Neighborhood Change: tidycensus, tidyr packages\n\nW06 (Nov 25 – Nov 29):\n\nWeb Storytelling I\nLab 6: Build ShinyApps\n\nW07 (Dec 2 – Dec 6):\n\nWeb Storytelling II\nLab 7 (optional): Quarto Website\n\nW08 (Dec 9 – Dec 11):\n\nPresentation",
+    "text": "Schedule\nW01 (Oct 21 - Oct 25):\n\nCourse Overview\nLab1: Cambridge Building Energy: R, Quarto, dplyr essentials\n\nW02 (Oct 28 - Nov 1):\n\nExploratory Data Analysis\nLab 2: Opportunity Zones: tidyverse, ggplot2 packages\n\nW03 (Nov 4 - Nov 8):\n\nSpatial Analysis; Obtain data from multiple sources\nLab 3: Walkable Environment: sf, osmdata packages\n\nW04 (Nov 11 – Nov 15):\n\nCreate interactive graphs and maps\nLab 4: Airbnb in Chicago: plotly and leaflet packages\n\nW05 (Nov 18 – Nov 22):\n\nCensus Data and Demographic Analysis\nLab 5: Neighborhood Change: tidycensus, tidyr packages\n\nW06 (Nov 25 – Nov 29):\n\nWeb Storytelling I\nLab 6: Build ShinyApps\n\nW07 (Dec 2 – Dec 6):\n\nWeb Storytelling II\nLab 7: Work Session\n\nW08 (Dec 9 – Dec 11):\n\nPresentation",
     "crumbs": [
       "Labs",
       "Schedule"

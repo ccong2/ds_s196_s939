@@ -37,7 +37,7 @@ W06 (Nov 25 -- Nov 29):
 W07 (Dec 2 -- Dec 6):
 
 -   Web Storytelling II
--   Lab 7 (optional): Quarto Website
+-   Lab 7: Work Session
 
 W08 (Dec 9 -- Dec 11):
 
